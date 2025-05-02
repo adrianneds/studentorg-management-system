@@ -9,6 +9,7 @@ DECLARE @semester VARCHAR;
 DECLARE @academic_year VARCHAR;
 DECLARE @alumni_date DATE;
 DECLARE @fee_date DATE;
+DECLARE @n INT;
 
 -- TEMPORARY: Set test values for user input
 
@@ -27,6 +28,9 @@ SET @committee = "Finance";
 -- (6) for late payments
 -- SET @semester = "2S";
 -- SET @academic_year = "2023-2024";
+
+-- (7)
+SET @n = 5;
 
 -- (8) alumni as of a given date
 SET @alumni_date = "2024-07-20";
@@ -117,6 +121,19 @@ AND payment_status = "Paid" AND payment_date > due_date;
 -- 7. View the percentage of active vs inactive members of a given organization for the last n semesters.
 -- (Note: n is a positive integer)
 
+-- NOTE: this query assumes a status change only once every semester
+SELECT
+    SUM(CASE WHEN b.membership_status = "Active" THEN 1 ELSE 0 END)/COUNT(student_number) AS c_active,
+    SUM(CASE WHEN b.membership_status = "Inactive" THEN 1 ELSE 0 END)/COUNT(student_number) AS c_inactive,
+    b.semester, b.academic_year
+FROM 
+    (SELECT * FROM is_part_of 
+    WHERE organization_id = "ES-101124" 
+    GROUP BY student_number, semester, academic_year) AS b
+GROUP BY b.semester, b.academic_year;
+-- CREATE VIEW testview AS SELECT * FROM is_part_of
+-- WHERE organization_id = "ES-101124" GROUP BY student_number, semester, academic_year;
+-- DROP VIEW testview
 
 -- 8. View all alumni members of a given organization as of a given date.
 SELECT student_number, member_name, gender, degree_program, date_of_status_update, membership_status

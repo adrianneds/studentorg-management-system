@@ -1,4 +1,3 @@
-
 DELETE FROM `member`;
 INSERT INTO member VALUES
     ('2022-04382','pambeesly','pb123','Pam Beesly','F','BS Statistics'),
