@@ -128,7 +128,7 @@ SELECT
     b.semester, b.academic_year
 FROM 
     (SELECT * FROM is_part_of 
-    WHERE organization_id = "ES-101124" 
+    WHERE organization_id = @organization_id
     GROUP BY student_number, semester, academic_year) AS b
 GROUP BY b.semester, b.academic_year;
 -- CREATE VIEW testview AS SELECT * FROM is_part_of
