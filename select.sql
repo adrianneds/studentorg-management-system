@@ -5,8 +5,12 @@ DECLARE @status VARCHAR;
 DECLARE @gender CHAR;
 DECLARE @batch VARCHAR;
 DECLARE @committee VARCHAR;
+DECLARE @semester VARCHAR;
+DECLARE @academic_year VARCHAR;
 
 -- TEMPORARY: Set test values for user input
+
+-- (1) filtering
 SET @organization_id = "ES-101124";
 SET @role = "Member";
 SET @membership_status = "Active";
@@ -14,6 +18,10 @@ SET @gender = "F";
 SET @degree_program = "BS Economics";
 SET @batch = "2023A";
 SET @committee = "Finance";
+
+-- (2) for late payments
+SET @semester = "2S";
+SET @academic_year = "2023-2024";
 
 -- 1. View all members of the organization by role, status, gender, degree program, batch
 -- (year of membership), and committee. (Note: we assume one committee membership only per
@@ -85,7 +93,15 @@ WHERE committee = @committee;
 
 -- 6. View all late payments made by all members of a given organization for a given semester and academic year.
 
+SELECT student_number, member_name, fee_id, due_date, payment_date, payment_status 
+FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
+WHERE organization_id = @organization_id
+AND semester = @semester AND academic_year = @academic_year
+AND payment_status = "Paid" AND payment_date > due_date;
+
 -- 7. View the percentage of active vs inactive members of a given organization for the last n semesters. (Note: n is a positive integer)
+
+
 
 -- 8. View all alumni members of a given organization as of a given date.
 
