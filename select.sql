@@ -8,6 +8,7 @@ DECLARE @committee VARCHAR;
 DECLARE @semester VARCHAR;
 DECLARE @academic_year VARCHAR;
 DECLARE @alumni_date DATE;
+DECLARE @fee_date DATE;
 
 -- TEMPORARY: Set test values for user input
 
@@ -33,6 +34,9 @@ SET @alumni_date = "2024-07-20";
 -- (9) for debt
 SET @semester = "2S";
 SET @academic_year = "2022-2023";
+
+-- (10)
+SET @fee_date = "2024-01-01";
 
 -- 1. View all members of the organization by role, status, gender, degree program, batch
 -- (year of membership), and committee. (Note: we assume one committee membership only per
@@ -113,6 +117,7 @@ AND payment_status = "Paid" AND payment_date > due_date;
 -- 7. View the percentage of active vs inactive members of a given organization for the last n semesters.
 -- (Note: n is a positive integer)
 
+
 -- 8. View all alumni members of a given organization as of a given date.
 SELECT student_number, member_name, gender, degree_program, date_of_status_update, membership_status
 FROM member NATURAL JOIN is_part_of NATURAL JOIN organization
@@ -122,12 +127,24 @@ AND date_of_status_update <= @alumni_date;
 -- NOTE: this query assumes that no status updates can be done after Alumni; only one and final Alumni status update
 
 -- 9. View the total amount of unpaid and paid fees or dues of a given organization as of a given date.
+SELECT 
+    (SELECT SUM(fee_amount) as total_unpaid 
+    FROM pays NATURAL JOIN fee
+    WHERE organization_id = @organization_id
+    AND payment_status = "Unpaid"
+    AND issue_date <= @fee_date) AS unpaid,
 
+    (SELECT SUM(fee_amount) as total_paid 
+    FROM pays NATURAL JOIN fee
+    WHERE organization_id = @organization_id
+    AND payment_status = "Paid"
+    AND payment_date <= @fee_date) AS paid
+;
 
 -- 10. View the member/s with the highest debt of a given organization for a given semester.
 SELECT student_number, member_name, SUM(fee_amount) AS debt 
 FROM member NATURAL JOIN pays NATURAL JOIN fee
-WHERE organization_id = "MS-101123"
+WHERE organization_id = @organization_id
 AND payment_status = "Unpaid" AND due_date < CURDATE()
 AND semester = @semester AND academic_year = @academic_year
 GROUP BY student_number

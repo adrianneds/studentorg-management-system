@@ -64,6 +64,7 @@ CREATE TABLE IF NOT EXISTS pays (
     transaction_id INT(4) AUTO_INCREMENT,
     student_number VARCHAR(15),
     fee_id VARCHAR(15),
+    issue_date DATE,
     due_date DATE,
     payment_date DATE,
     payment_status VARCHAR(15),
