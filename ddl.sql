@@ -4,6 +4,7 @@ USE `studentorg`;
 
 -- MEMBER(Student_number, Member_username, Member_password, Member_name, Gender, Degree_program)
 
+DROP TABLE IF EXISTS `member`;
 CREATE TABLE IF NOT EXISTS member(
     student_number VARCHAR(15),
     member_username VARCHAR(50) NOT NULL, 
@@ -16,6 +17,7 @@ CREATE TABLE IF NOT EXISTS member(
 
 -- ORGANIZATION(Organization_id, Organization_username, Organization_password, Organization_name)
 
+DROP TABLE IF EXISTS `organization`;
 CREATE TABLE IF NOT EXISTS organization (
     organization_id VARCHAR(15),
     organization_username VARCHAR(50) NOT NULL,
@@ -26,6 +28,7 @@ CREATE TABLE IF NOT EXISTS organization (
 
 -- IS_PART_OF(Status_update_id, Student_number, Organization_id, Committee, Batch, Semester, Academic_year, Date_of_status_update, Role, Membership_status)
 
+DROP TABLE IF EXISTS `is_part_of`;
 CREATE TABLE IF NOT EXISTS is_part_of (
     status_update_id INT(4) AUTO_INCREMENT,
     student_number VARCHAR(15),
@@ -44,6 +47,7 @@ CREATE TABLE IF NOT EXISTS is_part_of (
 
 -- FEE(Fee_id, Fee_name, Fee_amount, Organization_id)
 
+DROP TABLE IF EXISTS `fee`;
 CREATE TABLE IF NOT EXISTS fee (
     fee_id VARCHAR(15),
     fee_name VARCHAR(50),
@@ -55,6 +59,7 @@ CREATE TABLE IF NOT EXISTS fee (
 
 -- PAYS(Transaction_id, Student_number, Fee_id, Due_date, Payment_date, Payment_status, Semester, Academic_year)
 
+DROP TABLE IF EXISTS `pays`;
 CREATE TABLE IF NOT EXISTS pays (
     transaction_id INT(4) AUTO_INCREMENT,
     student_number VARCHAR(15),
