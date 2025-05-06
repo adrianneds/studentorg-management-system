@@ -37,12 +37,14 @@ CREATE TABLE IF NOT EXISTS is_part_of (
     batch VARCHAR(20),
     semester CHAR(2),
     academic_year CHAR(9),
-    date_of_status_update DATE,
+    -- ensure that date is within academic year
+    date_of_status_update DATE CHECK( YEAR(date_of_status_update) BETWEEN SUBSTRING(academic_year,1,4) AND SUBSTRING(academic_year, 6,4)),
     role VARCHAR(50),
     membership_status VARCHAR(9),
     CONSTRAINT ispartof_statusupdateid_pk PRIMARY KEY(status_update_id),
     CONSTRAINT ispartof_studentnumber_fk FOREIGN KEY(student_number) REFERENCES member(student_number),
-    CONSTRAINT ispartof_organizationid_fk FOREIGN KEY(organization_id) REFERENCES organization(organization_id)
+    CONSTRAINT ispartof_organizationid_fk FOREIGN KEY(organization_id) REFERENCES organization(organization_id),
+    CONSTRAINT ispartof_studentnumber_semester_academicyear_uk UNIQUE(student_number, semester, academic_year) -- only one update per sem
 ) AUTO_INCREMENT=1000;
 
 -- FEE(Fee_id, Fee_name, Fee_amount, Organization_id)
@@ -64,7 +66,7 @@ CREATE TABLE IF NOT EXISTS pays (
     transaction_id INT(4) AUTO_INCREMENT,
     student_number VARCHAR(15),
     fee_id VARCHAR(15),
-    issue_date DATE,
+    issue_date DATE CHECK (issue_date <= payment_date),
     semester_issued CHAR(2),
     academic_year_issued CHAR(9),
     due_date DATE,
