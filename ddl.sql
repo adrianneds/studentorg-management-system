@@ -77,18 +77,3 @@ CREATE TABLE IF NOT EXISTS pays (
     CONSTRAINT pays_feeid_fk FOREIGN KEY(fee_id) REFERENCES fee(fee_id)
 
 ) AUTO_INCREMENT=1000;
-
--- Variable declarations for user input
--- DECLARE @organization_id VARCHAR;
--- DECLARE @role VARCHAR;
--- DECLARE @status VARCHAR;
--- DECLARE @gender CHAR;
--- DECLARE @batch VARCHAR;
--- DECLARE @committee VARCHAR;
--- DECLARE @semester VARCHAR;
--- DECLARE @academic_year VARCHAR;
--- DECLARE @alumni_date DATE;
--- DECLARE @fee_date DATE;
--- DECLARE @n INT;
--- DECLARE @semester_debt VARCHAR;
--- DECLARE @academic_year_debt VARCHAR;

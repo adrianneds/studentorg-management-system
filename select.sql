@@ -1,29 +1,16 @@
--- Variable declarations for user input
--- DECLARE @organization_id VARCHAR;
--- DECLARE @role VARCHAR;
--- DECLARE @status VARCHAR;
--- DECLARE @gender CHAR;
--- DECLARE @batch VARCHAR;
--- DECLARE @committee VARCHAR;
--- DECLARE @semester VARCHAR;
--- DECLARE @academic_year VARCHAR;
--- DECLARE @alumni_date DATE;
--- DECLARE @fee_date DATE;
--- DECLARE @n INT;
-
-SET @organization_id = NULL;
-SET @role = NULL;
-SET @status = NULL;
-SET @gender = NULL;
-SET @batch = NULL;
-SET @committee = NULL;
-SET @semester = NULL;
-SET @academic_year = NULL;
-SET @alumni_date = NULL;
-SET @fee_date = NULL;
-SET @n = NULL;
-SET @semester_debt = NULL;
-SET @academic_year_debt = NULL;
+-- SET @organization_id = NULL;
+-- SET @role = NULL;
+-- SET @status = NULL;
+-- SET @gender = NULL;
+-- SET @batch = NULL;
+-- SET @committee = NULL;
+-- SET @semester = NULL;
+-- SET @academic_year = NULL;
+-- SET @alumni_date = NULL;
+-- SET @fee_date = NULL;
+-- SET @n = NULL;
+-- SET @semester_debt = NULL;
+-- SET @academic_year_debt = NULL;
 
 -- TEMPORARY: Set test values for user input
 
@@ -39,9 +26,9 @@ SET @degree_program = "BS Economics";
 SET @batch = "2022A";
 SET @committee = "Finance";
 
--- (6) for late payments
--- SET @semester = "2S";
--- SET @academic_year = "2023-2024";
+-- (6)
+SET @semester = "2S";
+SET @academic_year = "2022-2023";
 
 -- (7)
 SET @n = 5;
@@ -49,12 +36,10 @@ SET @n = 5;
 -- (8) alumni as of a given date
 SET @alumni_date = "2024-07-20";
 
--- (9) for debt
-SET @semester = "2S";
-SET @academic_year = "2022-2023";
-
--- (10)
+-- (9)
 SET @fee_date = "2024-01-01";
+
+-- (10) for debt
 SET @academic_year_debt = "2024-2025";
 SET @semester_debt = "1S";
 
