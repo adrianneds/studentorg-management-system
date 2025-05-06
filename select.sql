@@ -1,15 +1,15 @@
 -- Variable declarations for user input
-DECLARE @organization_id VARCHAR;
-DECLARE @role VARCHAR;
-DECLARE @status VARCHAR;
-DECLARE @gender CHAR;
-DECLARE @batch VARCHAR;
-DECLARE @committee VARCHAR;
-DECLARE @semester VARCHAR;
-DECLARE @academic_year VARCHAR;
-DECLARE @alumni_date DATE;
-DECLARE @fee_date DATE;
-DECLARE @n INT;
+-- DECLARE @organization_id VARCHAR;
+-- DECLARE @role VARCHAR;
+-- DECLARE @status VARCHAR;
+-- DECLARE @gender CHAR;
+-- DECLARE @batch VARCHAR;
+-- DECLARE @committee VARCHAR;
+-- DECLARE @semester VARCHAR;
+-- DECLARE @academic_year VARCHAR;
+-- DECLARE @alumni_date DATE;
+-- DECLARE @fee_date DATE;
+-- DECLARE @n INT;
 
 -- TEMPORARY: Set test values for user input
 
@@ -22,7 +22,7 @@ SET @role = "Member";
 SET @membership_status = "Active";
 SET @gender = "F";
 SET @degree_program = "BS Economics";
-SET @batch = "2023A";
+SET @batch = "2022A";
 SET @committee = "Finance";
 
 -- (6) for late payments
@@ -46,7 +46,10 @@ SET @fee_date = "2024-01-01";
 -- (year of membership), and committee. (Note: we assume one committee membership only per
 -- organization per semester) 
 
--- BY ROLE 
+-- BY ROLE
+-- test case: Math society members with recent role = "Member"
+-- tested: (1) same org, has different prev role; (2) same org, has new role;
+--         (3) found role but in a diff org (should not be in output)
 SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
 b.role
 FROM
@@ -59,7 +62,10 @@ JOIN member AS c
 ON (b.student_number = c.student_number)
 WHERE role = @role;
 
--- BY STATUS 
+-- BY STATUS
+-- test case: Math society members with recent status = active
+-- tested: (1) same org, has different prev status; (2) same org, has new role;
+--         (3) found status but in a diff org (should not be in output)
 SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
 b.membership_status
 FROM
@@ -72,32 +78,38 @@ JOIN member AS c
 ON (b.student_number = c.student_number)
 WHERE membership_status = @membership_status;
 
--- BY GENDER 
+-- BY GENDER
+-- test case: Math society members with gender = F
+-- tested: (1) same gender, diff org (should not be in output)
+--         (2) same org, diff gender (should not be in output)
 SELECT DISTINCT student_number, member_name, gender, degree_program
 FROM member NATURAL JOIN is_part_of
 WHERE organization_id = @organization_id
 AND gender = @gender;
 
 -- BY DEGREE PROGRAM 
+-- test case: Math society members with degree program = BS Economics
+-- tested: (1) same degree program, diff org (should not be in output)
+--         (2) same org, diff degree program (should not be in output)
 SELECT DISTINCT student_number, member_name, gender, degree_program
 FROM member NATURAL JOIN is_part_of
 WHERE organization_id = @organization_id
 AND degree_program = @degree_program;
 
 -- BY BATCH 
-SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
-b.batch
-FROM
-    (SELECT student_number, MAX(date_of_status_update) as recent_status_date
-    FROM is_part_of WHERE organization_id = @organization_id
-    GROUP BY is_part_of.student_number) AS a
-JOIN is_part_of AS b 
-ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
-JOIN member AS c
-ON (b.student_number = c.student_number)
-WHERE batch = @batch;
+-- test case: Math society members with recent batch = active
+-- tested: (1) same batch, diff org (should not be in output)
+--         (2) same org, diff batch (should not be in output)
+-- ASSUMPTION: batch does not change
+SELECT DISTINCT student_number, member_name, gender, degree_program
+FROM member NATURAL JOIN is_part_of
+WHERE organization_id = @organization_id
+AND batch = @batch;
 
--- BY COMMITTEE 
+-- BY COMMITTEE
+-- test case: Math society members with recent committee = Finance
+-- tested: (1) same org, has different prev committee; (2) same org, has new committee;
+--         (3) found committee but in a diff org (should not be in output)
 SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
 b.committee
 FROM
