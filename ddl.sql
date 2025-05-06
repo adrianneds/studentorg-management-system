@@ -65,6 +65,8 @@ CREATE TABLE IF NOT EXISTS pays (
     student_number VARCHAR(15),
     fee_id VARCHAR(15),
     issue_date DATE,
+    semester_issued CHAR(2),
+    academic_year_issued CHAR(9),
     due_date DATE,
     payment_date DATE,
     payment_status VARCHAR(15),
@@ -88,3 +90,5 @@ CREATE TABLE IF NOT EXISTS pays (
 -- DECLARE @alumni_date DATE;
 -- DECLARE @fee_date DATE;
 -- DECLARE @n INT;
+-- DECLARE @semester_debt VARCHAR;
+-- DECLARE @academic_year_debt VARCHAR;

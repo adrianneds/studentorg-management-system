@@ -11,6 +11,20 @@
 -- DECLARE @fee_date DATE;
 -- DECLARE @n INT;
 
+SET @organization_id = NULL;
+SET @role = NULL;
+SET @status = NULL;
+SET @gender = NULL;
+SET @batch = NULL;
+SET @committee = NULL;
+SET @semester = NULL;
+SET @academic_year = NULL;
+SET @alumni_date = NULL;
+SET @fee_date = NULL;
+SET @n = NULL;
+SET @semester_debt = NULL;
+SET @academic_year_debt = NULL;
+
 -- TEMPORARY: Set test values for user input
 
 -- (1) filtering
@@ -41,6 +55,8 @@ SET @academic_year = "2022-2023";
 
 -- (10)
 SET @fee_date = "2024-01-01";
+SET @academic_year_debt = "2024-2025";
+SET @semester_debt = "1S";
 
 -- 1. View all members of the organization by role, status, gender, degree program, batch
 -- (year of membership), and committee. (Note: we assume one committee membership only per
@@ -123,7 +139,6 @@ ON (b.student_number = c.student_number)
 WHERE committee = @committee;
 
 -- 6. View all late payments made by all members of a given organization for a given semester and academic year.
-
 SELECT student_number, member_name, fee_id, due_date, payment_date, payment_status 
 FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
 WHERE organization_id = @organization_id
@@ -135,25 +150,25 @@ AND payment_status = "Paid" AND payment_date > due_date;
 
 -- NOTE: this query assumes a status change only once every semester
 SELECT
-    SUM(CASE WHEN b.membership_status = "Active" THEN 1 ELSE 0 END)/COUNT(student_number) AS c_active,
-    SUM(CASE WHEN b.membership_status = "Inactive" THEN 1 ELSE 0 END)/COUNT(student_number) AS c_inactive,
+    (SUM(CASE WHEN b.membership_status = "Active" THEN 1 ELSE 0 END)/COUNT(student_number))*100 AS percent_active,
+    (SUM(CASE WHEN b.membership_status = "Inactive" THEN 1 ELSE 0 END)/COUNT(student_number))*100 AS percent_inactive,
+    (1-(SUM(CASE WHEN b.membership_status = "Inactive" THEN 1 WHEN b.membership_status = "Active" THEN 1 ELSE 0 END)/COUNT(student_number)))*100
+        AS percent_other,
     b.semester, b.academic_year
 FROM 
     (SELECT * FROM is_part_of 
     WHERE organization_id = @organization_id
     GROUP BY student_number, semester, academic_year) AS b
-GROUP BY b.semester, b.academic_year;
--- CREATE VIEW testview AS SELECT * FROM is_part_of
--- WHERE organization_id = "ES-101124" GROUP BY student_number, semester, academic_year;
--- DROP VIEW testview
+GROUP BY b.academic_year, b.semester
+ORDER BY b.semester, b.academic_year DESC LIMIT 3;
 
 -- 8. View all alumni members of a given organization as of a given date.
+-- NOTE: this query assumes that no status updates can be done after Alumni; only one and final Alumni status update
 SELECT student_number, member_name, gender, degree_program, date_of_status_update, membership_status
 FROM member NATURAL JOIN is_part_of NATURAL JOIN organization
 WHERE organization_id = @organization_id
 AND membership_status = "Alumni"
 AND date_of_status_update <= @alumni_date;
--- NOTE: this query assumes that no status updates can be done after Alumni; only one and final Alumni status update
 
 -- 9. View the total amount of unpaid and paid fees or dues of a given organization as of a given date.
 SELECT 
@@ -171,10 +186,13 @@ SELECT
 ;
 
 -- 10. View the member/s with the highest debt of a given organization for a given semester.
-SELECT student_number, member_name, SUM(fee_amount) AS debt 
-FROM member NATURAL JOIN pays NATURAL JOIN fee
-WHERE organization_id = @organization_id
-AND payment_status = "Unpaid" AND due_date < CURDATE()
-AND semester = @semester AND academic_year = @academic_year
-GROUP BY student_number
-ORDER BY debt DESC LIMIT 1;
+--     interpreted as outstanding balance for all previous semesters until given semester
+SELECT student_number, member_name, SUM(fee_amount) AS debt
+    FROM member NATURAL JOIN pays NATURAL JOIN fee
+    WHERE organization_id = @organization_id
+    AND payment_status = "Unpaid"
+    AND CONCAT(academic_year_issued,semester_issued) <= CONCAT (@academic_year_debt, @semester_debt)
+    GROUP BY student_number
+    ORDER BY debt DESC LIMIT 1
+;
+
