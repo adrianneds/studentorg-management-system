@@ -19,20 +19,24 @@ DELETE FROM `is_part_of`;
 INSERT INTO is_part_of 
 (student_number, organization_id, committee, batch, semester, academic_year, date_of_status_update, role, membership_status)
 VALUES
-    ('2022-04382','MS-101123','Membership','2022B','1S','2022-2023','2022-11-13','Assistant Head','Active'),
-	('2022-04382','ES-101124','Finance','2022B','1S','2022-2023','2022-11-24','Member','Active'),
-	('2022-04382','MS-101123','Executive','2022B','2S','2024-2025','2025-04-24','President','Active'),
-	('2022-04382','MS-101123','Finance','2022B','2S','2023-2024','2025-05-01','Member','Active'),
-	('2022-04382','ES-101124','Project','2022B','2S','2024-2025','2025-05-06','Member','Inactive'),
+	('2022-04382','MS-101123','Membership','2022B','2S','2022-2023','2022-11-13','Member','Active'),
+	('2022-04382','MS-101123','Membership','2022B','1S','2023-2024','2023-10-01','Assistant Head','Active'),
+	('2022-04382','MS-101123','Finance','2022B','2S','2023-2024','2024-05-01','Member','Active'),
+	('2022-04382','MS-101123','Executive','2022B','1S','2024-2025','2024-10-01','President','Active'),
+	('2022-04382','MS-101123','Publicity','2022B','2S','2024-2025','2025-05-01','President','Active'),
 	('2019-04339','MS-101123','Finance','2022A','2S','2021-2022','2022-05-01','Member','Active'),
-	('2019-04339','MS-101123','Executive','2022A','2S','2022-2023','2023-05-01','Secretary','Active'),
+	('2019-04339','MS-101123','Membership','2022A','1S','2022-2023','2022-11-20','Assistant Head','Active'),
+	('2019-04339','MS-101123','Executive','2022A','2S','2022-2023','2023-05-01','Vice President','Active'),
+	('2019-04339','MS-101123','Executive','2022A','1S','2023-2024','2023-05-01','Treasurer','Active'),
 	('2019-04339','MS-101123','Executive','2022A','2S','2023-2024','2024-07-01','Secretary','Alumni'),
 	('2023-20302','ES-101124','Publicity','2023B','1S','2023-2024','2023-11-13','Assistant Head','Active'),
 	('2023-20302','ES-101124','Finance','2023B','2S','2023-2024','2024-03-15','Member','Active'),
 	('2023-20302','ES-101124','Finance','2023B','2S','2024-2025','2025-03-16','Member','Active'),
 	('2020-83492','ES-101124','Finance','2025A','2S','2024-2025','2025-04-16','Member','Active'),
-	('2020-93922','MS-101123','Finance','2021B','1S','2021-2022','2021-10-17','Member','Inactive'),
-	('2020-93922','MS-101123','Finance','2021B','2S','2022-2023','2023-05-18','Member','Active')
+	('2020-83492','MS-101123','Finance','2023A','2S','2022-2023','2023-05-01','Assistant Head','Active'),
+	('2020-83492','MS-101123','Finance','2023A','1S','2023-2024','2023-10-05','Member','Alumni'),
+	('2020-93922','MS-101123','Finance','2024B','1S','2024-2025','2024-10-01','Assistant Head','Active'),
+	('2020-93922','MS-101123','Finance','2024B','2S','2024-2025','2025-05-02','Member','Inactive')
 ;
 
 DELETE FROM `fee`;
