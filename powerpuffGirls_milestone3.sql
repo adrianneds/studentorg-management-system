@@ -1,3 +1,21 @@
+---------------------------------------------------------------------------------------------
+-- Milestone 3: SQL Queries
+-- Powerpuff Girls (Eugenio, Solis, Victoria)
+-- CMSC 127 ST2-8L
+---------------------------------------------------------------------------------------------
+-- <<Contents>> (can search in file)
+
+--  id         section
+-- [01]     DDL Statements
+-- [02]     Inserting Test Data
+-- [03]     DCL Statements
+-- [04]     SELECT statements for required features
+-- [05]     INSERT new data
+-- [06]     DELETE a student, organization, fee, or specific status update/transaction
+-- [07]     UPDATE existing data
+---------------------------------------------------------------------------------------------
+
+-- [01]     DDL Statements
 DROP DATABASE IF EXISTS `studentorg`;
 CREATE DATABASE IF NOT EXISTS `studentorg`;
 USE `studentorg`;
@@ -80,7 +98,7 @@ CREATE TABLE IF NOT EXISTS pays (
 
 ) AUTO_INCREMENT=1000;
 
--- TEST DATA
+-- [02]     Inserting Test Data
 
 DELETE FROM `member`;
 INSERT INTO member VALUES
@@ -148,7 +166,7 @@ VALUES
 	('2022-04382','FE-101193','2024-10-19','1S','2023-2024','2024-11-19','2025-04-19','Paid','2S','2023-2024')
 ;
 
--- DCL
+-- [03]     DCL Statements
 
 -- TEMPORARY test values
 
@@ -217,7 +235,7 @@ GRANT ALL ON studentorg.pays_mathsoc TO 'mathsoc'@'localhost';
 -- SELECT * FROM studentorg.pays_mathsoc;
 
 
--- SELECT QUERIES
+-- [04]     SELECT statements for required features
 -- TEMPORARY: Set test values for user input
 
 -- (1) filtering
@@ -403,7 +421,7 @@ SELECT student_number, member_name, SUM(fee_amount) AS debt
     ORDER BY debt DESC LIMIT 1
 ;
 
--- ADD
+-- [05]     INSERT new data
 
 -- Add new member (user)
 INSERT INTO member (student_number, member_username, member_password, member_name, gender, degree_program)
@@ -442,7 +460,7 @@ SELECT * FROM pays WHERE fee_id = 'FE-00044';
 SELECT * FROM is_part_of WHERE status_update_id = '1019';
 SELECT * FROM pays WHERE transaction_id = '1011';
 
--- DELETE
+-- [06]     DELETE a student, organization, fee, or specific status update/transaction
 
 -- NOTE: in actual implementation, deletion of one member / organization / fee also deletes
 --       referenced entries in other tables. for now, the queries are listed in order
@@ -474,5 +492,25 @@ SELECT * FROM fee WHERE fee_id = 'FE-00044';
 SELECT * FROM pays WHERE fee_id = 'FE-00044';
 SELECT * FROM pays WHERE transaction_id = '1012';
 SELECT * FROM is_part_of WHERE status_update_id = '1020';
+
+-- [07]     UPDATE existing data
+-- Update degree program of the student
+UPDATE studentorg.member_janlevinson SET degree_program = 'BS Statistics' WHERE student_number = '2019-04339';
+
+-- ORGANIZATION
+-- (1) Update name of the organization
+UPDATE studentorg.organization_mathsoc SET organization_name = 'Mathematics Society' WHERE organization_id = 'MS-101123';
+
+-- (2) Update amount of fee
+UPDATE studentorg.fee_mathsoc SET fee_amount = 90 WHERE fee_id = 'FE-101193';
+
+-- (3) Update transaction
+UPDATE studentorg.pays_mathsoc SET payment_status = 'Paid' WHERE transaction_id = '1000';
+
+-- test
+SELECT * FROM member WHERE student_number = '2019-04339';
+SELECT * FROM organization WHERE organization_id = 'MS-101123';
+SELECT * FROM fee WHERE fee_id = 'FE-101193';
+SELECT * FROM pays WHERE transaction_id = '1000';
 
 
