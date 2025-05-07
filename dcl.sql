@@ -11,7 +11,7 @@ CREATE USER 'mathsoc'@'localhost' IDENTIFIED BY 'msoc123';
 CREATE VIEW studentorg.member_janlevinson AS
     SELECT * FROM member
     WHERE student_number = '2019-04339';
-GRANT SELECT ON studentorg.member_janlevinson TO 'janlevinson'@'localhost';
+GRANT SELECT, UPDATE ON studentorg.member_janlevinson TO 'janlevinson'@'localhost';
 -- SELECT * FROM studentorg.member_janlevinson;
 
 -- (2) pays - shows only the payments of the students
