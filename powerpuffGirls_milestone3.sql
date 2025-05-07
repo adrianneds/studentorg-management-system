@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS member(
     member_username VARCHAR(50) NOT NULL, 
     member_password VARCHAR(50) NOT NULL,
     member_name VARCHAR(70),
-    gender CHAR(1) CHARACTER SET utf8,
+    gender CHAR(1) CHARACTER SET utf8 CHECK (gender IN ('M','F')),  -- only allow such values
     degree_program VARCHAR(70),
     CONSTRAINT member_studentnumber_pk PRIMARY KEY(student_number)
 );
@@ -53,12 +53,14 @@ CREATE TABLE IF NOT EXISTS is_part_of (
     organization_id VARCHAR(15),
     committee VARCHAR(50),
     batch VARCHAR(20),
-    semester CHAR(2),
-    academic_year CHAR(9),
+    semester CHAR(2) CHECK (semester IN ('1S','2S','M')),
+    academic_year CHAR(9) CHECK (academic_year LIKE '%-%'),
     -- ensure that date is within academic year
-    date_of_status_update DATE CHECK( YEAR(date_of_status_update) BETWEEN SUBSTRING(academic_year,1,4) AND SUBSTRING(academic_year, 6,4)),
+    date_of_status_update DATE CHECK( YEAR(date_of_status_update)
+        BETWEEN SUBSTRING(academic_year,1,4) AND SUBSTRING(academic_year, 6,4)),
     role VARCHAR(50),
-    membership_status VARCHAR(9),
+    membership_status VARCHAR(9) CHECK (
+        membership_status IN ('Active','Inactive','Expelled','Suspended','Alumni')), -- only allow such values
     CONSTRAINT ispartof_statusupdateid_pk PRIMARY KEY(status_update_id),
     CONSTRAINT ispartof_studentnumber_fk FOREIGN KEY(student_number) REFERENCES member(student_number),
     CONSTRAINT ispartof_organizationid_fk FOREIGN KEY(organization_id) REFERENCES organization(organization_id),
@@ -71,7 +73,7 @@ DROP TABLE IF EXISTS `fee`;
 CREATE TABLE IF NOT EXISTS fee (
     fee_id VARCHAR(15),
     fee_name VARCHAR(50),
-    fee_amount FLOAT(15),
+    fee_amount FLOAT(15) CHECK(fee_amount > 0), -- fee should be a positive number
     organization_id VARCHAR(15),
     CONSTRAINT fee_feeid_pk PRIMARY KEY(fee_id),
     CONSTRAINT fee_organizationid_fk FOREIGN KEY(organization_id) REFERENCES organization(organization_id)
@@ -84,20 +86,23 @@ CREATE TABLE IF NOT EXISTS pays (
     transaction_id INT(4) AUTO_INCREMENT,
     student_number VARCHAR(15),
     fee_id VARCHAR(15),
-    issue_date DATE CHECK (issue_date <= payment_date),
-    semester_issued CHAR(2),
+    issue_date DATE,
+    semester_issued CHAR(2) CHECK (semester_issued IN ('1S','2S','M')),
     academic_year_issued CHAR(9),
-    due_date DATE,
-    payment_date DATE,
-    payment_status VARCHAR(15),
-    semester CHAR(2),
-    academic_year CHAR(9),
+    due_date DATE CHECK(due_date >= issue_date),          -- due date should be after issue date 
+    payment_date DATE CHECK (payment_date >= issue_date), -- payment date should be after issue date
+    payment_status VARCHAR(15) CHECK (payment_status IN ('Paid','Unpaid')), -- only allow such values
+    semester CHAR(2) CHECK (semester IN ('1S','2S','M')),                   -- only allow such values
+    academic_year CHAR(9) CHECK (academic_year LIKE '%-%'),                 -- specify valid format
     CONSTRAINT pays_transactionid_pk PRIMARY KEY(transaction_id),
     CONSTRAINT pays_studentnumber_fk FOREIGN KEY(student_number) REFERENCES member(student_number),
-    CONSTRAINT pays_feeid_fk FOREIGN KEY(fee_id) REFERENCES fee(fee_id)
-
+    CONSTRAINT pays_feeid_fk FOREIGN KEY(fee_id) REFERENCES fee(fee_id),
+    -- issue date should be before payment date and be within the academic year issued
+    CONSTRAINT issue_date_valid CHECK((issue_date <= payment_date AND
+        YEAR(issue_date) BETWEEN SUBSTRING(academic_year_issued,1,4) AND SUBSTRING(academic_year_issued, 6,4)))
 ) AUTO_INCREMENT=1000;
 
+---------------------------------------------------------------------------------------------
 -- [02]     Inserting Test Data
 
 DELETE FROM `member`;
@@ -166,6 +171,7 @@ VALUES
 	('2022-04382','FE-101193','2024-10-19','1S','2023-2024','2024-11-19','2025-04-19','Paid','2S','2023-2024')
 ;
 
+---------------------------------------------------------------------------------------------
 -- [03]     DCL Statements
 
 -- TEMPORARY test values
@@ -235,6 +241,7 @@ GRANT ALL ON studentorg.pays_mathsoc TO 'mathsoc'@'localhost';
 -- SELECT * FROM studentorg.pays_mathsoc;
 
 
+---------------------------------------------------------------------------------------------
 -- [04]     SELECT statements for required features
 -- TEMPORARY: Set test values for user input
 
@@ -421,6 +428,7 @@ SELECT student_number, member_name, SUM(fee_amount) AS debt
     ORDER BY debt DESC LIMIT 1
 ;
 
+---------------------------------------------------------------------------------------------
 -- [05]     INSERT new data
 
 -- Add new member (user)
@@ -460,6 +468,7 @@ SELECT * FROM pays WHERE fee_id = 'FE-00044';
 SELECT * FROM is_part_of WHERE status_update_id = '1019';
 SELECT * FROM pays WHERE transaction_id = '1011';
 
+---------------------------------------------------------------------------------------------
 -- [06]     DELETE a student, organization, fee, or specific status update/transaction
 
 -- NOTE: in actual implementation, deletion of one member / organization / fee also deletes
@@ -493,6 +502,7 @@ SELECT * FROM pays WHERE fee_id = 'FE-00044';
 SELECT * FROM pays WHERE transaction_id = '1012';
 SELECT * FROM is_part_of WHERE status_update_id = '1020';
 
+---------------------------------------------------------------------------------------------
 -- [07]     UPDATE existing data
 -- Update degree program of the student
 UPDATE studentorg.member_janlevinson SET degree_program = 'BS Statistics' WHERE student_number = '2019-04339';
