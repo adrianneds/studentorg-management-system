@@ -1,0 +1,16 @@
+const mysql = require('mysql2/promise');
+
+// SAMPLE USER CREDENTIALS
+var user = 'janlevinson'
+var pass = 'jl123'
+
+// db connection
+const pool = mysql.createPool({
+  host: "localhost",
+  user: user,
+  password: pass,
+  port: 3306,
+  database: "studentorg"
+});
+
+module.exports = {pool, user, pass};
