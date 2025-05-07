@@ -16,4 +16,9 @@ VALUES ('<student_number>', '<org_id>', '<committee>', '<batch>', '<semester>', 
 
 -- Add new transaction (pays)
 INSERT INTO pays (student_number, fee_id, issue_date, semester_issued, academic_year_issued, due_date, payment_date, payment_status, semester, academic_year)
-VALUES ('<student_number>', '<fee_id>', '<issue_date>', '<sem_issued>', '<acad_issued>', '<due_date>', '<payment_date>', '<status>', '<sem>', '<acad_year>');
+VALUES ('<student_number>', '<fee_id>', '<issue_date>', '<sem_issued>', '<acad_issued>', '<due_date>', '<payment_date>', '<status>', '<sem>', '<acad_year>');\
+
+-- TEST: Insert new member / user
+-- Add new member (user)
+INSERT INTO member (student_number, member_username, member_password, member_name, gender, degree_program)
+VALUES ('2022-04242', 'michaelscott', 'ms456', 'Michael Scott', 'M', 'BS Chemistry');

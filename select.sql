@@ -47,6 +47,8 @@ SET @semester_debt = "1S";
 -- (year of membership), and committee. (Note: we assume one committee membership only per
 -- organization per semester) 
 
+-- NOTE: This query is for getting most recent info
+
 -- BY ROLE
 -- test case: Math society members with recent role = "Member"
 -- tested: (1) same org, has different prev role; (2) same org, has new role;
