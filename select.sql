@@ -123,6 +123,22 @@ JOIN member AS c
 ON (b.student_number = c.student_number)
 WHERE committee = @committee;
 
+-- 4. View all executive committee members of a given organization for a given academic year.
+SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year
+FROM is_part_of b
+JOIN member c ON b.student_number = c.student_number
+WHERE b.organization_id = @organization_id
+AND b.committee = 'Executive'
+AND b.academic_year = @academic_year;
+
+-- 5. View all Presidents (or any other role) of a given organization for every academic year (reverse chronological)
+SELECT DISTINCT c.student_number, c.member_name, b.role, b.academic_year
+FROM is_part_of b
+JOIN member c ON b.student_number = c.student_number
+WHERE b.organization_id = @organization_id
+AND b.role = 'President'
+ORDER BY b.academic_year DESC;
+
 -- 6. View all late payments made by all members of a given organization for a given semester and academic year.
 SELECT student_number, member_name, fee_id, due_date, payment_date, payment_status 
 FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
