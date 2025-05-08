@@ -196,7 +196,7 @@ GRANT SELECT, UPDATE ON studentorg.member_janlevinson TO 'janlevinson'@'localhos
 -- (2) pays - shows only the payments of the students
 CREATE VIEW studentorg.feepays_janlevinson AS
 SELECT org.organization_id, org.organization_name, fee.fee_id, fee.fee_name, fee.fee_amount,
-pays.student_number, pays.issue_date, pays.semester_issued, pays.academic_year_issued,
+pays.transaction_id, pays.student_number, pays.issue_date, pays.semester_issued, pays.academic_year_issued,
 pays.payment_date, pays.payment_status, pays.semester, pays.academic_year
 FROM (SELECT organization_id, organization_name FROM organization) AS org
 JOIN fee ON org.organization_id = fee.organization_id 
@@ -255,6 +255,7 @@ GRANT ALL ON studentorg.pays_mathsoc TO 'mathsoc'@'localhost';
 -- [04]     SELECT statements for required features
 --  Note: In actual implementation, queries will be through views of the logged in user
 --        Math Society will be used as a test case for sample queries (mathsoc views)
+--        For member POV, user janlevinson will be used
 
 -- TEMPORARY: Set test values for user input
 
@@ -371,7 +372,7 @@ AND payment_status = "Unpaid";
 
 -- 3. View a member’s unpaid membership fees or dues for all their organizations (Member’s POV).
 SELECT transaction_id, fee_id, fee_name, fee_amount
-FROM feepays_janlevinson NATURAL JOIN feepays_janlevinson NATURAL JOIN organization
+FROM feepays_janlevinson
 WHERE student_number = @student_number AND payment_status = "Unpaid";
 
 -- 4. View all executive committee members of a given organization for a given academic year.
