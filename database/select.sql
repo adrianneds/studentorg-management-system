@@ -26,6 +26,9 @@ SET @degree_program = "BS Economics";
 SET @batch = "2022A";
 SET @committee = "Finance";
 
+-- (3)
+SET @student_number = "2019-04339";
+
 -- (6)
 SET @semester = "2S";
 SET @academic_year = "2022-2023";
@@ -122,6 +125,19 @@ ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.stud
 JOIN member AS c
 ON (b.student_number = c.student_number)
 WHERE committee = @committee;
+
+ -- 2. View members for a given organization with unpaid membership fees or dues for a
+ -- given semester and academic year. (orgs pov)
+SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount
+FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
+WHERE organization_id = @organization_id
+AND semester = @semester AND academic_year = @academic_year
+AND payment_status = "Unpaid";
+
+-- 3. View a member’s unpaid membership fees or dues for all their organizations (Member’s POV).
+SELECT transaction_id, fee_id, fee_name, fee_amount
+FROM pays NATURAL JOIN fee NATURAL JOIN organization
+WHERE student_number = @student_number AND payment_status = "Unpaid";
 
 -- 4. View all executive committee members of a given organization for a given academic year.
 SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year
