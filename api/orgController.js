@@ -29,6 +29,22 @@ const orgMembers = async (req, res) => {
     res.send(rows)
 };
 
+// TO DO: Add a fee
+
+// TO DO: Update a fee amount
+
+// TO DO: Update a fee name
+
+// TO DO: Delete a fee
+
+// TO DO: Add a transaction (pays)
+
+// TO DO: Update a transaction status, payment date, sem, AY of payment
+
+// TO DO: Delete a transaction
+
+// TO DO: Add a status update
+
 // View members with late payments for a given semester/AY
 // TEST: http://localhost:5000/organization/unpaidMembers?sem=2S&ay=2023-2024
 // FIELDS
