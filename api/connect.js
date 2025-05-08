@@ -5,6 +5,7 @@ var user = 'janlevinson'
 var pass = 'jl123'
 
 // db connection
+try {
 const pool = mysql.createPool({
   host: "localhost",
   user: user,
@@ -12,5 +13,8 @@ const pool = mysql.createPool({
   port: 3306,
   database: "studentorg"
 });
+} catch (err) {
+  console.log("Invalid credentials");
+}
 
 export {pool, user, pass};

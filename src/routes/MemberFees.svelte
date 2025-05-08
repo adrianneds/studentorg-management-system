@@ -31,38 +31,24 @@
         description: 'A community of computer science enthusiasts'
       };
 
-      fees = [
-        {
-          id: 1,
-          name: 'Annual Membership Fee',
-          amount: 500,
-          dueDate: '2024-03-15',
-          status: 'paid',
-          paymentMethod: 'GCash',
-          paymentDate: '2024-02-01'
-        },
-        {
-          id: 2,
-          name: 'Event Participation Fee',
-          amount: 200,
-          dueDate: '2024-04-01',
-          status: 'pending',
-          paymentMethod: null,
-          paymentDate: null
-        },
-        {
-          id: 3,
-          name: 'Seminar Fee',
-          amount: 300,
-          dueDate: '2024-02-28',
-          status: 'overdue',
-          paymentMethod: null,
-          paymentDate: null
-        }
-      ];
+      getFees();
+
       loading = false;
     }, 1000);
   });
+
+  // NEW: import fee data from db server
+  async function getFees() {
+    fetch("http://localhost:5000/member/transactions")
+    .then(response => response.json())
+    .then(data => {
+      fees = data;
+      console.log(fees);
+    }).catch(error => {
+      console.log(error);
+      return [];
+    });
+  };
 
   function handlePayment(fee) {
     selectedFee = fee;
@@ -101,11 +87,11 @@
     }, 1500);
   }
 
-  $: filteredFees = fees.filter(fee => {
-    const matchesSearch = fee.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || fee.status === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
+  // $: filteredFees = fees.filter(fee => {
+  //   const matchesSearch = fee.name.toLowerCase().includes(searchQuery.toLowerCase());
+  //   const matchesStatus = filterStatus === 'all' || fee.status === filterStatus;
+  //   return matchesSearch && matchesStatus;
+  // });
 </script>
 
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
@@ -119,8 +105,9 @@
           Back to Dashboard
         </Link>
       </div>
-      <h1 class="text-3xl font-bold text-primary mb-2">{organization?.name || 'Organization'} Fees</h1>
-      <p class="text-secondary">View and manage your organization fees</p>
+      <h1 class="text-3xl font-bold text-primary mb-2"> Organization Fees</h1>
+      <!-- <h1 class="text-3xl font-bold text-primary mb-2">{organization?.name || 'Organization'} Fees</h1> -->
+      <p class="text-secondary">View and manage your transactions </p>
     </div>
 
     <div class="flex-1 overflow-hidden">
@@ -135,40 +122,45 @@
       {:else}
         <div class="h-full overflow-y-auto pr-2">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {#each filteredFees as fee}
+            {#each fees as fee}
               <div class="glass-card p-6">
                 <div class="flex justify-between items-start mb-4">
                   <div>
-                    <h3 class="text-lg font-semibold text-primary mb-1">{fee.name}</h3>
-                    <p class="text-secondary text-sm">Due: {new Date(fee.dueDate).toLocaleDateString()}</p>
+                    <h3 class="text-lg font-semibold text-primary mb-1">{fee.fee_name}</h3>
+                    <h2 class="text-lg font-semibold text-primary mb-1">{fee.organization_name}</h2>
+                    <p class="text-secondary text-sm">Due: {new Date(fee.due_date).toLocaleDateString()}</p>
                   </div>
                   <div class="glass-badge {
-                    fee.status === 'paid' ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20' :
-                    fee.status === 'overdue' ? 'bg-gradient-to-r from-red-500/20 to-pink-500/20' :
+                    fee.payment_status === 'paid' ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20' :
                     'bg-gradient-to-r from-yellow-500/20 to-orange-500/20'
                   }">
-                    {fee.status.charAt(0).toUpperCase() + fee.status.slice(1)}
+                    {fee.payment_status.charAt(0).toUpperCase() + fee.payment_status.slice(1)}
                   </div>
                 </div>
 
                 <div class="space-y-2 mb-4">
                   <div class="flex justify-between text-sm">
                     <span class="text-secondary">Amount:</span>
-                    <span class="text-primary">₱{fee.amount.toFixed(2)}</span>
+                    <span class="text-primary">₱{fee.fee_amount.toFixed(2)}</span>
                   </div>
-                  {#if fee.status === 'paid'}
-                    <div class="flex justify-between text-sm">
-                      <span class="text-secondary">Payment Method:</span>
-                      <span class="text-primary">{fee.paymentMethod}</span>
-                    </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-secondary"> Semester Issued: </span>
+                    <span class="text-primary"> {fee.semester_issued} </span>
+                  </div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-secondary"> AY Issued:  </span>
+                    <span class="text-primary"> {fee.academic_year_issued} </span>
+                  </div>
+
+                  {#if fee.payment_status === 'Paid'}
                     <div class="flex justify-between text-sm">
                       <span class="text-secondary">Payment Date:</span>
-                      <span class="text-primary">{new Date(fee.paymentDate).toLocaleDateString()}</span>
+                      <span class="text-primary">{new Date(fee.payment_date).toLocaleDateString()}</span>
                     </div>
                   {/if}
                 </div>
 
-                {#if fee.status !== 'paid'}
+                {#if fee.payment_status !== 'Paid'}
                   <button 
                     class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
                     on:click={() => handlePayment(fee)}
