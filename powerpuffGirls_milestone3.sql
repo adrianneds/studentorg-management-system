@@ -197,7 +197,7 @@ GRANT SELECT, UPDATE ON studentorg.member_janlevinson TO 'janlevinson'@'localhos
 CREATE VIEW studentorg.feepays_janlevinson AS
 SELECT org.organization_id, org.organization_name, fee.fee_id, fee.fee_name, fee.fee_amount,
 pays.transaction_id, pays.student_number, pays.issue_date, pays.semester_issued, pays.academic_year_issued,
-pays.payment_date, pays.payment_status, pays.semester, pays.academic_year
+pays.due_date, pays.payment_date, pays.payment_status, pays.semester, pays.academic_year
 FROM (SELECT organization_id, organization_name FROM organization) AS org
 JOIN fee ON org.organization_id = fee.organization_id 
 JOIN pays ON fee.fee_id = pays.fee_id
@@ -371,9 +371,9 @@ WHERE semester_issued = '2S' AND academic_year_issued = '2023-2024'
 AND payment_status = "Unpaid";
 
 -- 3. View a member’s unpaid membership fees or dues for all their organizations (Member’s POV).
-SELECT transaction_id, fee_id, fee_name, fee_amount
-FROM feepays_janlevinson
-WHERE student_number = @student_number AND payment_status = "Unpaid";
+SELECT transaction_id, organization_name, fee_id,
+fee_name, fee_amount, payment_status, due_date, semester_issued, academic_year_issued
+FROM feepays_janlevinson WHERE payment_status = "Unpaid";
 
 -- 4. View all executive committee members of a given organization for a given academic year.
 SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year
