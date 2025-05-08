@@ -1,5 +1,6 @@
 import express from 'express';
-import {orgInfo, orgUnpaidMembers, orgCommitteeMembers, orgRoles} from '../orgController.js';
+import {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
+     orgRoles, orgCountStatus, orgAlumni, orgFeeStatus} from '../orgController.js';
 
 // import all the functions from controller.js
 
@@ -8,5 +9,8 @@ orgRouter.get('/info', orgInfo);
 orgRouter.get('/unpaidMembers', orgUnpaidMembers);
 orgRouter.get('/committeeMembers', orgCommitteeMembers);
 orgRouter.get('/roles', orgRoles);
+orgRouter.get('/memberStatus', orgCountStatus);
+orgRouter.get('/alumni', orgAlumni);
+orgRouter.get('/feeStatus', orgFeeStatus);
 
 export {orgRouter}

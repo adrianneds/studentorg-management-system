@@ -100,8 +100,86 @@ const orgRoles = async (req, res) => {
     res.send(rows)
 }
 
-// 
+// View status distribution for the last n semesters
+// TEST: http://localhost:5000/organization/memberStatus?n=3
+// FIELDS (per n sem entries)
+//     "percent_active": "100.0000",
+//     "percent_inactive": "0.0000",
+//     "percent_other": "0.0000",
+//     "semester": "1S",
+//     "academic_year": "2024-2025"
+const orgCountStatus = async (req, res) => {
+
+    let n = req.query.n;
+
+    const query = 
+    `SELECT
+    (SUM(CASE WHEN b.membership_status = "Active" THEN 1 ELSE 0 END)/COUNT(student_number))*100 AS percent_active,
+    (SUM(CASE WHEN b.membership_status = "Inactive" THEN 1 ELSE 0 END)/COUNT(student_number))*100 AS percent_inactive,
+    (1-(SUM(CASE WHEN b.membership_status = "Inactive" THEN 1 WHEN b.membership_status = "Active" THEN 1 ELSE 0 END)/COUNT(student_number)))*100
+        AS percent_other,
+    b.semester, b.academic_year
+    FROM 
+        (SELECT * FROM ispartof_${user}
+        GROUP BY student_number, semester, academic_year) AS b 
+    GROUP BY b.academic_year, b.semester      
+    ORDER BY b.semester, b.academic_year DESC LIMIT ${n};`
+
+    const [rows] = await pool.query(query);
+    res.send(rows)
+}
+
+// View alumni
+// TEST: http://localhost:5000/organization/alumni?date=2024-07-20
+// FIELDS
+//     "student_number": "2019-04339",
+//     "member_name": "Jan Levinson",
+//     "gender": "F",
+//     "degree_program": "BS Statistics",
+//     "date_of_status_update": "2024-06-30T16:00:00.000Z",
+//     "membership_status": "Alumni"
+
+const orgAlumni = async (req, res) => {
+
+    let alumni_date = req.query.date;
+
+    const query = 
+    `SELECT student_number, member_name, gender, degree_program, date_of_status_update, membership_status
+    FROM member_${user} NATURAL JOIN ispartof_${user} NATURAL JOIN organization_${user}
+    WHERE membership_status = "Alumni"
+    AND date_of_status_update <= '${alumni_date}';`
+
+    const [rows] = await pool.query(query);
+    res.send(rows)
+}
+
+// View total paid/unpaid fees
+// TEST: http://localhost:5000/organization/feeStatus?date=2024-01-01
+// FIELDS
+//      "unpaid": 200,
+//      "paid": 90
+const orgFeeStatus = async (req, res) => {
+
+    let fee_date = req.query.date;
+
+    const query = 
+    `SELECT 
+    (SELECT SUM(fee_amount) as total_unpaid  
+    FROM pays_${user} NATURAL JOIN fee_${user}
+    WHERE payment_status = "Unpaid"
+    AND issue_date <= '${fee_date}') AS unpaid,
+
+    (SELECT SUM(fee_amount) as total_paid         
+    FROM pays_${user} NATURAL JOIN fee_${user}
+    WHERE payment_status = "Paid"
+    AND payment_date <= '${fee_date}') AS paid`
+
+    const [rows] = await pool.query(query);
+    res.send(rows)
+}
 
 
-export {orgInfo, orgUnpaidMembers, orgCommitteeMembers, orgRoles}
+
+export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
+        orgRoles, orgCountStatus, orgAlumni, orgFeeStatus}
 
