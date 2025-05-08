@@ -193,12 +193,10 @@ GRANT SELECT, UPDATE ON studentorg.member_janlevinson TO 'janlevinson'@'localhos
 -- SELECT * FROM studentorg.member_janlevinson;
 
 -- (2) pays - shows only the payments of the students
-CREATE VIEW studentorg.pays_janlevinson AS
-    SELECT * FROM pays
-    WHERE student_number = '2019-04339';
-GRANT SELECT ON studentorg.pays_janlevinson TO 'janlevinson'@'localhost';
--- SELECT * FROM studentorg.pays_janlevinson;
-
+DROP VIEW studentorg.feepays_janlevinson;
+CREATE VIEW studentorg.feepays_janlevinson AS
+(SELECT * FROM organization NATURAL JOIN fee NATURAL JOIN pays WHERE pays.student_number = '2019-04339');
+GRANT SELECT ON studentorg.feepays_janlevinson TO 'janlevinson'@'localhost';
 
 -- ORGANIZATION
 -- (1) member - shows only members from the selected organization
