@@ -1,8 +1,14 @@
 import mysql from 'mysql2/promise';
 
 // SAMPLE USER CREDENTIALS
-var user = 'janlevinson'
-var pass = 'jl123'
+
+// sample member
+// var user = 'janlevinson'
+// var pass = 'jl123'
+
+// sample user
+var user = 'mathsoc'
+var pass = 'msoc123'
 
 // db connection
 const pool = mysql.createPool({
