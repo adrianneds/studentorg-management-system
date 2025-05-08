@@ -204,6 +204,13 @@ JOIN pays ON fee.fee_id = pays.fee_id
 WHERE pays.student_number = '2019-04339';
 GRANT SELECT ON studentorg.feepays_janlevinson TO 'janlevinson'@'localhost';
 
+-- (3) organization
+CREATE VIEW studentorg.organization_janlevinson AS
+    SELECT DISTINCT organization_name, organization.organization_id FROM is_part_of JOIN organization ON 
+    is_part_of.organization_id = organization.organization_id
+    WHERE student_number = '2019-04339';
+GRANT SELECT ON studentorg.organization_janlevinson TO 'janlevinson'@'localhost';
+
 -- ORGANIZATION
 -- (1) member - shows only members from the selected organization
 CREATE VIEW studentorg.member_mathsoc AS
@@ -364,7 +371,7 @@ AND payment_status = "Unpaid";
 
 -- 3. View a member’s unpaid membership fees or dues for all their organizations (Member’s POV).
 SELECT transaction_id, fee_id, fee_name, fee_amount
-FROM pays NATURAL JOIN fee NATURAL JOIN organization
+FROM feepays_janlevinson NATURAL JOIN feepays_janlevinson NATURAL JOIN organization
 WHERE student_number = @student_number AND payment_status = "Unpaid";
 
 -- 4. View all executive committee members of a given organization for a given academic year.
