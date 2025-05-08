@@ -178,8 +178,47 @@ const orgFeeStatus = async (req, res) => {
     res.send(rows)
 }
 
+// Member with highest debt
+// TEST: http://localhost:5000/organization/highestDebt?ay=2024-2025&sem=1S
+// FIELDS
+//     "student_number": "2019-04339",
+//     "member_name": "Jan Levinson",
+//     "debt": 600
+const orgHighestDebt = async (req, res) => {
 
+    let academic_year_debt = req.query.ay;
+    let semester_debt = req.query.sem;
+
+    const query = 
+    `SELECT student_number, member_name, SUM(fee_amount) AS debt
+    FROM member_${user} NATURAL JOIN pays_${user} NATURAL JOIN fee_${user}
+    WHERE payment_status = "Unpaid"
+    AND CONCAT(academic_year_issued,semester_issued) <= CONCAT ('${academic_year_debt}', '${semester_debt}') 
+    GROUP BY student_number
+    ORDER BY debt DESC LIMIT 1;`
+
+    const [rows] = await pool.query(query);
+    res.send(rows)
+}
+
+// Late payments
+// TEST: http://localhost:5000/organization/latePayments?sem=2S&ay=2023-2024
+// (currently empty given current test data)
+const orgLatePayments = async (req, res) => {
+
+    let academic_year = req.query.ay;
+    let semester = req.query.sem;
+
+    const query = 
+    `SELECT student_number, member_name, fee_id, due_date, payment_date, payment_status 
+    FROM member_${user} NATURAL JOIN pays_${user} NATURAL JOIN fee_${user} NATURAL JOIN organization_${user}
+    WHERE semester = '${semester}' AND academic_year = '${academic_year}'
+    AND payment_status = "Paid" AND payment_date > due_date;`
+
+    const [rows] = await pool.query(query);
+    res.send(rows)
+}
 
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
-        orgRoles, orgCountStatus, orgAlumni, orgFeeStatus}
+        orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments}
 
