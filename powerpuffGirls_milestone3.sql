@@ -16,6 +16,7 @@
 ---------------------------------------------------------------------------------------------
 
 -- [01]     DDL Statements
+
 DROP DATABASE IF EXISTS `studentorg`;
 CREATE DATABASE IF NOT EXISTS `studentorg`;
 USE `studentorg`;
@@ -193,7 +194,6 @@ GRANT SELECT, UPDATE ON studentorg.member_janlevinson TO 'janlevinson'@'localhos
 -- SELECT * FROM studentorg.member_janlevinson;
 
 -- (2) pays - shows only the payments of the students
-DROP VIEW studentorg.feepays_janlevinson;
 CREATE VIEW studentorg.feepays_janlevinson AS
 (SELECT * FROM organization NATURAL JOIN fee NATURAL JOIN pays WHERE pays.student_number = '2019-04339');
 GRANT SELECT ON studentorg.feepays_janlevinson TO 'janlevinson'@'localhost';
@@ -201,8 +201,8 @@ GRANT SELECT ON studentorg.feepays_janlevinson TO 'janlevinson'@'localhost';
 -- ORGANIZATION
 -- (1) member - shows only members from the selected organization
 CREATE VIEW studentorg.member_mathsoc AS
-    SELECT student_number, member_username, member_name, gender, degree_program FROM member
-    WHERE student_number IN ('2019-04339','2022-04382','2020-93922');
+    SELECT student_number, member_username, member_name, gender, degree_program FROM member NATURAL JOIN organization
+    WHERE organization_id = 'MS-101123';
 GRANT SELECT, INSERT ON studentorg.member_mathsoc TO 'mathsoc'@'localhost';
 -- SELECT * FROM studentorg.member_mathsoc;
 
@@ -233,20 +233,21 @@ GRANT ALL ON studentorg.fee_mathsoc TO 'mathsoc'@'localhost';
 
 -- (5) pays - shows only the payments of the members of the selected organization
 CREATE VIEW studentorg.pays_mathsoc AS
-    SELECT * FROM pays
-    WHERE fee_id IN ('FE-101193', 'FE-193921');
+    SELECT * FROM pays NATURAL JOIN fee
+    WHERE organization_id = 'MS-101123';
 GRANT ALL ON studentorg.pays_mathsoc TO 'mathsoc'@'localhost';
 -- SELECT * FROM studentorg.pays_mathsoc;
 
-
 ---------------------------------------------------------------------------------------------
 -- [04]     SELECT statements for required features
+--  Note: In actual implementation, queries will be through views of the logged in user
+--        Math Society will be used as a test case for sample queries (mathsoc views)
+
 -- TEMPORARY: Set test values for user input
 
 -- (1) filtering
-
 --SET @organization_id = "ES-101124";
-SET @organization_id = "MS-101123";
+-- SET @organization_id = "MS-101123";
 
 SET @role = "Member";
 SET @membership_status = "Active";
@@ -258,9 +259,6 @@ SET @committee = "Finance";
 -- (6)
 SET @semester = "2S";
 SET @academic_year = "2022-2023";
-
--- (7)
-SET @n = 5;
 
 -- (8) alumni as of a given date
 SET @alumni_date = "2024-07-20";
@@ -283,12 +281,13 @@ SET @semester_debt = "1S";
 SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
 b.role
 FROM
-    (SELECT student_number, MAX(date_of_status_update) as recent_status_date
-    FROM is_part_of WHERE organization_id = @organization_id
-    GROUP BY is_part_of.student_number) AS a
-JOIN is_part_of AS b 
+--  no semester/AY specified, so find most recent status update
+    (SELECT student_number, MAX(date_of_status_update) as recent_status_date 
+    FROM ispartof_mathsoc 
+    GROUP BY ispartof_mathsoc.student_number) AS a
+JOIN ispartof_mathsoc AS b
 ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
-JOIN member AS c
+JOIN member_mathsoc AS c -- join with member view to get member name, gender, other info
 ON (b.student_number = c.student_number)
 WHERE role = @role;
 
@@ -300,41 +299,13 @@ SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_sta
 b.membership_status
 FROM
     (SELECT student_number, MAX(date_of_status_update) as recent_status_date
-    FROM is_part_of WHERE organization_id = @organization_id
-    GROUP BY is_part_of.student_number) AS a
-JOIN is_part_of AS b 
+    FROM ispartof_mathsoc
+    GROUP BY ispartof_mathsoc.student_number) AS a
+JOIN ispartof_mathsoc AS b 
 ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
-JOIN member AS c
+JOIN member_mathsoc AS c
 ON (b.student_number = c.student_number)
 WHERE membership_status = @membership_status;
-
--- BY GENDER
--- test case: Math society members with gender = F
--- tested: (1) same gender, diff org (should not be in output)
---         (2) same org, diff gender (should not be in output)
-SELECT DISTINCT student_number, member_name, gender, degree_program
-FROM member NATURAL JOIN is_part_of
-WHERE organization_id = @organization_id
-AND gender = @gender;
-
--- BY DEGREE PROGRAM 
--- test case: Math society members with degree program = BS Economics
--- tested: (1) same degree program, diff org (should not be in output)
---         (2) same org, diff degree program (should not be in output)
-SELECT DISTINCT student_number, member_name, gender, degree_program
-FROM member NATURAL JOIN is_part_of
-WHERE organization_id = @organization_id
-AND degree_program = @degree_program;
-
--- BY BATCH 
--- test case: Math society members with recent batch = active
--- tested: (1) same batch, diff org (should not be in output)
---         (2) same org, diff batch (should not be in output)
--- ASSUMPTION: batch does not change
-SELECT DISTINCT student_number, member_name, gender, degree_program
-FROM member NATURAL JOIN is_part_of
-WHERE organization_id = @organization_id
-AND batch = @batch;
 
 -- BY COMMITTEE
 -- test case: Math society members with recent committee = Finance
@@ -344,88 +315,129 @@ SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_sta
 b.committee
 FROM
     (SELECT student_number, MAX(date_of_status_update) as recent_status_date
-    FROM is_part_of WHERE organization_id = @organization_id
-    GROUP BY is_part_of.student_number) AS a
-JOIN is_part_of AS b 
+    FROM ispartof_mathsoc
+    GROUP BY ispartof_mathsoc.student_number) AS a
+JOIN ispartof_mathsoc AS b 
 ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
-JOIN member AS c
+JOIN member_mathsoc AS c
 ON (b.student_number = c.student_number)
 WHERE committee = @committee;
 
+-- BY GENDER
+-- test case: Math society members with gender = F
+-- tested: (1) same gender, diff org (should not be in output)
+--         (2) same org, diff gender (should not be in output)
+SELECT DISTINCT student_number, member_name, gender, degree_program
+FROM member_mathsoc NATURAL JOIN ispartof_mathsoc
+WHERE gender = @gender;
+
+-- BY DEGREE PROGRAM 
+-- test case: Math society members with degree program = BS Economics
+-- tested: (1) same degree program, diff org (should not be in output)
+--         (2) same org, diff degree program (should not be in output)
+SELECT DISTINCT student_number, member_name, gender, degree_program
+FROM member_mathsoc NATURAL JOIN ispartof_mathsoc
+WHERE degree_program = @degree_program;
+
+-- BY BATCH 
+-- test case: Math society members with recent batch = active
+-- tested: (1) same batch, diff org (should not be in output)
+--         (2) same org, diff batch (should not be in output)
+-- ASSUMPTION: batch does not change
+SELECT DISTINCT student_number, member_name, gender, degree_program
+FROM member_mathsoc NATURAL JOIN ispartof_mathsoc
+WHERE batch = @batch;
+
 -- 4. View all executive committee members of a given organization for a given academic year.
 SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year
-FROM is_part_of b
-JOIN member c ON b.student_number = c.student_number
-WHERE b.organization_id = @organization_id
-AND b.committee = 'Executive'
+FROM ispartof_mathsoc b
+JOIN member_mathsoc c ON b.student_number = c.student_number -- to get student info
+WHERE b.committee = 'Executive'
 AND b.academic_year = @academic_year;
+
+----- equivalent to:
+-- SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year
+-- FROM is_part_of b
+-- JOIN member c ON b.student_number = c.student_number
+-- WHERE b.organization_id = @organization_id
+-- AND b.committee = 'Executive'
+-- AND b.academic_year = @academic_year;
 
 -- 5. View all Presidents (or any other role) of a given organization for every academic year (reverse chronological)
 SELECT DISTINCT c.student_number, c.member_name, b.role, b.academic_year
-FROM is_part_of b
-JOIN member c ON b.student_number = c.student_number
-WHERE b.organization_id = @organization_id
-AND b.role = 'President'
+FROM ispartof_mathsoc b
+JOIN member_mathsoc c ON b.student_number = c.student_number -- to get student info
+WHERE b.role = 'President'
 ORDER BY b.academic_year DESC;
+
+----- template:
+-- SELECT DISTINCT c.student_number, c.member_name, b.role, b.academic_year
+-- FROM is_part_of b
+-- JOIN member c ON b.student_number = c.student_number
+-- WHERE b.organization_id = @organization_id
+-- AND b.role = 'President'
+-- ORDER BY b.academic_year DESC;
 
 -- 6. View all late payments made by all members of a given organization for a given semester and academic year.
 SELECT student_number, member_name, fee_id, due_date, payment_date, payment_status 
-FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
-WHERE organization_id = @organization_id
-AND semester = @semester AND academic_year = @academic_year
-AND payment_status = "Paid" AND payment_date > due_date;
+FROM member_mathsoc NATURAL JOIN pays_mathsoc NATURAL JOIN fee_mathsoc NATURAL JOIN organization_mathsoc
+WHERE semester = @semester AND academic_year = @academic_year
+AND payment_status = "Paid" AND payment_date > due_date; -- classifying late payments
+
+----- template:
+-- SELECT student_number, member_name, fee_id, due_date, payment_date, payment_status 
+-- FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
+-- WHERE organization_id = @organization_id
+-- AND semester = @semester AND academic_year = @academic_year
+-- AND payment_status = "Paid" AND payment_date > due_date;
 
 -- 7. View the percentage of active vs inactive members of a given organization for the last n semesters.
 -- (Note: n is a positive integer)
 
 -- NOTE: this query assumes a status change only once every semester
 SELECT
+--  count active, inactive, and other (e.g, alumni) status
     (SUM(CASE WHEN b.membership_status = "Active" THEN 1 ELSE 0 END)/COUNT(student_number))*100 AS percent_active,
     (SUM(CASE WHEN b.membership_status = "Inactive" THEN 1 ELSE 0 END)/COUNT(student_number))*100 AS percent_inactive,
     (1-(SUM(CASE WHEN b.membership_status = "Inactive" THEN 1 WHEN b.membership_status = "Active" THEN 1 ELSE 0 END)/COUNT(student_number)))*100
         AS percent_other,
     b.semester, b.academic_year
 FROM 
-    (SELECT * FROM is_part_of 
-    WHERE organization_id = @organization_id
-    GROUP BY student_number, semester, academic_year) AS b
-GROUP BY b.academic_year, b.semester
-ORDER BY b.semester, b.academic_year DESC LIMIT 3;
+    (SELECT * FROM ispartof_mathsoc
+    GROUP BY student_number, semester, academic_year) AS b -- get each students status update per sem/ay
+GROUP BY b.academic_year, b.semester        -- count is per semester
+ORDER BY b.semester, b.academic_year DESC LIMIT 3; -- NOTE: in implementation, replace 3 with user input
 
 -- 8. View all alumni members of a given organization as of a given date.
 -- NOTE: this query assumes that no status updates can be done after Alumni; only one and final Alumni status update
 SELECT student_number, member_name, gender, degree_program, date_of_status_update, membership_status
-FROM member NATURAL JOIN is_part_of NATURAL JOIN organization
-WHERE organization_id = @organization_id
-AND membership_status = "Alumni"
-AND date_of_status_update <= @alumni_date;
+FROM member_mathsoc NATURAL JOIN ispartof_mathsoc NATURAL JOIN organization_mathsoc
+WHERE membership_status = "Alumni"
+AND date_of_status_update <= @alumni_date;   -- find all who were alumni before/on given date
 
 -- 9. View the total amount of unpaid and paid fees or dues of a given organization as of a given date.
 SELECT 
-    (SELECT SUM(fee_amount) as total_unpaid 
-    FROM pays NATURAL JOIN fee
-    WHERE organization_id = @organization_id
-    AND payment_status = "Unpaid"
-    AND issue_date <= @fee_date) AS unpaid,
+    (SELECT SUM(fee_amount) as total_unpaid         -- sum all unpaid fees
+    FROM pays_mathsoc NATURAL JOIN fee_mathsoc
+    WHERE payment_status = "Unpaid"
+    AND issue_date <= @fee_date) AS unpaid,         -- count only payments issued on/before given date
 
-    (SELECT SUM(fee_amount) as total_paid 
-    FROM pays NATURAL JOIN fee
-    WHERE organization_id = @organization_id
-    AND payment_status = "Paid"
-    AND payment_date <= @fee_date) AS paid
+    (SELECT SUM(fee_amount) as total_paid           -- sum all paid fees
+    FROM pays_mathsoc NATURAL JOIN fee_mathsoc
+    WHERE payment_status = "Paid"
+    AND payment_date <= @fee_date) AS paid          -- avoid counting transactions paid beyond the given date
 ;
 
 -- 10. View the member/s with the highest debt of a given organization for a given semester.
 --     interpreted as outstanding balance for all previous semesters until given semester
 SELECT student_number, member_name, SUM(fee_amount) AS debt
-    FROM member NATURAL JOIN pays NATURAL JOIN fee
-    WHERE organization_id = @organization_id
-    AND payment_status = "Unpaid"
-    AND CONCAT(academic_year_issued,semester_issued) <= CONCAT (@academic_year_debt, @semester_debt)
+    FROM member_mathsoc NATURAL JOIN pays_mathsoc NATURAL JOIN fee_mathsoc
+    WHERE payment_status = "Unpaid"
+    -- consider payments made on/before given sem/AY
+    AND CONCAT(academic_year_issued,semester_issued) <= CONCAT (@academic_year_debt, @semester_debt) 
     GROUP BY student_number
-    ORDER BY debt DESC LIMIT 1
+    ORDER BY debt DESC LIMIT 1 -- get member with highest debt
 ;
-
 ---------------------------------------------------------------------------------------------
 -- [05]     INSERT new data
 
@@ -520,5 +532,3 @@ SELECT * FROM member WHERE student_number = '2019-04339';
 SELECT * FROM organization WHERE organization_id = 'MS-101123';
 SELECT * FROM fee WHERE fee_id = 'FE-101193';
 SELECT * FROM pays WHERE transaction_id = '1000';
-
-
