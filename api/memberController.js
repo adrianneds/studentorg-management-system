@@ -1,4 +1,4 @@
-const {pool, user} = require('./connect.js');
+import {pool, user} from './connect.js';
 
 // view the member's own info
 const memberInfo = async (req, res) => {
@@ -12,4 +12,4 @@ const memberPays = async (req, res) => {
   res.send(rows)
 };
 
-module.exports = {memberInfo, memberPays}
+export {memberInfo, memberPays}

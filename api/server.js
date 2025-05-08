@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const {memberRouter} = require('./routes/members.js');
+import express from "express";
+import cors from "cors";
+import {memberRouter} from './routes/members.js'
 
 const app = express();
 app.use(cors());

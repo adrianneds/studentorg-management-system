@@ -1,4 +1,4 @@
-const mysql = require('mysql2/promise');
+import mysql from 'mysql2/promise';
 
 // SAMPLE USER CREDENTIALS
 var user = 'janlevinson'
@@ -13,4 +13,4 @@ const pool = mysql.createPool({
   database: "studentorg"
 });
 
-module.exports = {pool, user, pass};
+export {pool, user, pass};
