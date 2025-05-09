@@ -381,13 +381,13 @@ AND membership_status = 'Active';
  -- 2. View members for a given organization with unpaid membership fees or dues for a
  -- given semester and academic year. (orgs pov)
  -- Interpreted as unpaid fees that were issued at a certain sem/ay
-SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount
+SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount, payment_status
 FROM member_mathsoc NATURAL JOIN pays_mathsoc NATURAL JOIN fee_mathsoc NATURAL JOIN organization_mathsoc
 WHERE semester_issued = '2S' AND academic_year_issued = '2023-2024'
 AND payment_status = "Unpaid";
 
 -- 3. View a member’s unpaid membership fees or dues for all their organizations (Member’s POV).
-SELECT transaction_id, organization_name, fee_id,
+SELECT transaction_id, organization_id, organization_name, fee_id, payment_status,
 fee_name, fee_amount, payment_status, due_date, semester_issued, academic_year_issued
 FROM feepays_janlevinson WHERE payment_status = "Unpaid";
 
