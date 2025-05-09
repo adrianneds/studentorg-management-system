@@ -433,7 +433,7 @@ FROM
     (SELECT * FROM ispartof_mathsoc
     GROUP BY student_number, semester, academic_year) AS b -- get each students status update per sem/ay
 GROUP BY b.academic_year, b.semester        -- count is per semester
-ORDER BY b.semester, b.academic_year DESC LIMIT 3; -- NOTE: in implementation, replace 3 with user input
+ORDER BY b.academic_year DESC LIMIT 3; -- NOTE: in implementation, replace 3 with user input
 
 -- 8. View all alumni members of a given organization as of a given date.
 -- NOTE: this query assumes that no status updates can be done after Alumni; only one and final Alumni status update
