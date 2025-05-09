@@ -114,7 +114,7 @@ VALUES
 	('2022-04382','MS-101123','Membership','2022B','1S','2023-2024','2023-10-01','Assistant Head','Active'),
 	('2022-04382','MS-101123','Finance','2022B','2S','2023-2024','2024-05-01','Member','Active'),
 	('2022-04382','MS-101123','Executive','2022B','1S','2024-2025','2024-10-01','President','Active'),
-	('2022-04382','MS-101123','Publicity','2022B','2S','2024-2025','2025-05-01','President','Active'),
+	('2022-04382','MS-101123','Executive','2022B','2S','2024-2025','2025-05-01','President','Active'),
 	('2019-04339','MS-101123','Finance','2022A','2S','2021-2022','2022-05-01','Member','Active'),
 	('2019-04339','MS-101123','Membership','2022A','1S','2022-2023','2022-11-20','Assistant Head','Active'),
 	('2019-04339','MS-101123','Executive','2022A','2S','2022-2023','2023-05-01','Member','Inactive'),
@@ -178,8 +178,21 @@ GRANT SELECT, UPDATE ON studentorg.member_janlevinson TO 'janlevinson'@'localhos
 
 -- (2) pays - shows only the payments of the students
 CREATE VIEW studentorg.feepays_janlevinson AS
-(SELECT * FROM organization NATURAL JOIN fee NATURAL JOIN pays WHERE pays.student_number = '2019-04339');
+SELECT org.organization_id, org.organization_name, fee.fee_id, fee.fee_name, fee.fee_amount,
+pays.transaction_id, pays.student_number, pays.issue_date, pays.semester_issued, pays.academic_year_issued,
+pays.due_date, pays.payment_date, pays.payment_status, pays.semester, pays.academic_year
+FROM (SELECT organization_id, organization_name FROM organization) AS org
+JOIN fee ON org.organization_id = fee.organization_id 
+JOIN pays ON fee.fee_id = pays.fee_id
+WHERE pays.student_number = '2019-04339';
 GRANT SELECT ON studentorg.feepays_janlevinson TO 'janlevinson'@'localhost';
+
+-- (3) organization
+CREATE VIEW studentorg.organization_janlevinson AS
+    SELECT DISTINCT organization_name, organization.organization_id FROM is_part_of JOIN organization ON 
+    is_part_of.organization_id = organization.organization_id
+    WHERE student_number = '2019-04339';
+GRANT SELECT ON studentorg.organization_janlevinson TO 'janlevinson'@'localhost';
 
 -- ORGANIZATION
 -- (1) member - shows only members from the selected organization
