@@ -6,6 +6,6 @@ import {logIn, memberInfo, memberTransactions} from '../memberController.js';
 const memberRouter = express.Router();  // use Router to define and manage the API routes 
 memberRouter.post('/login', logIn);
 memberRouter.get('/info/user/:user', memberInfo);
-memberRouter.get('/transactions', memberTransactions);
+memberRouter.get('/transactions/user/:user', memberTransactions);
 
 export {memberRouter}

@@ -62,8 +62,10 @@ const memberInfo = async (req, res) => {
 //   "academic_year": "2021-2022"
 const memberTransactions = async (req, res) => {
 
+  const user = req.params.user;
+
   const query = 
-  `SELECT * FROM fee NATURAL JOIN pays NATURAL JOIN member WHERE member_username = '${user}';`
+  `SELECT * FROM fee NATURAL JOIN pays NATURAL JOIN member NATURAL JOIN organization WHERE member_username = '${user}';`
 
   const [rows] = await pool.query(query);
   res.send(rows);

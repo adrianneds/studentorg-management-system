@@ -17,7 +17,8 @@
       return;
     }
 
-    var username = JSON.parse(localStorage.getItem('user')).member_username
+  // NEW: getting username
+  var username = JSON.parse(localStorage.getItem('user')).member_username
 
   // NEW: import member data from db server
   async function getMemberInfo() {
@@ -82,6 +83,7 @@
 
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
 
+<!-- NEW: Member information/profile -->
 <div class="flex-1 overflow-hidden">
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-primary mb-2">Welcome, {memberInfo.member_name} </h1>
