@@ -1,11 +1,12 @@
 import express from 'express';
 import {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
      orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt,
-     orgLatePayments,orgMembers} from '../orgController.js';
+     orgLatePayments,orgMembers, logIn} from '../orgController.js';
 // import all the functions from controller.js
 
 const orgRouter = express.Router();  // use Router to define and manage the API routes 
-orgRouter.get('/info', orgInfo);
+orgRouter.post('/login', logIn);
+orgRouter.get('/info/user/:user', orgInfo);
 orgRouter.get('/unpaidMembers', orgUnpaidMembers);
 orgRouter.get('/committeeMembers', orgCommitteeMembers);
 orgRouter.get('/roles', orgRoles);

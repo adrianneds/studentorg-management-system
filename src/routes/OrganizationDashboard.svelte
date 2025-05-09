@@ -7,6 +7,7 @@
   let organization = null;
   let loading = true;
   let error = null;
+  let orgInfo = [];
   
   onMount(async () => {
     if (!$auth || $auth.type !== 'organization') {
@@ -14,31 +15,55 @@
       return;
     }
 
+    // NEW: getting username
+    var username = JSON.parse(localStorage.getItem('user')).organization_username
+
+    // NEW: import org data from db server
+    async function getOrganizationInfo() {
+      fetch(`http://localhost:5000/organization/info/user/${username}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data[0])
+        orgInfo = data[0];
+      }).catch(error => {
+        console.log(error);
+        return [];
+      });
+    };
+
+    getOrganizationInfo()
+    console.log(orgInfo)
+
     // Simulate loading organization
-    setTimeout(() => {
-      organization = {
-        id: 1,
-        name: 'Computer Society',
-        description: 'A community of computer science enthusiasts',
-        established: '2020-01-01',
-        totalMembers: 150,
-        activeMembers: 145,
-        officers: 10,
-        committees: ['Technical', 'Events', 'Marketing', 'Finance']
-      };
-      loading = false;
-    }, 1000);
+    // setTimeout(() => {
+    //   organization = {
+    //     id: 1,
+    //     name: 'Computer Society',
+    //     description: 'A community of computer science enthusiasts',
+    //     established: '2020-01-01',
+    //     totalMembers: 150,
+    //     activeMembers: 145,
+    //     officers: 10,
+    //     committees: ['Technical', 'Events', 'Marketing', 'Finance']
+    //   };
+    //   loading = false;
+    // }, 1000);
   });
 </script>
 
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto h-full flex flex-col">
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-primary mb-2">{organization?.name || 'Organization'} Dashboard</h1>
+      <h1 class="text-3xl font-bold text-primary mb-2">{orgInfo?.organization_name || 'Organization'} Dashboard</h1>
       <p class="text-secondary">Manage your organization and members</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      <!-- NEW: for organization info -->
+      <div class="glass-card p-6">
+        <div class="text-sm text-secondary mb-1"> Orgniazation ID </div>
+        <div class="text-2xl font-semibold text-primary">{orgInfo?.organization_id || 0}</div>
+      </div>
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Total Members</div>
         <div class="text-2xl font-semibold text-primary">{organization?.totalMembers || 0}</div>
@@ -47,10 +72,11 @@
         <div class="text-sm text-secondary mb-1">Active Members</div>
         <div class="text-2xl font-semibold text-primary">{organization?.activeMembers || 0}</div>
       </div>
-      <div class="glass-card p-6">
+      <!-- <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Officers</div>
         <div class="text-2xl font-semibold text-primary">{organization?.officers || 0}</div>
-      </div>
+      </div> -->
+
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

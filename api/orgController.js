@@ -1,7 +1,37 @@
 import {pool} from './connect.js';
 
 // SAMPLE USER
-var user = 'mathsoc'
+// var user = 'mathsoc' //msoc123
+
+// Login function
+const SECRET_KEY ='secret'
+const logIn = async (req, res) => {
+
+  let username = req.body.username
+  let password = req.body.password
+
+  var query = 
+  `SELECT organization_username, organization_password, organization_id FROM organization`
+  const [rows] = await pool.query(query);
+
+  try {
+    let user = rows.find(o => o.organization_username === username && o.organization_password === password)
+    console.log(user)
+    if (!user) {
+        res.status(401).json({message: "Invalid credentials"})
+    }
+    try {
+      //const token = jwt.sign({userId: user.organization_id}, SECRET_KEY, {expiresIn: '1hr'})
+      res.status(200).json({message: "Successful login"})
+    } catch(err) {
+      res.status(500).json({message: 'Error logging in ' + err})
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(401).json({message: "Invalid credentials " + err})
+  }
+
+};
 
 // View organization's own info
 // TEST     : http://localhost:5000/organization/info
@@ -11,6 +41,7 @@ var user = 'mathsoc'
 //     "organization_password": "msoc123",
 //     "organization_name": "Mathematics Society"
 const orgInfo = async (req, res) => {
+    var user = req.params.user;
     var query = `SELECT * FROM organization WHERE organization_username = '${user}';`
     const [rows] = await pool.query(query);
     res.send(rows)
@@ -306,5 +337,5 @@ const orgLatePayments = async (req, res) => {
 
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
-        orgMembers}
+        orgMembers, logIn}
 

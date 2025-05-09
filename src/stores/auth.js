@@ -69,13 +69,14 @@ function createAuthStore() {
       setLoading(false);
     },
 
-    validateCredentials: async(username, password) => {
-      const res = await fetch('http://localhost:5000/member/login', {
+    validateCredentials: async(username, password, type) => {
+      const res = await fetch(`http://localhost:5000/${type}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username: username, password: password})
       })
       if (!res.ok) {
+        console.log(res)
         throw new Error('Failed login attempt')
       }
       return true
