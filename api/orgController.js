@@ -42,11 +42,11 @@ const orgMembers = async (req, res) => {
     b.membership_status, b.batch, b.committee, b.role
     FROM
         (SELECT student_number, MAX(date_of_status_update) as recent_status_date
-        FROM ispartof_${user}
-        GROUP BY ispartof_${user}.student_number) AS a
-    JOIN ispartof_${user} AS b 
+        FROM is_part_of NATURAL JOIN organization WHERE organization_username = '${user}'
+        GROUP BY is_part_of.student_number) AS a
+    JOIN is_part_of AS b 
     ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
-    JOIN member_${user} AS c
+    JOIN member AS c
     ON (b.student_number = c.student_number)`
 
     var whereClause = "";
@@ -100,31 +100,30 @@ const orgMembers = async (req, res) => {
 // View members with late payments for a given semester/AY
 // TEST: http://localhost:5000/organization/unpaidMembers?sem=2S&ay=2023-2024
 // FIELDS
-//     "student_number": "2022-04382",
-//     "member_name": "Pam Beesly",
-//     "fee_id": "FE-101193",
-//     "due_date": "2024-11-18T16:00:00.000Z",
-//     "payment_date": "2025-04-18T16:00:00.000Z",
-//     "payment_status": "Paid"
+//     "student_number": "2019-04339",
+//     "member_name": "Jan Levinson",
+//     "transaction_id": 1003,
+//     "fee_id": "FE-193921",
+//     "fee_name": "Miscellaneous A",
+//     "fee_amount": 200,
+//     "payment_status": "Unpaid",
+//     "semester_issued": "2S",
+//     "academic_year_issued": "2023-2024"
 const orgUnpaidMembers = async (req, res) => {
     
     let semester = req.query.sem;                  // need to pass to query
     let academic_year = req.query.ay;            
 
     const query =
-    `SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount, payment_status
-    FROM member_${user} NATURAL JOIN pays_${user} NATURAL JOIN fee_${user} NATURAL JOIN organization_${user}
-    WHERE semester_issued = '${semester}' AND academic_year_issued = '${academic_year}'
+    `SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount, payment_status,
+    semester_issued, academic_year_issued
+    FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization WHERE organization_username = '${user}'
+    AND semester_issued = '${semester}' AND academic_year_issued = '${academic_year}'
     AND payment_status = "Unpaid";`
 
     const [rows] = await pool.query(query);
     res.send(rows)
 };
-
-// SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount, payment_status
-// FROM member_mathsoc NATURAL JOIN pays_mathsoc NATURAL JOIN fee_mathsoc NATURAL JOIN organization_mathsoc
-// WHERE semester_issued = '2S' AND academic_year_issued = '2023-2024'
-// AND payment_status = "Unpaid";
 
 // View members of a specific committee given an AY
 // TEST: http://localhost:5000/organization/committeeMembers?ay=2023-2024&committee=Executive
@@ -141,9 +140,10 @@ const orgCommitteeMembers = async (req, res) => {
 
     const query = 
     `SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year
-    FROM ispartof_${user} b
-    JOIN member_${user} c ON b.student_number = c.student_number
-    WHERE b.committee = '${committee}'
+    FROM (organization NATURAL JOIN is_part_of AS b)
+    JOIN member c ON b.student_number = c.student_number
+    WHERE organization_username = '${user}'
+    AND b.committee = '${committee}'
     AND b.academic_year = '${academic_year}';`
 
     const [rows] = await pool.query(query);
@@ -164,9 +164,10 @@ const orgRoles = async (req, res) => {
 
     const query = 
     `SELECT DISTINCT c.student_number, c.member_name, b.role, b.academic_year
-    FROM ispartof_${user} b
-    JOIN member_${user} c ON b.student_number = c.student_number
-    WHERE b.role = '${role}'
+    FROM (organization NATURAL JOIN is_part_of AS b)
+    JOIN member c ON b.student_number = c.student_number
+    WHERE organization_username = '${user}'
+    AND b.role = '${role}'
     ORDER BY b.academic_year DESC;`
 
     const [rows] = await pool.query(query);
@@ -193,7 +194,7 @@ const orgCountStatus = async (req, res) => {
         AS percent_other,
     b.semester, b.academic_year
     FROM 
-        (SELECT * FROM ispartof_${user}
+        (SELECT * FROM is_part_of NATURAL JOIN organization WHERE organization_username = '${user}'
         GROUP BY student_number, semester, academic_year) AS b 
     GROUP BY b.academic_year, b.semester      
     ORDER BY b.semester, b.academic_year DESC LIMIT ${n};`
@@ -218,8 +219,9 @@ const orgAlumni = async (req, res) => {
 
     const query = 
     `SELECT student_number, member_name, gender, degree_program, date_of_status_update, membership_status
-    FROM member_${user} NATURAL JOIN ispartof_${user} NATURAL JOIN organization_${user}
-    WHERE membership_status = "Alumni"
+    FROM member NATURAL JOIN is_part_of NATURAL JOIN organization
+    WHERE organization_username = '${user}'
+    AND membership_status = "Alumni"
     AND date_of_status_update <= '${alumni_date}';`
 
     const [rows] = await pool.query(query);
@@ -238,13 +240,15 @@ const orgFeeStatus = async (req, res) => {
     const query = 
     `SELECT 
     (SELECT SUM(fee_amount) as total_unpaid  
-    FROM pays_${user} NATURAL JOIN fee_${user}
-    WHERE payment_status = "Unpaid"
+    FROM pays NATURAL JOIN fee NATURAL JOIN organization
+    WHERE organization_username = '${user}'
+    AND payment_status = "Unpaid"
     AND issue_date <= '${fee_date}') AS unpaid,
 
     (SELECT SUM(fee_amount) as total_paid         
-    FROM pays_${user} NATURAL JOIN fee_${user}
-    WHERE payment_status = "Paid"
+    FROM pays NATURAL JOIN fee NATURAL JOIN organization
+    WHERE organization_username = '${user}'
+    AND payment_status = "Paid"
     AND payment_date <= '${fee_date}') AS paid`
 
     const [rows] = await pool.query(query);
@@ -264,8 +268,9 @@ const orgHighestDebt = async (req, res) => {
 
     const query = 
     `SELECT student_number, member_name, SUM(fee_amount) AS debt
-    FROM member_${user} NATURAL JOIN pays_${user} NATURAL JOIN fee_${user}
-    WHERE payment_status = "Unpaid"
+    FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
+    WHERE organization_username = '${user}'
+    AND payment_status = "Unpaid"
     AND CONCAT(academic_year_issued,semester_issued) <= CONCAT ('${academic_year_debt}', '${semester_debt}') 
     GROUP BY student_number
     ORDER BY debt DESC LIMIT 1;`
@@ -276,7 +281,13 @@ const orgHighestDebt = async (req, res) => {
 
 // Late payments
 // TEST: http://localhost:5000/organization/latePayments?sem=2S&ay=2023-2024
-// (currently empty given current test data)
+// FIELDS
+//     "student_number": "2022-04382",
+//     "member_name": "Pam Beesly",
+//     "fee_id": "FE-101193",
+//     "due_date": "2024-11-18T16:00:00.000Z",
+//     "payment_date": "2025-04-18T16:00:00.000Z",
+//     "payment_status": "Paid"
 const orgLatePayments = async (req, res) => {
 
     let academic_year = req.query.ay;
@@ -284,8 +295,9 @@ const orgLatePayments = async (req, res) => {
 
     const query = 
     `SELECT student_number, member_name, fee_id, due_date, payment_date, payment_status 
-    FROM member_${user} NATURAL JOIN pays_${user} NATURAL JOIN fee_${user} NATURAL JOIN organization_${user}
-    WHERE semester = '${semester}' AND academic_year = '${academic_year}'
+    FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
+    WHERE organization_username = '${user}'
+    AND semester = '${semester}' AND academic_year = '${academic_year}'
     AND payment_status = "Paid" AND payment_date > due_date;`
 
     const [rows] = await pool.query(query);
