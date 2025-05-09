@@ -1,4 +1,6 @@
-import {pool, user} from './connect.js';
+import {pool} from './connect.js';
+
+var user = 'janlevinson'
 
 // NOTE: Before testing, make sure to edit user credentials in connect.js (temporary measure)
 

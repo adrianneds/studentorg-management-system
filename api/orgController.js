@@ -1,4 +1,7 @@
-import {pool, user} from './connect.js';
+import {pool} from './connect.js';
+
+// SAMPLE USER
+var user = 'mathsoc'
 
 // View organization's own info
 // TEST     : http://localhost:5000/organization/info
@@ -8,7 +11,8 @@ import {pool, user} from './connect.js';
 //     "organization_password": "msoc123",
 //     "organization_name": "Mathematics Society"
 const orgInfo = async (req, res) => {
-    const [rows] = await pool.query("SELECT * FROM organization_" + user);
+    var query = `SELECT * FROM organization WHERE organization_username = '${user}';`
+    const [rows] = await pool.query(query);
     res.send(rows)
 };
 
