@@ -108,14 +108,19 @@ const orgUnpaidMembers = async (req, res) => {
     let academic_year = req.query.ay;            
 
     const query =
-    `SELECT student_number, member_name, fee_id, due_date, payment_date, payment_status 
-    FROM studentorg.pays_${user} NATURAL JOIN studentorg.member_${user}
-    WHERE semester = '${semester}' AND academic_year = '${academic_year}'
-    AND payment_status = 'Paid' AND payment_date > due_date`;
+    `SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount, payment_status
+    FROM member_${user} NATURAL JOIN pays_${user} NATURAL JOIN fee_${user} NATURAL JOIN organization_${user}
+    WHERE semester_issued = '${semester}' AND academic_year_issued = '${academic_year}'
+    AND payment_status = "Unpaid";`
 
     const [rows] = await pool.query(query);
     res.send(rows)
 };
+
+// SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount, payment_status
+// FROM member_mathsoc NATURAL JOIN pays_mathsoc NATURAL JOIN fee_mathsoc NATURAL JOIN organization_mathsoc
+// WHERE semester_issued = '2S' AND academic_year_issued = '2023-2024'
+// AND payment_status = "Unpaid";
 
 // View members of a specific committee given an AY
 // TEST: http://localhost:5000/organization/committeeMembers?ay=2023-2024&committee=Executive
