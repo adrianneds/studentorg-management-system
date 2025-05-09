@@ -12,20 +12,68 @@ const orgInfo = async (req, res) => {
     res.send(rows)
 };
 
-// TO DO: View members of an organization (with filtering)
+// View members of an organization (with filtering)
+// TEST:  node test.js
+// FIELDS
+//     student_number: '2022-04382',
+//     member_name: 'Pam Beesly',
+//     gender: 'F',
+//     degree_program: 'BS Statistics',
+//     recent_status_date: '2025-04-30T16:00:00.000Z',
+//     membership_status: 'Active',
+//     batch: '2022B',
+//     committee: 'Executive',
+//     role: 'President'
 const orgMembers = async (req, res) => {
 
     let committee = req.body.committee;
     let role = req.body.role;
-    let status = req.body.status;
+    let status = req.body.membership_status;
     let gender = req.body.gender;
     let degree_program = req.body.degree_program;
+    let batch = req.body.batch;
 
-    // TO DO: add filtering
-    const query = 
-    `SELECT * FROM studentorg.member_${user}` ;
+    var query = 
+    `SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
+    b.membership_status, b.batch, b.committee, b.role
+    FROM
+        (SELECT student_number, MAX(date_of_status_update) as recent_status_date
+        FROM ispartof_${user}
+        GROUP BY ispartof_${user}.student_number) AS a
+    JOIN ispartof_${user} AS b 
+    ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
+    JOIN member_${user} AS c
+    ON (b.student_number = c.student_number)`
 
-    const [rows] = await pool.query("SELECT * FROM ispartof_" + user);
+    var whereClause = "";
+
+    if (committee !== null) {
+        whereClause += ` WHERE committee = '${committee}'`
+    }
+    if (role !== null) {
+        whereClause += ` AND role = '${role}'`
+    } 
+    if (status !== null) {
+        whereClause += ` AND membership_status = '${status}'`
+    } 
+    if (gender !== null) {
+        whereClause += ` AND gender = '${gender}'`
+    }
+    if (degree_program !== null) {
+        whereClause += ` AND degree_program = '${degree_program}'`
+    }
+    if (batch !== null) {
+        whereClause += ` AND batch = '${batch}'`
+    }
+    if (whereClause!=="") {
+        if (whereClause[1]=='A') {
+            whereClause = ' WHERE' + whereClause.slice(4, whereClause.length-1) + ';'
+        }
+    }
+
+    query += whereClause;
+
+    const [rows] = await pool.query(query);
     res.send(rows)
 };
 
@@ -236,5 +284,6 @@ const orgLatePayments = async (req, res) => {
 }
 
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
-        orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments}
+        orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
+        orgMembers}
 

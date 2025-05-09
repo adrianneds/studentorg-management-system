@@ -131,7 +131,7 @@ VALUES
 	('2022-04382','MS-101123','Membership','2022B','1S','2023-2024','2023-10-01','Assistant Head','Active'),
 	('2022-04382','MS-101123','Finance','2022B','2S','2023-2024','2024-05-01','Member','Active'),
 	('2022-04382','MS-101123','Executive','2022B','1S','2024-2025','2024-10-01','President','Active'),
-	('2022-04382','MS-101123','Publicity','2022B','2S','2024-2025','2025-05-01','President','Active'),
+	('2022-04382','MS-101123','Executive','2022B','2S','2024-2025','2025-05-01','President','Active'),
 	('2019-04339','MS-101123','Finance','2022A','2S','2021-2022','2022-05-01','Member','Active'),
 	('2019-04339','MS-101123','Membership','2022A','1S','2022-2023','2022-11-20','Assistant Head','Active'),
 	('2019-04339','MS-101123','Executive','2022A','2S','2022-2023','2023-05-01','Member','Inactive'),
@@ -196,13 +196,20 @@ GRANT SELECT, UPDATE ON studentorg.member_janlevinson TO 'janlevinson'@'localhos
 -- (2) pays - shows only the payments of the students
 CREATE VIEW studentorg.feepays_janlevinson AS
 SELECT org.organization_id, org.organization_name, fee.fee_id, fee.fee_name, fee.fee_amount,
-pays.student_number, pays.issue_date, pays.semester_issued, pays.academic_year_issued,
-pays.payment_date, pays.payment_status, pays.semester, pays.academic_year
+pays.transaction_id, pays.student_number, pays.issue_date, pays.semester_issued, pays.academic_year_issued,
+pays.due_date, pays.payment_date, pays.payment_status, pays.semester, pays.academic_year
 FROM (SELECT organization_id, organization_name FROM organization) AS org
 JOIN fee ON org.organization_id = fee.organization_id 
 JOIN pays ON fee.fee_id = pays.fee_id
 WHERE pays.student_number = '2019-04339';
 GRANT SELECT ON studentorg.feepays_janlevinson TO 'janlevinson'@'localhost';
+
+-- (3) organization
+CREATE VIEW studentorg.organization_janlevinson AS
+    SELECT DISTINCT organization_name, organization.organization_id FROM is_part_of JOIN organization ON 
+    is_part_of.organization_id = organization.organization_id
+    WHERE student_number = '2019-04339';
+GRANT SELECT ON studentorg.organization_janlevinson TO 'janlevinson'@'localhost';
 
 -- ORGANIZATION
 -- (1) member - shows only members from the selected organization
@@ -246,13 +253,14 @@ GRANT ALL ON studentorg.pays_mathsoc TO 'mathsoc'@'localhost';
 
 ---------------------------------------------------------------------------------------------
 -- [04]     SELECT statements for required features
---  Note: In actual implementation, queries will be through views of the logged in user
---        Math Society will be used as a test case for sample queries (mathsoc views)
+--  Notes: In actual implementation, queries will be through views of the logged in user
+--         Math Society will be used as a test case for sample queries (mathsoc views)
+--         For member POV, user janlevinson will be used
 
 -- TEMPORARY: Set test values for user input
 
 -- (1) filtering
---SET @organization_id = "ES-101124";
+-- SET @organization_id = "ES-101124";
 -- SET @organization_id = "MS-101123";
 
 SET @role = "Member";
@@ -354,6 +362,35 @@ SELECT DISTINCT student_number, member_name, gender, degree_program
 FROM member_mathsoc NATURAL JOIN ispartof_mathsoc
 WHERE batch = @batch;
 
+-- Sample query: multiple filters
+SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
+b.membership_status, b.batch, b.committee, b.role
+FROM
+    (SELECT student_number, MAX(date_of_status_update) as recent_status_date
+    FROM ispartof_mathsoc
+    GROUP BY ispartof_mathsoc.student_number) AS a
+JOIN ispartof_mathsoc AS b 
+ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
+JOIN member_mathsoc AS c
+ON (b.student_number = c.student_number)
+WHERE role = 'President'
+AND committee = 'Executive'
+AND batch = '2022B'
+AND membership_status = 'Active';
+
+ -- 2. View members for a given organization with unpaid membership fees or dues for a
+ -- given semester and academic year. (orgs pov)
+ -- Interpreted as unpaid fees that were issued at a certain sem/ay
+SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount, payment_status
+FROM member_mathsoc NATURAL JOIN pays_mathsoc NATURAL JOIN fee_mathsoc NATURAL JOIN organization_mathsoc
+WHERE semester_issued = '2S' AND academic_year_issued = '2023-2024'
+AND payment_status = "Unpaid";
+
+-- 3. View a member’s unpaid membership fees or dues for all their organizations (Member’s POV).
+SELECT transaction_id, organization_id, organization_name, fee_id, payment_status,
+fee_name, fee_amount, payment_status, due_date, semester_issued, academic_year_issued
+FROM feepays_janlevinson WHERE payment_status = "Unpaid";
+
 -- 4. View all executive committee members of a given organization for a given academic year.
 SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year
 FROM ispartof_mathsoc b
@@ -412,7 +449,7 @@ FROM
     (SELECT * FROM ispartof_mathsoc
     GROUP BY student_number, semester, academic_year) AS b -- get each students status update per sem/ay
 GROUP BY b.academic_year, b.semester        -- count is per semester
-ORDER BY b.semester, b.academic_year DESC LIMIT 3; -- NOTE: in implementation, replace 3 with user input
+ORDER BY b.academic_year DESC LIMIT 3; -- NOTE: in implementation, replace 3 with user input
 
 -- 8. View all alumni members of a given organization as of a given date.
 -- NOTE: this query assumes that no status updates can be done after Alumni; only one and final Alumni status update
