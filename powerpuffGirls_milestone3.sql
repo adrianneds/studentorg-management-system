@@ -131,7 +131,7 @@ VALUES
 	('2022-04382','MS-101123','Membership','2022B','1S','2023-2024','2023-10-01','Assistant Head','Active'),
 	('2022-04382','MS-101123','Finance','2022B','2S','2023-2024','2024-05-01','Member','Active'),
 	('2022-04382','MS-101123','Executive','2022B','1S','2024-2025','2024-10-01','President','Active'),
-	('2022-04382','MS-101123','Publicity','2022B','2S','2024-2025','2025-05-01','President','Active'),
+	('2022-04382','MS-101123','Executive','2022B','2S','2024-2025','2025-05-01','President','Active'),
 	('2019-04339','MS-101123','Finance','2022A','2S','2021-2022','2022-05-01','Member','Active'),
 	('2019-04339','MS-101123','Membership','2022A','1S','2022-2023','2022-11-20','Assistant Head','Active'),
 	('2019-04339','MS-101123','Executive','2022A','2S','2022-2023','2023-05-01','Member','Inactive'),
@@ -253,14 +253,14 @@ GRANT ALL ON studentorg.pays_mathsoc TO 'mathsoc'@'localhost';
 
 ---------------------------------------------------------------------------------------------
 -- [04]     SELECT statements for required features
---  Note: In actual implementation, queries will be through views of the logged in user
---        Math Society will be used as a test case for sample queries (mathsoc views)
---        For member POV, user janlevinson will be used
+--  Notes: In actual implementation, queries will be through views of the logged in user
+--         Math Society will be used as a test case for sample queries (mathsoc views)
+--         For member POV, user janlevinson will be used
 
 -- TEMPORARY: Set test values for user input
 
 -- (1) filtering
---SET @organization_id = "ES-101124";
+-- SET @organization_id = "ES-101124";
 -- SET @organization_id = "MS-101123";
 
 SET @role = "Member";
@@ -361,6 +361,22 @@ WHERE degree_program = @degree_program;
 SELECT DISTINCT student_number, member_name, gender, degree_program
 FROM member_mathsoc NATURAL JOIN ispartof_mathsoc
 WHERE batch = @batch;
+
+-- Sample query: multiple filters
+SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
+b.membership_status, b.batch, b.committee, b.role
+FROM
+    (SELECT student_number, MAX(date_of_status_update) as recent_status_date
+    FROM ispartof_mathsoc
+    GROUP BY ispartof_mathsoc.student_number) AS a
+JOIN ispartof_mathsoc AS b 
+ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
+JOIN member_mathsoc AS c
+ON (b.student_number = c.student_number)
+WHERE role = 'President'
+AND committee = 'Executive'
+AND batch = '2022B'
+AND membership_status = 'Active';
 
  -- 2. View members for a given organization with unpaid membership fees or dues for a
  -- given semester and academic year. (orgs pov)
