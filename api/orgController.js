@@ -34,7 +34,7 @@ const logIn = async (req, res) => {
 };
 
 // View organization's own info
-// TEST     : http://localhost:5000/organization/info
+// TEST     : http://localhost:5000/organization/info/user/mathsoc
 // FIELDS   
 //     "organization_id": "MS-101123",
 //     "organization_username": "mathsoc",
@@ -61,12 +61,14 @@ const orgInfo = async (req, res) => {
 //     role: 'President'
 const orgMembers = async (req, res) => {
 
-    let committee = req.body.committee;
-    let role = req.body.role;
-    let status = req.body.membership_status;
-    let gender = req.body.gender;
-    let degree_program = req.body.degree_program;
-    let batch = req.body.batch;
+    var user = req.params.user
+
+    let committee = req.body.committee
+    let role = req.body.role
+    let status = req.body.membership_status
+    let gender = req.body.gender
+    let degree_program = req.body.degree_program
+    let batch = req.body.batch
 
     var query = 
     `SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
@@ -82,31 +84,34 @@ const orgMembers = async (req, res) => {
 
     var whereClause = "";
 
-    if (committee !== null) {
+    if (committee !== "") {
         whereClause += ` WHERE committee = '${committee}'`
     }
-    if (role !== null) {
+    if (role !== "") {
         whereClause += ` AND role = '${role}'`
     } 
-    if (status !== null) {
+    if (status !== "") {
         whereClause += ` AND membership_status = '${status}'`
     } 
-    if (gender !== null) {
+    if (gender !== "") {
         whereClause += ` AND gender = '${gender}'`
     }
-    if (degree_program !== null) {
+    if (degree_program !== "") {
         whereClause += ` AND degree_program = '${degree_program}'`
     }
-    if (batch !== null) {
+    if (batch !== "") {
         whereClause += ` AND batch = '${batch}'`
     }
     if (whereClause!=="") {
         if (whereClause[1]=='A') {
             whereClause = ' WHERE' + whereClause.slice(4, whereClause.length-1) + ';'
         }
+    } else {
+        query += ';'
     }
 
     query += whereClause;
+    console.log(query)
 
     const [rows] = await pool.query(query);
     res.send(rows)
