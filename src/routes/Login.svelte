@@ -29,11 +29,10 @@
     setTimeout(() => {
       if (userType === 'member') {
         // Check member credentials
-        if (username === 'johndoe' && password === 'password') {
+        // if (username === 'johndoe' && password === 'password') {
+        if (auth.validateCredentials(username, password)) {
           auth.login({
             type: 'member',
-            student_number: '2024-0001',
-            member_name: 'John Doe',
             member_username: username
           });
           navigate('/member-dashboard');

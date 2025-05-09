@@ -28,6 +28,7 @@ function createAuthStore() {
 
   return {
     subscribe,
+
     init: () => {
       setLoading(true, 'Initializing...');
       const storedUser = localStorage.getItem('user');
@@ -42,6 +43,7 @@ function createAuthStore() {
       }
       setLoading(false);
     },
+
     login: async (userData) => {
       setLoading(true, 'Logging in...');
       // Simulate network delay
@@ -59,28 +61,43 @@ function createAuthStore() {
       set(userWithoutPassword);
       setLoading(false);
     },
+
     logout: () => {
       setLoading(true, 'Logging out...');
       localStorage.removeItem('user');
       set(null);
       setLoading(false);
     },
-    validateCredentials: async (username, password, type) => {
-      setLoading(true, 'Validating credentials...');
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (type !== 'member' && type !== 'organization') {
-        setLoading(false);
-        return null;
+
+    validateCredentials: async(username, password) => {
+      const res = await fetch('http://localhost:5000/member/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({username: username, password: password})
+      })
+      if (!res.ok) {
+        throw new Error('Failed login attempt')
       }
-      
-      const users = type === 'member' ? mockUsers.members : mockUsers.organizations;
-      const user = users.find(u => u.username === username && u.password === password);
-      
-      setLoading(false);
-      return user;
+      return true
     }
+
+    // validateCredentials: async (username, password, type) => {
+    //   setLoading(true, 'Validating credentials...');
+    //   // Simulate network delay
+    //   await new Promise(resolve => setTimeout(resolve, 1000));
+      
+    //   if (type !== 'member' && type !== 'organization') {
+    //     setLoading(false);
+    //     return null;
+    //   }
+      
+    //   const users = type === 'member' ? mockUsers.members : mockUsers.organizations;
+    //   const user = users.find(u => u.username === username && u.password === password);
+      
+    //   setLoading(false);
+    //   return user;
+    // }
+    
   };
 }
 
