@@ -13,7 +13,7 @@ var user = 'janlevinson'
 //   "gender": "F",
 //   "degree_program": "BS Statistics"
 const memberInfo = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM member_" + user);
+  const [rows] = await pool.query(`SELECT * FROM member WHERE member_username = '${user}';`);
   res.send(rows)
 };
 
@@ -35,7 +35,7 @@ const memberInfo = async (req, res) => {
 const memberTransactions = async (req, res) => {
 
   const query = 
-  `SELECT * FROM feepays_${user}`
+  `SELECT * FROM fee NATURAL JOIN pays NATURAL JOIN member WHERE member_username = '${user}';`
 
   const [rows] = await pool.query(query);
   res.send(rows);
