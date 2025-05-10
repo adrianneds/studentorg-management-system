@@ -219,7 +219,7 @@ const orgRoles = async (req, res) => {
 }
 
 // View status distribution for the last n semesters
-// TEST: http://localhost:5000/organization/memberStatus?n=3
+// TEST: http://localhost:5000/organization/memberStatus/user/mathsoc?n=3
 // FIELDS (per n sem entries)
 //     "percent_active": "100.0000",
 //     "percent_inactive": "0.0000",
@@ -227,6 +227,8 @@ const orgRoles = async (req, res) => {
 //     "semester": "1S",
 //     "academic_year": "2024-2025"
 const orgCountStatus = async (req, res) => {
+
+    let user = req.params.user;
 
     let n = req.query.n;
 

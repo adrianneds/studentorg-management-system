@@ -6,10 +6,14 @@
     import { Dropdown, initFlowbite } from 'flowbite';
 
     let membersCommittee = [];
-    let ayCommittee = "2023-2024";
+    let ayCommittee = "2023-2024"; // default
     let committee = "";
     let committeeOptions = [];
     let ayInput = "";
+    let statusProps = [];
+
+    let nsemCount = 3; // default
+    let nsemCountInput = 0;
 
     // NEW: getting username
     var username = JSON.parse(localStorage.getItem('user')).organization_username
@@ -31,7 +35,9 @@
 
     async function initializeData () {
         await getCommittee();
+        await getStatusProp();
         committeeOptions = membersCommittee.map(o => o.committee).filter(onlyUnique)
+        console.log(committeeOptions)
     }
 
     function updateCommittee(value) {
@@ -45,6 +51,16 @@
         }
         ayCommittee = ayIn;
         getCommittee();
+    }
+
+    function updatensemCount(nsemCountInput) {
+        if (nsemCountInput < 0) {
+            alert('Invalid input');
+        }
+        if (nsemCountInput !== null) {
+            nsemCount = nsemCountInput
+        }
+        getStatusProp();
     }
 
     // NEW: import member data from db server
@@ -61,6 +77,26 @@
       .then(data => {
         membersCommittee = data;
         console.log(membersCommittee);
+      }).catch(error => {
+        console.log(error);
+        return [];
+      });
+    };
+
+    // NEW: import member data from db server
+    async function getStatusProp() {
+      await fetch(`http://localhost:5000/organization/memberStatus/user/${username}?n=${nsemCount}`,
+        {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      )
+      .then(response => response.json())
+      .then(data => {
+        statusProps = data;
+        console.log(statusProps);
       }).catch(error => {
         console.log(error);
         return [];
@@ -178,6 +214,63 @@
 </div>
 
 </div>
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-primary mb-2"> Membership Status throughout the Semesters </h1>
+        <p class="text-secondary"> Table view of percentage of active, inactive, miscellaneous status for the last n semesters </p>
+    </div>
+    
+    <div class="mb-8">
+        <label for="quantity-input" class="block mb-2 text-sm font-medium text-white-900 dark:text-white"> Show {nsemCountInput} semesters </label>
+        <input type="number" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation"
+        class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        placeholder="3" required bind:value={nsemCountInput} on:input={updatensemCount(nsemCountInput)}/>
+    </div>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Percent Active
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Percent Inactive
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Other
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Semester
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Academic Year
+                </th>
+            </tr>
+        </thead>
+        {#each statusProps as statusProp}
+            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+               <td class="px-6 py-4">
+                    {statusProp.percent_active}
+                </td>
+                <td class="px-6 py-4">
+                    {statusProp.percent_inactive}
+                </td>
+                <td class="px-6 py-4">
+                    {statusProp.percent_other}
+                </td>
+                <td class="px-6 py-4">
+                    {statusProp.semester}
+                </td>
+                <td class="px-6 py-4">
+                    {statusProp.academic_year}
+                </td>
+            </tr>
+        {/each}
+    </table>
+    </div>
+    <br><br>
+
 </div>
 
 <style>
@@ -194,6 +287,12 @@
 
    #AYsubmitButton {
     background-color: var(--primary);
+   }
+
+   #quantity-input {
+    width: 50px;
+    height: 20px;
+    border-radius:2px;
    }
 
 </style> 

@@ -10,7 +10,7 @@ orgRouter.get('/info/user/:user', orgInfo);
 orgRouter.get('/unpaidMembers/user/:user', orgUnpaidMembers);
 orgRouter.get('/committeeMembers/user/:user', orgCommitteeMembers);
 orgRouter.get('/roles', orgRoles);
-orgRouter.get('/memberStatus', orgCountStatus);
+orgRouter.get('/memberStatus/user/:user', orgCountStatus);
 orgRouter.get('/alumni', orgAlumni);
 orgRouter.get('/feeStatus/user/:user', orgFeeStatus);
 orgRouter.get('/highestDebt/user/:user', orgHighestDebt);
