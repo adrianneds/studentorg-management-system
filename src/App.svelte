@@ -14,6 +14,7 @@
   import NotFound from "./routes/NotFound.svelte";
   import OrganizationDashboard from './routes/OrganizationDashboard.svelte';
   import MembersList from './routes/MembersList.svelte';
+  import OrganizationFeeMembers from './routes/OrganizationFeeMembers.svelte';
 
   export let url = "";
 
@@ -38,6 +39,7 @@
       <Route path="/member-fees" component={MemberFees} />
       <Route path="/member-fees/:orgId" component={MemberFees} />
       <Route path='/members-list' component={MembersList} />
+      <Route path='/organization-fee-members' component={OrganizationFeeMembers} />
       <Route path="*" component={NotFound} />
     </div>
   </main>

@@ -36,6 +36,7 @@
         overduePayments: 5000
       };
 
+      // NOTE: replace with fees from database
       fees = [
         {
           id: 1,
@@ -262,6 +263,22 @@
       {/if}
     </div>
   </div>
+</div>
+
+<!-- NEW: buttons for viewing full reports  -->
+<div class="glass-card p-6">
+    <h2 class="text-xl font-semibold text-primary mb-4">Reports</h2>
+    <div class="space-y-3">
+    <Link 
+        to="/organization-fee-members" 
+        class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+    >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        Pending Members
+    </Link>
+    </div>
 </div>
 
 {#if showPopup && selectedFee}

@@ -133,8 +133,8 @@ const orgMembers = async (req, res) => {
 
 // TO DO: Add a status update
 
-// View members with late payments for a given semester/AY
-// TEST: http://localhost:5000/organization/unpaidMembers?sem=2S&ay=2023-2024
+// View members with unpaid fees for a given semester/AY
+// TEST: http://localhost:5000/organization/unpaidMembers/user/mathsoc?sem=2S&ay=2023-2024
 // FIELDS
 //     "student_number": "2019-04339",
 //     "member_name": "Jan Levinson",
@@ -146,6 +146,8 @@ const orgMembers = async (req, res) => {
 //     "semester_issued": "2S",
 //     "academic_year_issued": "2023-2024"
 const orgUnpaidMembers = async (req, res) => {
+
+    let user = req.params.user;
     
     let semester = req.query.sem;                  // need to pass to query
     let academic_year = req.query.ay;            
@@ -299,6 +301,7 @@ const orgFeeStatus = async (req, res) => {
 //     "debt": 600
 const orgHighestDebt = async (req, res) => {
 
+    let user = req.params.user;
     let academic_year_debt = req.query.ay;
     let semester_debt = req.query.sem;
 
