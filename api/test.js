@@ -77,16 +77,36 @@ var deletePays = { transaction_id : '1013'}
 // Test add status update
 var newStatusUpdate = { student_number: '2023-20302', organization_id:'MS-101123', committee:'Publicity', batch:'2025A',
     semester:'2S', academic_year:'2024-2025', date_of_status_update:'2025-05-10', role: 'Assistant Head', membership_status: 'Active'}
-needle.post(
-    "http://localhost:5000/organization/addStatusUpdate",
-    newStatusUpdate,
-    { json: true },
-    (err, res) => {
-        console.log(res.body)
-    }
-);
+// needle.post(
+//     "http://localhost:5000/organization/addStatusUpdate",
+//     newStatusUpdate,
+//     { json: true },
+//     (err, res) => {
+//         console.log(res.body)
+//     }
+// );
 
+// Test delete status update
+var deleteStatusUpdate = { status_update_id: 1018 }
+// needle.post(
+//     "http://localhost:5000/organization/deleteStatusUpdate",
+//     deleteStatusUpdate,
+//     { json: true },
+//     (err, res) => {
+//         console.log(res.body)
+//     }
+// );
 
+// Update fee
+var feeUpdate = { fee_id: 'FE-384922', fee_name: '', fee_amount: 50 }
+// needle.post(
+//     "http://localhost:5000/organization/updateFee",
+//     feeUpdate,
+//     { json: true },
+//     (err, res) => {
+//         console.log(res.body)
+//     }
+// );
 
 
 

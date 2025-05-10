@@ -487,12 +487,62 @@ const addStatusUpdate = async (req, res) => {
         res.status(200).json({message: "Successfully added status update"})
     } catch (err) {
         console.log(err)
+        res.status(500).json({message: "Error adding status update"})
+    }
+
+}
+
+// Delete a status update
+const deleteStatusUpdate = async (req, res) => {
+
+    let status_update_id = req.body.status_update_id;
+
+    const query = 
+    `DELETE FROM is_part_of WHERE status_update_id = '${status_update_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully deleted status update"})
+    } catch (err) {
+        console.log(err)
         res.status(500).json({message: "Error deleting status update"})
+    }
+}
+
+// Update a fee
+const updateFee = async (req, res) => {
+
+    let fee_id = req.body.fee_id;
+    let fee_name = req.body.fee_name;
+    let fee_amount = req.body.fee_amount;
+
+    var query = `UPDATE fee SET `;
+
+    if (fee_amount !=="" && fee_amount !== null) {
+        query += ` fee_amount = ${fee_amount}`
+        if (fee_name !== "" && fee_name !== null) {
+            query += `, fee_name = '${fee_name}'`
+        }
+    } else if (fee_name !== "" && fee_name !== null) {
+        query += ` fee_name = '${fee_name}'`
+    } 
+    
+    query += ` WHERE fee_id = '${fee_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully updated fee"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error updating fee"})
     }
 
 }
 
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
-        orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate}
+        orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
+        updateFee}
 
