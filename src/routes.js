@@ -7,6 +7,7 @@ import MemberDashboard from './routes/MemberDashboard.svelte';
 import Members from './routes/Members.svelte';
 import Fees from './routes/Fees.svelte';
 import NotFound from './routes/NotFound.svelte';
+import MembersList from './routes/MembersList.svelte';
 
 // All routes
 export const routes = {
@@ -21,5 +22,6 @@ export const routes = {
   '/fees/:orgId': Fees,
   '/member-fees': MemberFees,
   '/member-fees/:orgId': MemberFees,
+  '/members-list': MembersList,
   '*': NotFound // Catch-all route
 }; 

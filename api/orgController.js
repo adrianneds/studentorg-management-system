@@ -104,7 +104,7 @@ const orgMembers = async (req, res) => {
     }
     if (whereClause!=="") {
         if (whereClause[1]=='A') {
-            whereClause = ' WHERE' + whereClause.slice(4, whereClause.length-1) + ';'
+            whereClause = ' WHERE' + whereClause.slice(4, whereClause.length) + ';'
         }
     } else {
         query += ';'
