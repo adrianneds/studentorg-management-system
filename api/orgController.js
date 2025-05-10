@@ -294,7 +294,7 @@ const orgFeeStatus = async (req, res) => {
 }
 
 // Member with highest debt
-// TEST: http://localhost:5000/organization/highestDebt?ay=2024-2025&sem=1S
+// TEST: http://localhost:5000/organization/highestDebt/user/mathsoc?ay=2024-2025&sem=1S
 // FIELDS
 //     "student_number": "2019-04339",
 //     "member_name": "Jan Levinson",
@@ -302,6 +302,7 @@ const orgFeeStatus = async (req, res) => {
 const orgHighestDebt = async (req, res) => {
 
     let user = req.params.user;
+
     let academic_year_debt = req.query.ay;
     let semester_debt = req.query.sem;
 

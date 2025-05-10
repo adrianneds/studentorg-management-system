@@ -12,13 +12,23 @@
     let status = "unpaid";
     let ayInput = "";
     let members = [];
-    let membersUnpaid = [];
-    let membersLate = [];
+    let semDebt = "2S";
+    let ayDebt = "2023-2024";
+    let ayInputDebt = "";
+    let memberDebt = [];
 
-    function updateSemAY(statusIn, semIn, ayIn) {
-        if ( isNaN(parseInt(ayIn.slice(0,4))) || isNaN(parseInt(ayIn.slice(4,9)))  
+    function validateAY(ayIn) {
+         if ( isNaN(parseInt(ayIn.slice(0,4))) || isNaN(parseInt(ayIn.slice(4,9)))  
             || ayIn[4] != '-' || parseInt(ayIn[3]) != parseInt(ayIn[8]) -1 ) {
             alert("Invalid Academic Year");
+            return
+        } else {
+            return true
+        }
+    }
+
+    function updateSemAY(statusIn, semIn, ayIn) {
+        if (!validateAY(ayIn)) {
             return
         }
         sem = semIn;
@@ -32,6 +42,16 @@
         } else if (status == "late") {
             getMembersLate();
         }
+    }
+
+    function updateSemAYDebt(semIn, ayIn) {
+        if (!validateAY(ayIn)) {
+            return
+        }
+        semDebt = semIn
+        ayDebt = ayIn;
+        console.log(semDebt); console.log(ayDebt)
+        getMemberHighestDebt();
     }
 
     // NEW: getting username
@@ -78,6 +98,26 @@
       });
     };
 
+    // NEW: import member with highest debt from db server
+    async function getMemberHighestDebt() {
+      await fetch(`http://localhost:5000/organization/highestDebt/user/${username}?sem=${semDebt}&ay=${ayDebt}`,
+        {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      )
+      .then(response => response.json())
+      .then(data => {
+        memberDebt = data;
+        console.log(memberDebt);
+      }).catch(error => {
+        console.log(error);
+        return [];
+      });
+    };
+
     onMount(async () => {
         if (!$auth || $auth.type !== 'organization') {
             navigate('/login');
@@ -85,6 +125,7 @@
         }
         initFlowbite();
         getMembersUnpaid();
+        getMemberHighestDebt();
     });
 
 
@@ -216,11 +257,87 @@
         {/each}
     </table>
 </div>
-
-<br>
-
-
 </div>
+
+<div class="max-w-7xl mx-auto h-full flex flex-col">
+    <div class="mb-8">
+        <a name = "debt"> </a>
+        <h1 class="text-3xl font-bold text-primary mb-2"> Highest Debtor </h1>
+        <p class="text-secondary"> Member with highest debt as of a given semester/academic year </p>
+    </div>
+
+    <!-- Dropdown menu -->
+    <div class = "mb-8">
+    <button id="semDropdown2" data-dropdown-toggle="dropdown3" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+        {semDebt}
+    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+    </svg>
+    </button>
+    <div id="dropdown3" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
+        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        <li>
+            <a href="#debt" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateSemAYDebt("1S",ayDebt)}>1st Semester</a>
+        </li>
+        <li>
+            <a href="#debt" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateSemAYDebt("2S",ayDebt)}>2nd Semester</a>
+        </li>
+        <li>
+            <a href="#debt" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={updateSemAYDebt("M",ayDebt)}>Midyear</a>
+        </li>
+        </ul>
+    </div>
+    </div>
+
+    <div class = "mb-8">
+    <div class="w-full max-w-sm min-w-[200px]">
+        <div class="relative">
+            <input id = "AYInput" type="email" class="w-full bg-transparent placeholder:text-slate-600 text-slate-700 text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+            placeholder="e.g., 2023-2024" bind:value={ayInputDebt} />
+            <button id = "AYsubmitButton"
+            class="absolute right-1 top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            type="button" on:click={updateSemAYDebt(semDebt, ayInputDebt)}
+            >
+            Submit
+            </button>
+        </div>
+    </div>
+    </div>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Student Number
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Amount Due
+                </th>
+            </tr>
+        </thead>
+
+    {#each memberDebt as member}
+    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            {member.student_number}
+        </th>
+        <td class="px-6 py-4">
+            {member.member_name}
+        </td>
+        <td class="px-6 py-4">
+            {member.debt}
+        </td>
+    </tr>
+    {/each}
+    </table>
+    </div>
+</div>
+
 </div>
 
 <style>
@@ -228,7 +345,7 @@
     color: var(--text-primary);
   }
 
-    #semDropdown {
+    #semDropdown, #semDropdown2 {
     color: black;
     background-color: var(--text-primary)
   }

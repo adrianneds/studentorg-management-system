@@ -13,7 +13,7 @@ orgRouter.get('/roles', orgRoles);
 orgRouter.get('/memberStatus', orgCountStatus);
 orgRouter.get('/alumni', orgAlumni);
 orgRouter.get('/feeStatus', orgFeeStatus);
-orgRouter.get('/highestDebt', orgHighestDebt);
+orgRouter.get('/highestDebt/user/:user', orgHighestDebt);
 orgRouter.get('/latePayments/user/:user', orgLatePayments);
 orgRouter.post('/orgMembers/user/:user', orgMembers);
 
