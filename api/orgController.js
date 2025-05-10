@@ -527,7 +527,7 @@ const updateFee = async (req, res) => {
     } else if (fee_name !== "" && fee_name !== null) {
         query += ` fee_name = '${fee_name}'`
     } 
-    
+
     query += ` WHERE fee_id = '${fee_id}';`
 
     try {
@@ -541,8 +541,61 @@ const updateFee = async (req, res) => {
 
 }
 
+// Change a status update
+const changeStatusUpdate = async (req, res) => {
+
+    let status_update_id = req.body.status_update_id;
+    let committee = req.body.committee;
+    let batch = req.body.batch;
+    let semester = req.body.semester;
+    let academic_year = req.body.academic_year;
+    let role = req.body.role;
+    let membership_status = req.body.membership_status
+
+    var query = `UPDATE is_part_of SET`;
+    var updateColumnsStr = '';
+    var updateColumns = [];
+
+    if (committee !=="") {
+        updateColumns.push(` committee = '${committee}'`)
+    } 
+    if (batch !=="") {
+        updateColumns.push(`, batch = '${batch}'`)
+    }
+    if (semester !=="") {
+        updateColumns.push(`, semester = '${semester}'`)
+    } 
+    if (academic_year !== "") {
+        updateColumns.push(`, academic_year = '${academic_year}'`)
+    }
+    if (role !== "") {
+        updateColumns.push(`, role = '${role}'`)
+    } 
+    if (membership_status !== "") {
+        updateColumns.push(`, membership_status=${membership_status}`)
+    }
+
+    updateColumnsStr = updateColumns.join()
+
+    if (updateColumnsStr[0]==',') {
+        query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
+    }
+
+    query += ` WHERE status_update_id = '${status_update_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully updated status update"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error updating status update"})
+    }
+
+}
+
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
         orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
-        updateFee}
+        updateFee, changeStatusUpdate}
 

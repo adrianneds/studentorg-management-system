@@ -109,4 +109,14 @@ var feeUpdate = { fee_id: 'FE-384922', fee_name: '', fee_amount: 50 }
 // );
 
 
-
+// Update status update
+var statusUpdate = { status_update_id: '1015', committee: '',
+                    batch: '', semester: '', academic_year:'', role: 'Social Media Manager', membership_status:'' }
+// needle.post(
+//     "http://localhost:5000/organization/changeStatusUpdate",
+//     statusUpdate,
+//     { json: true },
+//     (err, res) => {
+//         console.log(res.body)
+//     }
+// );
