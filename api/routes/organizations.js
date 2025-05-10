@@ -14,7 +14,7 @@ orgRouter.get('/memberStatus', orgCountStatus);
 orgRouter.get('/alumni', orgAlumni);
 orgRouter.get('/feeStatus', orgFeeStatus);
 orgRouter.get('/highestDebt', orgHighestDebt);
-orgRouter.get('/latePayments', orgLatePayments);
+orgRouter.get('/latePayments/user/:user', orgLatePayments);
 orgRouter.post('/orgMembers/user/:user', orgMembers);
 
 export {orgRouter}

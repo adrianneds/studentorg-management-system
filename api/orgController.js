@@ -329,11 +329,15 @@ const orgHighestDebt = async (req, res) => {
 //     "payment_status": "Paid"
 const orgLatePayments = async (req, res) => {
 
+    let user = req.params.user;
+
     let academic_year = req.query.ay;
     let semester = req.query.sem;
 
     const query = 
-    `SELECT student_number, member_name, fee_id, due_date, payment_date, payment_status 
+    `SELECT student_number, member_name, transaction_id, fee_name, fee_amount,
+    semester_issued, academic_year_issued, fee_id, due_date, payment_date, payment_status,
+    semester, academic_year
     FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
     WHERE organization_username = '${user}'
     AND semester = '${semester}' AND academic_year = '${academic_year}'

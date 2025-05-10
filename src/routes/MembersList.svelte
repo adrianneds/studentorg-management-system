@@ -5,6 +5,8 @@
   import { navigate } from 'svelte-routing';
   import { Dropdown, initFlowbite } from 'flowbite';
 
+  initFlowbite();
+
     let members = [];
     let memberQuery = {committee:"", role:"", gender:"", degree_program:"", batch:"",membership_status:""} 
     let committees = [];
@@ -63,7 +65,6 @@
         return;
     }
 
-    initFlowbite();
     initializeData();
 
   });
