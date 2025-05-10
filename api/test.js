@@ -16,12 +16,24 @@ var testOrgMember = { role: 'President', committee: 'Executive', batch:'2022B',
 
 // Test login
 var credentials = { username: 'janlevinson', password: 'jl123'}
-console.log("Member Login test")
-needle.post(
-    "http://localhost:5000/member/login",
-    credentials,
-    { json: true },
-    (err, res) => {
-        console.log(res.body)
-    }
-);
+// console.log("Member Login test")
+// needle.post(
+//     "http://localhost:5000/member/login",
+//     credentials,
+//     { json: true },
+//     (err, res) => {
+//         console.log(res.body)
+//     }
+// );
+
+// Test add fee
+var newFee = { fee_id: 'FE-018394', fee_name: 'Service Fee', fee_amount: 120, organization_id: 'MS-101123'}
+// console.log("Add fee test")
+// needle.post(
+//     "http://localhost:5000/organization/addFee",
+//     newFee,
+//     { json: true },
+//     (err, res) => {
+//         console.log(res.body)
+//     }
+// );
