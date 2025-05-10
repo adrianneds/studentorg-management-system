@@ -594,8 +594,61 @@ const changeStatusUpdate = async (req, res) => {
 
 }
 
+// View all fees
+const viewFees = async (req, res) => {
+
+    let user = req.params.user;
+    const query = 
+    `SELECT fee_id, fee_name, fee_amount FROM fee 
+    NATURAL JOIN organization WHERE organization_username = '${user}';`
+
+    try {
+        const [rows] = await pool.query(query);
+        res.send(rows)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error retrieving fees"})
+    }
+}
+
+// View all status updates
+const viewStatusUpdates = async (req, res) => {
+
+    let user = req.params.user;
+    const query = 
+    `SELECT status_update_id, student_number, committee, batch, semester,
+    academic_year, date_of_status_update, role, membership_status FROM is_part_of 
+    NATURAL JOIN organization WHERE organization_username = '${user}';`
+
+    try {
+        const [rows] = await pool.query(query);
+        res.send(rows)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error retrieving fees"})
+    }
+}
+
+// View all transactions
+const viewTransactions = async (req, res) => {
+
+    let user = req.params.user;
+    const query = 
+    `SELECT transaction_id, student_number, fee_id, fee_amount, fee_name issue_date, semester_issued,
+    academic_year_issued, due_date, payment_date, payment_status, semester, academic_year
+    FROM pays NATURAL JOIN fee NATURAL JOIN organization WHERE organization_username = '${user}';`
+
+    try {
+        const [rows] = await pool.query(query);
+        res.send(rows)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error retrieving transactions"})
+    }
+}
+
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
         orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
-        updateFee, changeStatusUpdate}
+        updateFee, changeStatusUpdate, viewFees, viewStatusUpdates, viewTransactions}
 
