@@ -307,13 +307,15 @@ const orgHighestDebt = async (req, res) => {
     let semester_debt = req.query.sem;
 
     const query = 
-    `SELECT student_number, member_name, SUM(fee_amount) AS debt
+    `
+    SELECT * FROM
+    (SELECT student_number, member_name, SUM(fee_amount) AS debt
     FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
     WHERE organization_username = '${user}'
-    AND payment_status = "Unpaid"
-    AND CONCAT(academic_year_issued,semester_issued) <= CONCAT ('${academic_year_debt}', '${semester_debt}') 
-    GROUP BY student_number
-    ORDER BY debt DESC LIMIT 1;`
+    AND payment_status = 'Unpaid'
+    AND CONCAT(academic_year_issued,semester_issued) <= CONCAT ('${academic_year_debt}', '${semester_debt}')
+    GROUP BY student_number, member_name) AS subquery
+    HAVING debt = MAX(debt);`
 
     const [rows] = await pool.query(query);
     res.send(rows)
