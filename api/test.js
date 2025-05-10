@@ -37,3 +37,56 @@ var newFee = { fee_id: 'FE-018394', fee_name: 'Service Fee', fee_amount: 120, or
 //         console.log(res.body)
 //     }
 // );
+
+// Test delete fee
+var deleteFee = { fee_id: 'FE-018394'}
+// console.log("Delete fee test")
+// needle.post(
+//     "http://localhost:5000/organization/deleteFee",
+//     deleteFee,
+//     { json: true },
+//     (err, res) => {
+//         console.log(res.body)
+//     }
+// );
+
+// Test add transaction
+var newPays = { student_number: '2022-04382', fee_id:'FE-101193', issue_date:'2025-05-10', semester_issued:'2S', 
+    academic_year_issued: '2024-2025', due_date:'2025-05-23', payment_date: '2025-05-10', payment_status:'Paid',
+    semester:'2S', academic_year:'2023-2025'}
+// needle.post(
+//     "http://localhost:5000/organization/addTransaction",
+//     newPays,
+//     { json: true },
+//     (err, res) => {
+//         console.log(res.body)
+//     }
+// );
+
+// Test delete transaction
+var deletePays = { transaction_id : '1013'}
+// needle.post(
+//     "http://localhost:5000/organization/deleteTransaction",
+//     deletePays,
+//     { json: true },
+//     (err, res) => {
+//         console.log(res.body)
+//     }
+// );
+
+// Test add status update
+var newStatusUpdate = { student_number: '2023-20302', organization_id:'MS-101123', committee:'Publicity', batch:'2025A',
+    semester:'2S', academic_year:'2024-2025', date_of_status_update:'2025-05-10', role: 'Assistant Head', membership_status: 'Active'}
+needle.post(
+    "http://localhost:5000/organization/addStatusUpdate",
+    newStatusUpdate,
+    { json: true },
+    (err, res) => {
+        console.log(res.body)
+    }
+);
+
+
+
+
+

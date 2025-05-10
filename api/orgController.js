@@ -384,11 +384,115 @@ const addFee = async (req, res) => {
         console.log(err)
         res.status(500).json({message: "Error adding fee"})
     }
+}
 
+// Delete a fee
+const deleteFee = async (req, res) => {
+
+    let fee_id = req.body.fee_id;
+    const query = `DELETE FROM fee WHERE fee_id = '${fee_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully deleted fee"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error deleting fee"})
+    }
 }
 
 
+// INSERT INTO pays (student_number, fee_id, issue_date, semester_issued,
+// academic_year_issued, due_date, payment_date, payment_status, semester, academic_year)
+// VALUES 
+// ('2022-15733', 'FE-00044', '2024-05-02', '1S', '2024-2025', '2024-10-01',
+// '2024-12-10', 'Paid', '1S', '2024-2025');
+
+
+// Add transaction
+const addPays = async (req, res) => {
+
+    let student_number = req.body.student_number;
+    let fee_id = req.body.fee_id;
+    let issue_date = req.body.issue_date;
+    let semester_issued = req.body.semester_issued;
+    let academic_year_issued = req.body.academic_year_issued;
+    let due_date = req.body.due_date;
+    let payment_date = req.body.payment_date;
+    let payment_status = req.body.payment_status;
+    let semester = req.body.semester;
+    let academic_year = req.body.academic_year;
+
+    const query = 
+    `INSERT INTO pays (student_number, fee_id, issue_date, semester_issued,
+    academic_year_issued, due_date, payment_date, payment_status, semester, academic_year)
+    VALUES 
+    ('${student_number}', '${fee_id}', '${issue_date}', '${semester_issued}', '${academic_year_issued}',
+    '${due_date}', '${payment_date}', '${payment_status}', '${semester}', '${academic_year}');`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully added transaction"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error adding transaction"})
+    }
+
+}
+
+// Delete transaction
+const deletePays = async (req, res) => {
+
+    let transaction_id = req.body.transaction_id;
+
+    const query = 
+    `DELETE FROM pays WHERE transaction_id = '${transaction_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully deleted transaction"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error deleting transaction"})
+    }
+
+}
+
+// Add status update
+const addStatusUpdate = async (req, res) => {
+
+    let student_number = req.body.student_number;
+    let organization_id = req.body.organization_id;
+    let committee = req.body.committee;
+    let batch = req.body.batch;
+    let semester = req.body.semester;
+    let academic_year = req.body.academic_year;
+    let date_of_status_update = req.body.date_of_status_update;
+    let role = req.body.role;
+    let membership_status = req.body.membership_status;
+
+    const query = 
+    `INSERT INTO is_part_of 
+    (student_number, organization_id, committee, batch, semester, academic_year,
+    date_of_status_update, role, membership_status)
+    VALUES ('${student_number}', '${organization_id}', '${committee}', '${batch}', '${semester}', '${academic_year}',
+    '${date_of_status_update}', '${role}', '${membership_status}');`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully added status update"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error deleting status update"})
+    }
+
+}
+
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
-        orgMembers, logIn, addFee}
+        orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate}
 

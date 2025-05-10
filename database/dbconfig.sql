@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS is_part_of (
     CONSTRAINT ispartof_statusupdateid_pk PRIMARY KEY(status_update_id),
     CONSTRAINT ispartof_studentnumber_fk FOREIGN KEY(student_number) REFERENCES member(student_number),
     CONSTRAINT ispartof_organizationid_fk FOREIGN KEY(organization_id) REFERENCES organization(organization_id),
-    CONSTRAINT ispartof_studentnumber_semester_academicyear_uk UNIQUE(student_number, semester, academic_year) -- only one update per sem
+    CONSTRAINT ispartof_studentnumber_semester_org_academicyear_uk UNIQUE(student_number, organization_id, semester, academic_year) -- only one update per sem
 ) AUTO_INCREMENT=1000;
 
 -- FEE(Fee_id, Fee_name, Fee_amount, Organization_id)
