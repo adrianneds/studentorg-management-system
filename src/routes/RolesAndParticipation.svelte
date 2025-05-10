@@ -335,7 +335,8 @@
     
     <div class="mb-8">
         <label for="quantity-input" class="block mb-2 text-sm font-medium text-white-900 dark:text-white"> Show {nsemCountInput} semesters </label>
-        <input type="number" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation"
+        <a name="#number-input"> </a>
+        <input type="number" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" href="#number-input"
         class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         placeholder="3" required bind:value={nsemCountInput} on:input={updatensemCount(nsemCountInput)}/>
     </div>
@@ -404,7 +405,7 @@
 
    #quantity-input {
     width: 50px;
-    height: 20px;
+    height: 30px;
     border-radius:2px;
    }
 

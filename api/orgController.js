@@ -254,7 +254,7 @@ const orgCountStatus = async (req, res) => {
 }
 
 // View alumni
-// TEST: http://localhost:5000/organization/alumni?date=2024-07-20
+// TEST: http://localhost:5000/organization/alumni/user/mathsoc?date=2024-07-20
 // FIELDS
 //     "student_number": "2019-04339",
 //     "member_name": "Jan Levinson",
@@ -265,10 +265,11 @@ const orgCountStatus = async (req, res) => {
 
 const orgAlumni = async (req, res) => {
 
+    let user = req.params.user;
     let alumni_date = req.query.date;
 
     const query = 
-    `SELECT student_number, member_name, gender, degree_program, date_of_status_update, membership_status
+    `SELECT student_number, member_name, gender, degree_program, date_of_status_update, membership_status, batch
     FROM member NATURAL JOIN is_part_of NATURAL JOIN organization
     WHERE organization_username = '${user}'
     AND membership_status = "Alumni"

@@ -10,6 +10,7 @@ import NotFound from './routes/NotFound.svelte';
 import MembersList from './routes/MembersList.svelte';
 import OrganizationFeeMembers from './routes/OrganizationFeeMembers.svelte';
 import RolesAndParticipation from './routes/RolesAndParticipation.svelte';
+import Alumni from './routes/Alumni.svelte';
 
 // All routes
 export const routes = {
@@ -27,5 +28,6 @@ export const routes = {
   '/members-list': MembersList,
   '/organization-fee-members': OrganizationFeeMembers,
   '/roles-and-participation': RolesAndParticipation,
+  '/alumni': Alumni,
   '*': NotFound // Catch-all route
 }; 
