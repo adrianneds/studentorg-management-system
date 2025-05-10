@@ -267,12 +267,13 @@ const orgAlumni = async (req, res) => {
 }
 
 // View total paid/unpaid fees
-// TEST: http://localhost:5000/organization/feeStatus?date=2024-01-01
+// TEST: http://localhost:5000/organization/feeStatus/user/mathsoc?date=2024-01-01
 // FIELDS
 //      "unpaid": 200,
 //      "paid": 90
 const orgFeeStatus = async (req, res) => {
 
+    let user = req.params.user;
     let fee_date = req.query.date;
 
     const query = 

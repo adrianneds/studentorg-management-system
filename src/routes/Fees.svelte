@@ -16,12 +16,41 @@
   let paymentMethod = '';
   let processingPayment = false;
   let paymentError = null;
+  let feeStatus = {'unpaid':999, 'paid':999}
   
   onMount(async () => {
     if (!$auth || $auth.type !== 'organization') {
       navigate('/login');
       return;
     }
+
+    // NEW: getting username
+    var username = JSON.parse(localStorage.getItem('user')).organization_username
+    console.log(username)
+
+    // NEW: import member with unpaid fees data from db server
+    async function getFeeStatus() {
+      let currdate = new Date().toISOString().slice(0, 10);
+      console.log(currdate)
+      await fetch(`http://localhost:5000/organization/feeStatus/user/${username}?date=${currdate}`,
+        {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      )
+      .then(response => response.json())
+      .then(data => {
+        feeStatus = data[0];
+        console.log(feeStatus);
+      }).catch(error => {
+        console.log(error);
+        return [];
+      });
+    };
+
+    getFeeStatus();
 
     // Simulate loading organization and fees
     setTimeout(() => {
@@ -176,20 +205,20 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Total Revenue</div>
-        <div class="text-2xl font-semibold text-primary">₱{organization?.totalRevenue?.toLocaleString() || 0}</div>
+        <div class="text-2xl font-semibold text-primary">₱{feeStatus.paid}</div>
       </div>
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Pending Payments</div>
-        <div class="text-2xl font-semibold text-primary">₱{organization?.pendingPayments?.toLocaleString() || 0}</div>
+        <div class="text-2xl font-semibold text-primary">₱{feeStatus.unpaid}</div>
       </div>
-      <div class="glass-card p-6">
+      <!-- <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Overdue Payments</div>
         <div class="text-2xl font-semibold text-primary">₱{organization?.overduePayments?.toLocaleString() || 0}</div>
       </div>
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Active Members</div>
         <div class="text-2xl font-semibold text-primary">{organization?.activeMembers || 0}</div>
-      </div>
+      </div> -->
     </div>
 
     <div class="flex-1 overflow-hidden">
