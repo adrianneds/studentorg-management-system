@@ -9,7 +9,7 @@ orgRouter.post('/login', logIn);
 orgRouter.get('/info/user/:user', orgInfo);
 orgRouter.get('/unpaidMembers/user/:user', orgUnpaidMembers);
 orgRouter.get('/committeeMembers/user/:user', orgCommitteeMembers);
-orgRouter.get('/roles', orgRoles);
+orgRouter.get('/roles/user/:user', orgRoles);
 orgRouter.get('/memberStatus/user/:user', orgCountStatus);
 orgRouter.get('/alumni', orgAlumni);
 orgRouter.get('/feeStatus/user/:user', orgFeeStatus);

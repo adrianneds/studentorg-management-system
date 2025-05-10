@@ -10,10 +10,14 @@
     let committee = "";
     let committeeOptions = [];
     let ayInput = "";
-    let statusProps = [];
+
+    let role = "";
+    let membersRole = [];
+    let roleOptions = [];
 
     let nsemCount = 3; // default
     let nsemCountInput = 0;
+    let statusProps = [];
 
     // NEW: getting username
     var username = JSON.parse(localStorage.getItem('user')).organization_username
@@ -35,15 +39,25 @@
 
     async function initializeData () {
         await getCommittee();
+        await getMemberRoles();
         await getStatusProp();
+
         committeeOptions = membersCommittee.map(o => o.committee).filter(onlyUnique)
+        roleOptions = membersRole.map(o => o.role).filter(onlyUnique)
         console.log(committeeOptions)
+        console.log(roleOptions)
     }
 
     function updateCommittee(value) {
         committee = value;
         getCommittee();
     }
+
+    function updateRole(value) {
+        role = value;
+        getMemberRoles();
+    }
+
 
     function updateAY(ayIn) {
         if (!validateAY(ayIn)) {
@@ -97,6 +111,26 @@
       .then(data => {
         statusProps = data;
         console.log(statusProps);
+      }).catch(error => {
+        console.log(error);
+        return [];
+      });
+    };
+
+    // NEW: import member data from db server
+    async function getMemberRoles() {
+      await fetch(`http://localhost:5000/organization/roles/user/${username}?role=${role}`,
+        {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      )
+      .then(response => response.json())
+      .then(data => {
+        membersRole = data;
+        console.log(membersRole);
       }).catch(error => {
         console.log(error);
         return [];
@@ -212,9 +246,88 @@
         {/each}
     </table>
 </div>
-
 </div>
 
+<!-- ROLES  -->
+    <div class="mb-8">
+        <a name = "role"> </a>
+        <h1 class="text-3xl font-bold text-primary mb-2"> Roles </h1>
+        <p class="text-secondary"> Table view of members given selected roles in reverse chronological order </p>
+    </div>
+
+    <div class="mb-8">
+    <!-- Dropdown menu -->
+    <button id="roleDropdown" data-dropdown-toggle="dropdown2" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+        {role!=""?role : "Role"}
+    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+    </svg>
+    </button>
+    <div id="dropdown2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
+        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        {#each roleOptions as role}
+            <li>
+                <a href="#role" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateRole(role)}>{role}</a>
+            </li>
+        {/each}
+            <li>
+                <a href="#role" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateRole("")}> Any </a>
+            </li>
+        </ul>
+    </div>
+    </div>
+
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Student Number
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Committee
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Role
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Semester
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Academic Year
+                </th>
+            </tr>
+        </thead>
+        {#each membersRole as member}
+            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {member.student_number}
+                </th>
+                <td class="px-6 py-4">
+                    {member.member_name}
+                </td>
+                <td class="px-6 py-4">
+                    {member.committee}
+                </td>
+                <td class="px-6 py-4">
+                    {member.role}
+                </td>
+                <td class="px-6 py-4">
+                    {member.semester}
+                </td>
+                <td class="px-6 py-4">
+                    {member.academic_year}
+                </td>
+            </tr>
+        {/each}
+    </table>
+</div>
+<br>
+
+<!-- MEMBERSHIP STATUS -->
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-primary mb-2"> Membership Status throughout the Semesters </h1>
         <p class="text-secondary"> Table view of percentage of active, inactive, miscellaneous status for the last n semesters </p>
@@ -277,7 +390,7 @@
   h1 {
     color: var(--text-primary);
   }
-  #committeeDropdown {
+  #committeeDropdown, #roleDropdown {
     background-color: var(--primary);
   }
     #AYInput {

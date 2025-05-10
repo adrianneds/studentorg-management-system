@@ -195,7 +195,7 @@ const orgCommitteeMembers = async (req, res) => {
 }
 
 // View roles
-// TEST: http://localhost:5000/organization/roles?role=President&ay=2023-2024
+// TEST: http://localhost:5000/organization/roles/user/mathsoc/?role=President
 // FIELDS
 //     "student_number": "2022-04382",
 //     "member_name": "Pam Beesly",
@@ -203,16 +203,20 @@ const orgCommitteeMembers = async (req, res) => {
 //     "academic_year": "2024-2025"
 const orgRoles = async (req, res) => {
 
+    let user = req.params.user;
     let role = req.query.role;
-    let academic_year = req.query.ay;
 
-    const query = 
-    `SELECT DISTINCT c.student_number, c.member_name, b.role, b.academic_year
+    var query = `SELECT DISTINCT c.student_number, c.member_name, b.role, b.academic_year,
+    b.committee, b.semester
     FROM (organization NATURAL JOIN is_part_of AS b)
     JOIN member c ON b.student_number = c.student_number
-    WHERE organization_username = '${user}'
-    AND b.role = '${role}'
-    ORDER BY b.academic_year DESC;`
+    WHERE organization_username = '${user}'`
+
+    if (role !== "") {
+        query += ` AND b.role = '${role}'`
+    }
+
+    query += ` ORDER BY b.academic_year DESC;`
 
     const [rows] = await pool.query(query);
     res.send(rows)
