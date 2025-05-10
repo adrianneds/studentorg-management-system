@@ -128,7 +128,6 @@
         getMemberHighestDebt();
     });
 
-
 </script> 
     
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
@@ -364,4 +363,3 @@
    }
 
 </style>
-    

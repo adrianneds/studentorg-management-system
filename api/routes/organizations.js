@@ -8,7 +8,7 @@ const orgRouter = express.Router();  // use Router to define and manage the API 
 orgRouter.post('/login', logIn);
 orgRouter.get('/info/user/:user', orgInfo);
 orgRouter.get('/unpaidMembers/user/:user', orgUnpaidMembers);
-orgRouter.get('/committeeMembers', orgCommitteeMembers);
+orgRouter.get('/committeeMembers/user/:user', orgCommitteeMembers);
 orgRouter.get('/roles', orgRoles);
 orgRouter.get('/memberStatus', orgCountStatus);
 orgRouter.get('/alumni', orgAlumni);

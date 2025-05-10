@@ -164,7 +164,7 @@ const orgUnpaidMembers = async (req, res) => {
 };
 
 // View members of a specific committee given an AY
-// TEST: http://localhost:5000/organization/committeeMembers?ay=2023-2024&committee=Executive
+// TEST: http://localhost:5000/organization/committeeMembers/user/mathsoc?ay=2023-2024&committee=Executive
 // FIELDS
 //     "student_number": "2019-04339",
 //     "member_name": "Jan Levinson",
@@ -173,16 +173,22 @@ const orgUnpaidMembers = async (req, res) => {
 //     "academic_year": "2023-2024"
 const orgCommitteeMembers = async (req, res) => {
 
+    let user = req.params.user;
+
     let committee = req.query.committee;
     let academic_year = req.query.ay;
 
-    const query = 
-    `SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year
+    var query =`SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year, b.semester
     FROM (organization NATURAL JOIN is_part_of AS b)
     JOIN member c ON b.student_number = c.student_number
     WHERE organization_username = '${user}'
-    AND b.committee = '${committee}'
-    AND b.academic_year = '${academic_year}';`
+    AND b.academic_year = '${academic_year}'`
+
+    if (committee != "") {
+        query += ` AND b.committee = '${committee}'`
+    }
+
+    query += ";"
 
     const [rows] = await pool.query(query);
     res.send(rows)
