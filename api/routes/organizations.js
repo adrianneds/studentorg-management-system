@@ -1,19 +1,33 @@
 import express from 'express';
 import {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
      orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt,
-     orgLatePayments,orgMembers} from '../orgController.js';
+     orgLatePayments,orgMembers, logIn, addFee, deleteFee, addPays, deletePays,
+     addStatusUpdate, deleteStatusUpdate, updateFee, changeStatusUpdate, viewFees,
+     viewStatusUpdates, viewTransactions} from '../orgController.js';
 // import all the functions from controller.js
 
 const orgRouter = express.Router();  // use Router to define and manage the API routes 
-orgRouter.get('/info', orgInfo);
-orgRouter.get('/unpaidMembers', orgUnpaidMembers);
-orgRouter.get('/committeeMembers', orgCommitteeMembers);
-orgRouter.get('/roles', orgRoles);
-orgRouter.get('/memberStatus', orgCountStatus);
-orgRouter.get('/alumni', orgAlumni);
-orgRouter.get('/feeStatus', orgFeeStatus);
-orgRouter.get('/highestDebt', orgHighestDebt);
-orgRouter.get('/latePayments', orgLatePayments);
-orgRouter.post('/orgMembers', orgMembers);
+orgRouter.post('/login', logIn);
+orgRouter.get('/info/user/:user', orgInfo);
+orgRouter.get('/unpaidMembers/user/:user', orgUnpaidMembers);
+orgRouter.get('/committeeMembers/user/:user', orgCommitteeMembers);
+orgRouter.get('/roles/user/:user', orgRoles);
+orgRouter.get('/memberStatus/user/:user', orgCountStatus);
+orgRouter.get('/alumni/user/:user', orgAlumni);
+orgRouter.get('/feeStatus/user/:user', orgFeeStatus);
+orgRouter.get('/highestDebt/user/:user', orgHighestDebt);
+orgRouter.get('/latePayments/user/:user', orgLatePayments);
+orgRouter.post('/orgMembers/user/:user', orgMembers);
+orgRouter.post('/addFee', addFee);
+orgRouter.post('/deleteFee', deleteFee);
+orgRouter.post('/addTransaction', addPays);
+orgRouter.post('/deleteTransaction', deletePays);
+orgRouter.post('/addStatusUpdate', addStatusUpdate);
+orgRouter.post('/deleteStatusUpdate', deleteStatusUpdate);
+orgRouter.post('/updateFee', updateFee);
+orgRouter.post('/changeStatusUpdate', changeStatusUpdate);
+orgRouter.get('/viewFees/user/:user', viewFees);
+orgRouter.get('/viewStatusUpdates/user/:user', viewStatusUpdates);
+orgRouter.get('/viewTransactions/user/:user', viewTransactions);
 
 export {orgRouter}

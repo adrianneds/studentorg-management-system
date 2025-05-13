@@ -5,6 +5,7 @@
   import { Link } from 'svelte-routing';
   
   let organizations = [];
+  let memberInfo = {};
   let loading = true;
   let error = null;
   let searchQuery = '';
@@ -16,8 +17,26 @@
       return;
     }
 
+  // NEW: getting username
+  var username = JSON.parse(localStorage.getItem('user')).member_username
+
+  // NEW: import member data from db server
+  async function getMemberInfo() {
+    fetch(`http://localhost:5000/member/info/user/${username}`)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data[0])
+      memberInfo = data[0];
+    }).catch(error => {
+      console.log(error);
+      return [];
+    });
+  };
+
     // Simulate loading member's organizations
     setTimeout(() => {
+      getMemberInfo();
+      console.log(memberInfo);
       organizations = [
         {
           id: 1,
@@ -63,6 +82,17 @@
 </script>
 
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
+
+<!-- NEW: Member information/profile -->
+<div class="flex-1 overflow-hidden">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-primary mb-2">Welcome, {memberInfo.member_name} </h1>
+        <p class="text-secondary"> Student Number: {memberInfo.student_number} </p>
+        <p class="text-secondary"> Degree Program: {memberInfo.degree_program} </p>
+        <p class="text-secondary"> Gender: {memberInfo.gender == 'F' ? 'Female' : 'Male'} </p>
+    </div>
+</div>
+
   <div class="max-w-7xl mx-auto h-full flex flex-col">
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-primary mb-2">My Organizations</h1>

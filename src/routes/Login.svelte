@@ -29,11 +29,10 @@
     setTimeout(() => {
       if (userType === 'member') {
         // Check member credentials
-        if (username === 'johndoe' && password === 'password') {
+        // if (username === 'johndoe' && password === 'password') {
+        if (auth.validateCredentials(username, password, 'member')) {
           auth.login({
             type: 'member',
-            student_number: '2024-0001',
-            member_name: 'John Doe',
             member_username: username
           });
           navigate('/member-dashboard');
@@ -42,11 +41,10 @@
         }
       } else {
         // Check organization credentials
-        if (username === 'compsoc' && password === 'password') {
+        // if (username === 'compsoc' && password === 'password') {
+        if (auth.validateCredentials(username, password, 'organization')) {
           auth.login({
             type: 'organization',
-            organization_id: 'CS-101123',
-            organization_name: 'Computer Society',
             organization_username: username
           });
           navigate('/organization-dashboard');

@@ -23,6 +23,22 @@
       return;
     }
 
+  // NEW: getting username
+  var username = JSON.parse(localStorage.getItem('user')).member_username
+
+    // NEW: import fee data from db server
+  async function getFees() {
+    fetch(`http://localhost:5000/member/transactions/user/${username}`)
+    .then(response => response.json())
+    .then(data => {
+      fees = data;
+      console.log(fees);
+    }).catch(error => {
+      console.log(error);
+      return [];
+    });
+  };
+
     // Simulate loading organization and fees
     setTimeout(() => {
       organization = {
@@ -36,19 +52,6 @@
       loading = false;
     }, 1000);
   });
-
-  // NEW: import fee data from db server
-  async function getFees() {
-    fetch("http://localhost:5000/member/transactions")
-    .then(response => response.json())
-    .then(data => {
-      fees = data;
-      console.log(fees);
-    }).catch(error => {
-      console.log(error);
-      return [];
-    });
-  };
 
   function handlePayment(fee) {
     selectedFee = fee;

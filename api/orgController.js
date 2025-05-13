@@ -1,16 +1,47 @@
 import {pool} from './connect.js';
 
 // SAMPLE USER
-var user = 'mathsoc'
+// var user = 'mathsoc' //msoc123
+
+// Login function
+const SECRET_KEY ='secret'
+const logIn = async (req, res) => {
+
+  let username = req.body.username
+  let password = req.body.password
+
+  var query = 
+  `SELECT organization_username, organization_password, organization_id FROM organization`
+  const [rows] = await pool.query(query);
+
+  try {
+    let user = rows.find(o => o.organization_username === username && o.organization_password === password)
+    console.log(user)
+    if (!user) {
+        res.status(401).json({message: "Invalid credentials"})
+    }
+    try {
+      //const token = jwt.sign({userId: user.organization_id}, SECRET_KEY, {expiresIn: '1hr'})
+      res.status(200).json({message: "Successful login"})
+    } catch(err) {
+      res.status(500).json({message: 'Error logging in ' + err})
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(401).json({message: "Invalid credentials " + err})
+  }
+
+};
 
 // View organization's own info
-// TEST     : http://localhost:5000/organization/info
+// TEST     : http://localhost:5000/organization/info/user/mathsoc
 // FIELDS   
 //     "organization_id": "MS-101123",
 //     "organization_username": "mathsoc",
 //     "organization_password": "msoc123",
 //     "organization_name": "Mathematics Society"
 const orgInfo = async (req, res) => {
+    var user = req.params.user;
     var query = `SELECT * FROM organization WHERE organization_username = '${user}';`
     const [rows] = await pool.query(query);
     res.send(rows)
@@ -30,12 +61,14 @@ const orgInfo = async (req, res) => {
 //     role: 'President'
 const orgMembers = async (req, res) => {
 
-    let committee = req.body.committee;
-    let role = req.body.role;
-    let status = req.body.membership_status;
-    let gender = req.body.gender;
-    let degree_program = req.body.degree_program;
-    let batch = req.body.batch;
+    var user = req.params.user
+
+    let committee = req.body.committee
+    let role = req.body.role
+    let status = req.body.membership_status
+    let gender = req.body.gender
+    let degree_program = req.body.degree_program
+    let batch = req.body.batch
 
     var query = 
     `SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
@@ -51,31 +84,34 @@ const orgMembers = async (req, res) => {
 
     var whereClause = "";
 
-    if (committee !== null) {
+    if (committee !== "") {
         whereClause += ` WHERE committee = '${committee}'`
     }
-    if (role !== null) {
+    if (role !== "") {
         whereClause += ` AND role = '${role}'`
     } 
-    if (status !== null) {
+    if (status !== "") {
         whereClause += ` AND membership_status = '${status}'`
     } 
-    if (gender !== null) {
+    if (gender !== "") {
         whereClause += ` AND gender = '${gender}'`
     }
-    if (degree_program !== null) {
+    if (degree_program !== "") {
         whereClause += ` AND degree_program = '${degree_program}'`
     }
-    if (batch !== null) {
+    if (batch !== "") {
         whereClause += ` AND batch = '${batch}'`
     }
     if (whereClause!=="") {
         if (whereClause[1]=='A') {
-            whereClause = ' WHERE' + whereClause.slice(4, whereClause.length-1) + ';'
+            whereClause = ' WHERE' + whereClause.slice(4, whereClause.length) + ';'
         }
+    } else {
+        query += ';'
     }
 
     query += whereClause;
+    console.log(query)
 
     const [rows] = await pool.query(query);
     res.send(rows)
@@ -97,8 +133,8 @@ const orgMembers = async (req, res) => {
 
 // TO DO: Add a status update
 
-// View members with late payments for a given semester/AY
-// TEST: http://localhost:5000/organization/unpaidMembers?sem=2S&ay=2023-2024
+// View members with unpaid fees for a given semester/AY
+// TEST: http://localhost:5000/organization/unpaidMembers/user/mathsoc?sem=2S&ay=2023-2024
 // FIELDS
 //     "student_number": "2019-04339",
 //     "member_name": "Jan Levinson",
@@ -110,6 +146,8 @@ const orgMembers = async (req, res) => {
 //     "semester_issued": "2S",
 //     "academic_year_issued": "2023-2024"
 const orgUnpaidMembers = async (req, res) => {
+
+    let user = req.params.user;
     
     let semester = req.query.sem;                  // need to pass to query
     let academic_year = req.query.ay;            
@@ -126,7 +164,7 @@ const orgUnpaidMembers = async (req, res) => {
 };
 
 // View members of a specific committee given an AY
-// TEST: http://localhost:5000/organization/committeeMembers?ay=2023-2024&committee=Executive
+// TEST: http://localhost:5000/organization/committeeMembers/user/mathsoc?ay=2023-2024&committee=Executive
 // FIELDS
 //     "student_number": "2019-04339",
 //     "member_name": "Jan Levinson",
@@ -135,23 +173,29 @@ const orgUnpaidMembers = async (req, res) => {
 //     "academic_year": "2023-2024"
 const orgCommitteeMembers = async (req, res) => {
 
+    let user = req.params.user;
+
     let committee = req.query.committee;
     let academic_year = req.query.ay;
 
-    const query = 
-    `SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year
+    var query =`SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year, b.semester
     FROM (organization NATURAL JOIN is_part_of AS b)
     JOIN member c ON b.student_number = c.student_number
     WHERE organization_username = '${user}'
-    AND b.committee = '${committee}'
-    AND b.academic_year = '${academic_year}';`
+    AND b.academic_year = '${academic_year}'`
+
+    if (committee != "") {
+        query += ` AND b.committee = '${committee}'`
+    }
+
+    query += ";"
 
     const [rows] = await pool.query(query);
     res.send(rows)
 }
 
 // View roles
-// TEST: http://localhost:5000/organization/roles?role=President&ay=2023-2024
+// TEST: http://localhost:5000/organization/roles/user/mathsoc/?role=President
 // FIELDS
 //     "student_number": "2022-04382",
 //     "member_name": "Pam Beesly",
@@ -159,23 +203,27 @@ const orgCommitteeMembers = async (req, res) => {
 //     "academic_year": "2024-2025"
 const orgRoles = async (req, res) => {
 
+    let user = req.params.user;
     let role = req.query.role;
-    let academic_year = req.query.ay;
 
-    const query = 
-    `SELECT DISTINCT c.student_number, c.member_name, b.role, b.academic_year
+    var query = `SELECT DISTINCT c.student_number, c.member_name, b.role, b.academic_year,
+    b.committee, b.semester
     FROM (organization NATURAL JOIN is_part_of AS b)
     JOIN member c ON b.student_number = c.student_number
-    WHERE organization_username = '${user}'
-    AND b.role = '${role}'
-    ORDER BY b.academic_year DESC;`
+    WHERE organization_username = '${user}'`
+
+    if (role !== "") {
+        query += ` AND b.role = '${role}'`
+    }
+
+    query += ` ORDER BY b.academic_year DESC;`
 
     const [rows] = await pool.query(query);
     res.send(rows)
 }
 
 // View status distribution for the last n semesters
-// TEST: http://localhost:5000/organization/memberStatus?n=3
+// TEST: http://localhost:5000/organization/memberStatus/user/mathsoc?n=3
 // FIELDS (per n sem entries)
 //     "percent_active": "100.0000",
 //     "percent_inactive": "0.0000",
@@ -183,6 +231,8 @@ const orgRoles = async (req, res) => {
 //     "semester": "1S",
 //     "academic_year": "2024-2025"
 const orgCountStatus = async (req, res) => {
+
+    let user = req.params.user;
 
     let n = req.query.n;
 
@@ -204,7 +254,7 @@ const orgCountStatus = async (req, res) => {
 }
 
 // View alumni
-// TEST: http://localhost:5000/organization/alumni?date=2024-07-20
+// TEST: http://localhost:5000/organization/alumni/user/mathsoc?date=2024-07-20
 // FIELDS
 //     "student_number": "2019-04339",
 //     "member_name": "Jan Levinson",
@@ -215,10 +265,11 @@ const orgCountStatus = async (req, res) => {
 
 const orgAlumni = async (req, res) => {
 
+    let user = req.params.user;
     let alumni_date = req.query.date;
 
     const query = 
-    `SELECT student_number, member_name, gender, degree_program, date_of_status_update, membership_status
+    `SELECT student_number, member_name, gender, degree_program, date_of_status_update, membership_status, batch
     FROM member NATURAL JOIN is_part_of NATURAL JOIN organization
     WHERE organization_username = '${user}'
     AND membership_status = "Alumni"
@@ -229,12 +280,13 @@ const orgAlumni = async (req, res) => {
 }
 
 // View total paid/unpaid fees
-// TEST: http://localhost:5000/organization/feeStatus?date=2024-01-01
+// TEST: http://localhost:5000/organization/feeStatus/user/mathsoc?date=2024-01-01
 // FIELDS
 //      "unpaid": 200,
 //      "paid": 90
 const orgFeeStatus = async (req, res) => {
 
+    let user = req.params.user;
     let fee_date = req.query.date;
 
     const query = 
@@ -256,24 +308,28 @@ const orgFeeStatus = async (req, res) => {
 }
 
 // Member with highest debt
-// TEST: http://localhost:5000/organization/highestDebt?ay=2024-2025&sem=1S
+// TEST: http://localhost:5000/organization/highestDebt/user/mathsoc?ay=2024-2025&sem=1S
 // FIELDS
 //     "student_number": "2019-04339",
 //     "member_name": "Jan Levinson",
 //     "debt": 600
 const orgHighestDebt = async (req, res) => {
 
+    let user = req.params.user;
+
     let academic_year_debt = req.query.ay;
     let semester_debt = req.query.sem;
 
     const query = 
-    `SELECT student_number, member_name, SUM(fee_amount) AS debt
+    `
+    SELECT * FROM
+    (SELECT student_number, member_name, SUM(fee_amount) AS debt
     FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
     WHERE organization_username = '${user}'
-    AND payment_status = "Unpaid"
-    AND CONCAT(academic_year_issued,semester_issued) <= CONCAT ('${academic_year_debt}', '${semester_debt}') 
-    GROUP BY student_number
-    ORDER BY debt DESC LIMIT 1;`
+    AND payment_status = 'Unpaid'
+    AND CONCAT(academic_year_issued,semester_issued) <= CONCAT ('${academic_year_debt}', '${semester_debt}')
+    GROUP BY student_number, member_name) AS subquery
+    HAVING debt = MAX(debt);`
 
     const [rows] = await pool.query(query);
     res.send(rows)
@@ -290,11 +346,15 @@ const orgHighestDebt = async (req, res) => {
 //     "payment_status": "Paid"
 const orgLatePayments = async (req, res) => {
 
+    let user = req.params.user;
+
     let academic_year = req.query.ay;
     let semester = req.query.sem;
 
     const query = 
-    `SELECT student_number, member_name, fee_id, due_date, payment_date, payment_status 
+    `SELECT student_number, member_name, transaction_id, fee_name, fee_amount,
+    semester_issued, academic_year_issued, fee_id, due_date, payment_date, payment_status,
+    semester, academic_year
     FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
     WHERE organization_username = '${user}'
     AND semester = '${semester}' AND academic_year = '${academic_year}'
@@ -304,7 +364,291 @@ const orgLatePayments = async (req, res) => {
     res.send(rows)
 }
 
+// Add a fee
+const addFee = async (req, res) => {
+
+    let fee_id = req.body.fee_id;
+    let fee_name = req.body.fee_name;
+    let fee_amount = req.body.fee_amount;
+    let organization_id = req.body.organization_id; // not entered manually by user
+
+    const query =
+    `INSERT INTO fee (fee_id, fee_name, fee_amount, organization_id)
+    VALUES ('${fee_id}', '${fee_name}', '${fee_amount}', '${organization_id}');`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully added fee"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error adding fee"})
+    }
+}
+
+// Delete a fee
+const deleteFee = async (req, res) => {
+
+    let fee_id = req.body.fee_id;
+    const query = `DELETE FROM fee WHERE fee_id = '${fee_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully deleted fee"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error deleting fee"})
+    }
+}
+
+
+// INSERT INTO pays (student_number, fee_id, issue_date, semester_issued,
+// academic_year_issued, due_date, payment_date, payment_status, semester, academic_year)
+// VALUES 
+// ('2022-15733', 'FE-00044', '2024-05-02', '1S', '2024-2025', '2024-10-01',
+// '2024-12-10', 'Paid', '1S', '2024-2025');
+
+
+// Add transaction
+const addPays = async (req, res) => {
+
+    let student_number = req.body.student_number;
+    let fee_id = req.body.fee_id;
+    let issue_date = req.body.issue_date;
+    let semester_issued = req.body.semester_issued;
+    let academic_year_issued = req.body.academic_year_issued;
+    let due_date = req.body.due_date;
+    let payment_date = req.body.payment_date;
+    let payment_status = req.body.payment_status;
+    let semester = req.body.semester;
+    let academic_year = req.body.academic_year;
+
+    const query = 
+    `INSERT INTO pays (student_number, fee_id, issue_date, semester_issued,
+    academic_year_issued, due_date, payment_date, payment_status, semester, academic_year)
+    VALUES 
+    ('${student_number}', '${fee_id}', '${issue_date}', '${semester_issued}', '${academic_year_issued}',
+    '${due_date}', '${payment_date}', '${payment_status}', '${semester}', '${academic_year}');`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully added transaction"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error adding transaction"})
+    }
+
+}
+
+// Delete transaction
+const deletePays = async (req, res) => {
+
+    let transaction_id = req.body.transaction_id;
+
+    const query = 
+    `DELETE FROM pays WHERE transaction_id = '${transaction_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully deleted transaction"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error deleting transaction"})
+    }
+
+}
+
+// Add status update
+const addStatusUpdate = async (req, res) => {
+
+    let student_number = req.body.student_number;
+    let organization_id = req.body.organization_id;
+    let committee = req.body.committee;
+    let batch = req.body.batch;
+    let semester = req.body.semester;
+    let academic_year = req.body.academic_year;
+    let date_of_status_update = req.body.date_of_status_update;
+    let role = req.body.role;
+    let membership_status = req.body.membership_status;
+
+    const query = 
+    `INSERT INTO is_part_of 
+    (student_number, organization_id, committee, batch, semester, academic_year,
+    date_of_status_update, role, membership_status)
+    VALUES ('${student_number}', '${organization_id}', '${committee}', '${batch}', '${semester}', '${academic_year}',
+    '${date_of_status_update}', '${role}', '${membership_status}');`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully added status update"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error adding status update"})
+    }
+
+}
+
+// Delete a status update
+const deleteStatusUpdate = async (req, res) => {
+
+    let status_update_id = req.body.status_update_id;
+
+    const query = 
+    `DELETE FROM is_part_of WHERE status_update_id = '${status_update_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully deleted status update"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error deleting status update"})
+    }
+}
+
+// Update a fee
+const updateFee = async (req, res) => {
+
+    let fee_id = req.body.fee_id;
+    let fee_name = req.body.fee_name;
+    let fee_amount = req.body.fee_amount;
+
+    var query = `UPDATE fee SET `;
+
+    if (fee_amount !=="" && fee_amount !== null) {
+        query += ` fee_amount = ${fee_amount}`
+        if (fee_name !== "" && fee_name !== null) {
+            query += `, fee_name = '${fee_name}'`
+        }
+    } else if (fee_name !== "" && fee_name !== null) {
+        query += ` fee_name = '${fee_name}'`
+    } 
+
+    query += ` WHERE fee_id = '${fee_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully updated fee"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error updating fee"})
+    }
+
+}
+
+// Change a status update
+const changeStatusUpdate = async (req, res) => {
+
+    let status_update_id = req.body.status_update_id;
+    let committee = req.body.committee;
+    let batch = req.body.batch;
+    let semester = req.body.semester;
+    let academic_year = req.body.academic_year;
+    let role = req.body.role;
+    let membership_status = req.body.membership_status
+
+    var query = `UPDATE is_part_of SET`;
+    var updateColumnsStr = '';
+    var updateColumns = [];
+
+    if (committee !=="") {
+        updateColumns.push(` committee = '${committee}'`)
+    } 
+    if (batch !=="") {
+        updateColumns.push(`, batch = '${batch}'`)
+    }
+    if (semester !=="") {
+        updateColumns.push(`, semester = '${semester}'`)
+    } 
+    if (academic_year !== "") {
+        updateColumns.push(`, academic_year = '${academic_year}'`)
+    }
+    if (role !== "") {
+        updateColumns.push(`, role = '${role}'`)
+    } 
+    if (membership_status !== "") {
+        updateColumns.push(`, membership_status=${membership_status}`)
+    }
+
+    updateColumnsStr = updateColumns.join()
+
+    if (updateColumnsStr[0]==',') {
+        query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
+    }
+
+    query += ` WHERE status_update_id = '${status_update_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully updated status update"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error updating status update"})
+    }
+
+}
+
+// View all fees
+const viewFees = async (req, res) => {
+
+    let user = req.params.user;
+    const query = 
+    `SELECT fee_id, fee_name, fee_amount FROM fee 
+    NATURAL JOIN organization WHERE organization_username = '${user}';`
+
+    try {
+        const [rows] = await pool.query(query);
+        res.send(rows)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error retrieving fees"})
+    }
+}
+
+// View all status updates
+const viewStatusUpdates = async (req, res) => {
+
+    let user = req.params.user;
+    const query = 
+    `SELECT status_update_id, student_number, committee, batch, semester,
+    academic_year, date_of_status_update, role, membership_status FROM is_part_of 
+    NATURAL JOIN organization WHERE organization_username = '${user}';`
+
+    try {
+        const [rows] = await pool.query(query);
+        res.send(rows)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error retrieving fees"})
+    }
+}
+
+// View all transactions
+const viewTransactions = async (req, res) => {
+
+    let user = req.params.user;
+    const query = 
+    `SELECT transaction_id, student_number, fee_id, fee_amount, fee_name issue_date, semester_issued,
+    academic_year_issued, due_date, payment_date, payment_status, semester, academic_year
+    FROM pays NATURAL JOIN fee NATURAL JOIN organization WHERE organization_username = '${user}';`
+
+    try {
+        const [rows] = await pool.query(query);
+        res.send(rows)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error retrieving transactions"})
+    }
+}
+
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
-        orgMembers}
+        orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
+        updateFee, changeStatusUpdate, viewFees, viewStatusUpdates, viewTransactions}
 

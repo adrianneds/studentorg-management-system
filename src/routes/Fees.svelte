@@ -16,12 +16,46 @@
   let paymentMethod = '';
   let processingPayment = false;
   let paymentError = null;
+  let feeStatus = {'unpaid':999, 'paid':999}
+  let currdate = new Date().toISOString().slice(0, 10);
+  let dateInput = '2025-05-10';
+
+  function changeDate(date) {
+    currdate = date;
+    getFeeStatus();
+  }
+
+  // NEW: getting username
+  var username = JSON.parse(localStorage.getItem('user')).organization_username
+  console.log(username)
+
+  // NEW: import member with unpaid fees data from db server
+  async function getFeeStatus() {
+    await fetch(`http://localhost:5000/organization/feeStatus/user/${username}?date=${currdate}`,
+      {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    )
+    .then(response => response.json())
+    .then(data => {
+      feeStatus = data[0];
+      console.log(feeStatus);
+    }).catch(error => {
+      console.log(error);
+      return [];
+    });
+  };
+
   
   onMount(async () => {
     if (!$auth || $auth.type !== 'organization') {
       navigate('/login');
       return;
     }
+    getFeeStatus();
 
     // Simulate loading organization and fees
     setTimeout(() => {
@@ -36,6 +70,7 @@
         overduePayments: 5000
       };
 
+      // NOTE: replace with fees from database
       fees = [
         {
           id: 1,
@@ -172,23 +207,29 @@
       <p class="text-secondary">Manage organization fees and payments</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Total Revenue</div>
-        <div class="text-2xl font-semibold text-primary">₱{organization?.totalRevenue?.toLocaleString() || 0}</div>
+        <div class="text-2xl font-semibold text-primary">₱{feeStatus.paid}</div>
       </div>
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Pending Payments</div>
-        <div class="text-2xl font-semibold text-primary">₱{organization?.pendingPayments?.toLocaleString() || 0}</div>
+        <div class="text-2xl font-semibold text-primary">₱{feeStatus.unpaid}</div>
       </div>
       <div class="glass-card p-6">
+      <div class="text-sm text-secondary mb-1"> Total revenue and pending fees as of... </div>
+      <input class = "dateInput" type="date" bind:value={dateInput} min="1970-01-01" />
+      <button id = "submitButton" type="button" on:click={() => changeDate(dateInput)}> Submit </button>
+    </div>
+
+      <!-- <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Overdue Payments</div>
         <div class="text-2xl font-semibold text-primary">₱{organization?.overduePayments?.toLocaleString() || 0}</div>
       </div>
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Active Members</div>
         <div class="text-2xl font-semibold text-primary">{organization?.activeMembers || 0}</div>
-      </div>
+      </div> -->
     </div>
 
     <div class="flex-1 overflow-hidden">
@@ -262,6 +303,22 @@
       {/if}
     </div>
   </div>
+</div>
+
+<!-- NEW: buttons for viewing full reports  -->
+<div class="glass-card p-6">
+    <h2 class="text-xl font-semibold text-primary mb-4">Reports</h2>
+    <div class="space-y-3">
+    <Link 
+        to="/organization-fee-members" 
+        class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+    >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        Pending Members
+    </Link>
+    </div>
 </div>
 
 {#if showPopup && selectedFee}
@@ -390,4 +447,15 @@
   h1 {
     color: var(--text-primary);
   }
+  .dateInput {
+    color:black;
+  }
+  input[type="date"]{
+    background-color: whitesmoke;
+    border-radius: 5px;
+    margin-right:10px;
+    padding: 1px;
+    color: black;
+    font-size: 18px;
+}
 </style>

@@ -20,66 +20,94 @@
       return;
     }
 
+      // NEW: getting username
+    var username = JSON.parse(localStorage.getItem('user')).organization_username
+    console.log(username)
+
+      // NEW: import member data from db server
+    async function getMembers() {
+      fetch(`http://localhost:5000/organization/orgMembers/user/${username}`,
+        {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({committee:"", role:"",status:"",gender:"",
+                            degree_program:"", batch:"", membership_status:""})
+      }
+      )
+      .then(response => response.json())
+      .then(data => {
+        members = data;
+        console.log(members);
+      }).catch(error => {
+        console.log(error);
+        return [];
+      });
+    };
+
+    getMembers();
+
     // Simulate loading organization and members
     setTimeout(() => {
       // If orgId is provided in params, use it to load specific organization
       const orgId = params.orgId || 1;
       
-      organization = {
-        id: orgId,
-        name: 'Computer Society',
-        description: 'A community of computer science enthusiasts',
-        totalMembers: 150,
-        activeMembers: 145
-      };
+      // organization = {
+      //   id: orgId,
+      //   name: 'Computer Society',
+      //   description: 'A community of computer science enthusiasts',
+      //   totalMembers: 150,
+      //   activeMembers: 145
+      // };
 
-      members = [
-        {
-          id: 1,
-          name: 'John Doe',
-          studentNumber: '2024-0001',
-          role: 'President',
-          joinDate: '2023-09-01',
-          status: 'active',
-          email: 'john.doe@example.com',
-          contactNumber: '09123456789',
-          fees: {
-            paid: 3,
-            pending: 0,
-            overdue: 0
-          }
-        },
-        {
-          id: 2,
-          name: 'Jane Smith',
-          studentNumber: '2024-0002',
-          role: 'Vice President',
-          joinDate: '2023-09-01',
-          status: 'active',
-          email: 'jane.smith@example.com',
-          contactNumber: '09123456790',
-          fees: {
-            paid: 2,
-            pending: 1,
-            overdue: 0
-          }
-        },
-        {
-          id: 3,
-          name: 'Mike Johnson',
-          studentNumber: '2024-0003',
-          role: 'Member',
-          joinDate: '2024-01-15',
-          status: 'active',
-          email: 'mike.johnson@example.com',
-          contactNumber: '09123456791',
-          fees: {
-            paid: 1,
-            pending: 2,
-            overdue: 1
-          }
-        }
-      ];
+      // members = [
+      //   {
+      //     id: 1,
+      //     name: 'John Doe',
+      //     studentNumber: '2024-0001',
+      //     role: 'President',
+      //     joinDate: '2023-09-01',
+      //     status: 'active',
+      //     email: 'john.doe@example.com',
+      //     contactNumber: '09123456789',
+      //     fees: {
+      //       paid: 3,
+      //       pending: 0,
+      //       overdue: 0
+      //     }
+      //   },
+      //   {
+      //     id: 2,
+      //     name: 'Jane Smith',
+      //     studentNumber: '2024-0002',
+      //     role: 'Vice President',
+      //     joinDate: '2023-09-01',
+      //     status: 'active',
+      //     email: 'jane.smith@example.com',
+      //     contactNumber: '09123456790',
+      //     fees: {
+      //       paid: 2,
+      //       pending: 1,
+      //       overdue: 0
+      //     }
+      //   },
+      //   {
+      //     id: 3,
+      //     name: 'Mike Johnson',
+      //     studentNumber: '2024-0003',
+      //     role: 'Member',
+      //     joinDate: '2024-01-15',
+      //     status: 'active',
+      //     email: 'mike.johnson@example.com',
+      //     contactNumber: '09123456791',
+      //     fees: {
+      //       paid: 1,
+      //       pending: 2,
+      //       overdue: 1
+      //     }
+      //   }
+      // ];
       loading = false;
     }, 1000);
   });
@@ -108,13 +136,13 @@
     }
   }
 
-  $: filteredMembers = members.filter(member => {
-    const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         member.studentNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         member.role.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || member.status === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
+  // $: filteredMembers = members.filter(member => {
+  //   const matchesSearch = member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //                        member.studentNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //                        member.role.toLowerCase().includes(searchQuery.toLowerCase());
+  //   const matchesStatus = filterStatus === 'all' || member.status === filterStatus;
+  //   return matchesSearch && matchesStatus;
+  // });
 </script>
 
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
@@ -153,12 +181,12 @@
       {:else}
         <div class="h-full overflow-y-auto pr-2">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {#each filteredMembers as member}
+            {#each members as member}
               <div class="glass-card p-6">
                 <div class="flex justify-between items-start mb-4">
                   <div>
-                    <h3 class="text-lg font-semibold text-primary mb-1">{member.name}</h3>
-                    <p class="text-secondary text-sm">{member.studentNumber}</p>
+                    <h3 class="text-lg font-semibold text-primary mb-1">{member.member_name}</h3>
+                    <p class="text-secondary text-sm">{member.student_number}</p>
                   </div>
                   <div class="glass-badge {member.status === 'active' ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20' : 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20'}">
                     {member.role}
@@ -167,16 +195,16 @@
 
                 <div class="space-y-2 mb-4">
                   <div class="flex justify-between text-sm">
-                    <span class="text-secondary">Join Date:</span>
-                    <span class="text-primary">{new Date(member.joinDate).toLocaleDateString()}</span>
+                    <span class="text-secondary">Recent status update:</span>
+                    <span class="text-primary">{new Date(member.recent_status_date).toLocaleDateString()}</span>
                   </div>
                   <div class="flex justify-between text-sm">
-                    <span class="text-secondary">Email:</span>
-                    <span class="text-primary">{member.email}</span>
+                    <span class="text-secondary">Batch</span>
+                    <span class="text-primary">{member.batch}</span>
                   </div>
                   <div class="flex justify-between text-sm">
-                    <span class="text-secondary">Contact:</span>
-                    <span class="text-primary">{member.contactNumber}</span>
+                    <span class="text-secondary">Committee</span>
+                    <span class="text-primary">{member.committee}</span>
                   </div>
                 </div>
 
@@ -203,7 +231,7 @@
   <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="glass-card p-6 max-w-md w-full">
       <div class="flex justify-between items-start mb-4">
-        <h2 class="text-xl font-semibold text-primary">{selectedMember.name}</h2>
+        <h2 class="text-xl font-semibold text-primary">{selectedMember.member_name}</h2>
         <button 
           class="text-secondary hover:text-primary transition-colors"
           on:click={() => {
@@ -220,17 +248,17 @@
       <div class="space-y-4">
         <div>
           <label class="block text-secondary text-sm font-medium mb-2">Student Number</label>
-          <p class="text-primary">{selectedMember.studentNumber}</p>
+          <p class="text-primary">{selectedMember.student_number}</p>
         </div>
 
         <div>
-          <label class="block text-secondary text-sm font-medium mb-2">Email</label>
-          <p class="text-primary">{selectedMember.email}</p>
+          <label class="block text-secondary text-sm font-medium mb-2">Status</label>
+          <p class="text-primary">{selectedMember.membership_status}</p>
         </div>
 
         <div>
-          <label class="block text-secondary text-sm font-medium mb-2">Contact Number</label>
-          <p class="text-primary">{selectedMember.contactNumber}</p>
+          <label class="block text-secondary text-sm font-medium mb-2">Committee</label>
+          <p class="text-primary">{selectedMember.committee}</p>
         </div>
 
         <div>
@@ -241,11 +269,11 @@
         </div>
 
         <div>
-          <label class="block text-secondary text-sm font-medium mb-2">Join Date</label>
-          <p class="text-primary">{new Date(selectedMember.joinDate).toLocaleDateString()}</p>
+          <label class="block text-secondary text-sm font-medium mb-2">Gender</label>
+          <p class="text-primary">{selectedMember.gender == 'F' ? 'Female' : 'Male'}</p>
         </div>
 
-        <div>
+        <!-- <div>
           <label class="block text-secondary text-sm font-medium mb-2">Fees Status</label>
           <div class="space-y-2">
             <div class="flex justify-between text-sm">
@@ -263,7 +291,7 @@
               </div>
             {/if}
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

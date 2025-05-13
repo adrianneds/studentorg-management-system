@@ -1,8 +1,35 @@
 import {pool} from './connect.js';
+import jwt from 'jsonwebtoken';
 
-var user = 'janlevinson'
+// SAMPLE CREDENTIALS
+// var user = 'janlevinson'
+// var password = 'jl123'
 
-// NOTE: Before testing, make sure to edit user credentials in connect.js (temporary measure)
+// Login function
+const SECRET_KEY ='secret'
+const logIn = async (req, res) => {
+
+  let username = req.body.username
+  let password = req.body.password
+
+  var query = 
+  `SELECT member_username, member_password, student_number FROM member`
+  const [rows] = await pool.query(query);
+
+  try {
+    let user = rows.find(o => o.member_username === username && o.member_password === password)
+    try {
+      const token = jwt.sign({userId: user.student_number}, SECRET_KEY, {expiresIn: '1hr'})
+      res.status(200).json({message: "Successful login"})
+    } catch(err) {
+      res.status(500).json({message: 'Error logging in ' + err})
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(401).json({message: "Invalid credentials " + err})
+  }
+
+};
 
 // view the member's own info
 // FIELDS
@@ -13,6 +40,7 @@ var user = 'janlevinson'
 //   "gender": "F",
 //   "degree_program": "BS Statistics"
 const memberInfo = async (req, res) => {
+  const user = req.params.user;
   const [rows] = await pool.query(`SELECT * FROM member WHERE member_username = '${user}';`);
   res.send(rows)
 };
@@ -34,8 +62,10 @@ const memberInfo = async (req, res) => {
 //   "academic_year": "2021-2022"
 const memberTransactions = async (req, res) => {
 
+  const user = req.params.user;
+
   const query = 
-  `SELECT * FROM fee NATURAL JOIN pays NATURAL JOIN member WHERE member_username = '${user}';`
+  `SELECT * FROM fee NATURAL JOIN pays NATURAL JOIN member NATURAL JOIN organization WHERE member_username = '${user}';`
 
   const [rows] = await pool.query(query);
   res.send(rows);
@@ -45,4 +75,4 @@ const memberTransactions = async (req, res) => {
 
 // TO DO: View a member’s unpaid membership fees or dues for all their organizations 
 
-export {memberInfo, memberTransactions}
+export {memberInfo, memberTransactions, logIn}
