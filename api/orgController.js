@@ -585,19 +585,78 @@ const addStatusUpdate = async (req, res) => {
 
 }
 
+// Update a status update
+const updateStatusUpdate = async (req, res) => {
+
+    let student_number = req.body.student_number;
+    let organization_id = req.body.organization_id;
+    let committee = req.body.committee;
+    let batch = req.body.batch;
+    let semester = req.body.semester;
+    let academic_year = req.body.academic_year;
+    let date_of_status_update = req.body.date_of_status_update;
+    let role = req.body.role;
+    let membership_status = req.body.membership_status;
+
+    var query = `UPDATE is_part_of SET `;
+
+    var updateColumnsStr = '';
+    var updateColumns = [];
+
+    if (committee !==""&&committee!==undefined) {
+        updateColumns.push(` committee = '${committee}'`)
+    } 
+    if (batch !== ""&&batch!==undefined) {
+        updateColumns.push(` batch = '${batch}'`)
+    }
+    if (date_of_status_update !== ""&&date_of_status_update!==undefined) {
+        updateColumns.push(` date_of_status_update = '${date_of_status_update}'`)
+    }
+    if (role !== ""&&role!==undefined) {
+        updateColumns.push(` role = '${role}'`)
+    }
+    if (membership_status !== ""&&membership_status!==undefined) {
+        updateColumns.push(` membership_status = '${membership_status}'`)
+    }
+
+    updateColumnsStr = updateColumns.join()
+
+    console.log(updateColumns)
+    console.log(updateColumnsStr)
+
+    if (updateColumnsStr[0]==',') {
+        query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
+    } else {
+        query = query + updateColumnsStr
+    }
+
+    query += ` WHERE student_number = '${student_number}' AND organization_id = '${organization_id}'
+                AND semester = '${semester}' AND academic_year = '${academic_year}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully updated status update"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error updating status update"})
+    }
+
+}
+
 // REVISED 5/25/2025
 // Delete a status update
 const deleteStatusUpdate = async (req, res) => {
 
-    let status_update_id = req.body.student_number;
     let semester = req.body.semester;
     let academic_year = req.body.academic_year;
     let student_number = req.body.student_number;
     let organization_id = req.body.organization_id;
 
     const query = 
-    `DELETE FROM is_part_of WHERE status_update_id = '${status_update_id}' AND 
-    semester = '${semester}' AND academic_year = '${academic_year}' AND student_number = '${student_number}'
+    `DELETE FROM is_part_of 
+    WHERE semester = '${semester}'
+    AND academic_year = '${academic_year}' AND student_number = '${student_number}'
     AND organization_id = '${organization_id}';`
 
     try {
@@ -629,7 +688,7 @@ const updateFee = async (req, res) => {
     var updateColumnsStr = '';
     var updateColumns = [];
 
-    if (fee_name !==""&&fee_amount!==undefined) {
+    if (fee_name !==""&&fee_name!==undefined) {
         updateColumns.push(` fee_name = '${fee_name}'`)
     } 
     if (fee_amount !=="" && fee_amount!==undefined) {
@@ -795,5 +854,6 @@ const getOrganizationId = async (req, res) => {
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
         orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
-        updateFee, viewFees, viewStatusUpdates, viewTransactions, orgMemberCounts, getOrganizationId,updateTransaction}
+        updateFee, viewFees, viewStatusUpdates, viewTransactions, orgMemberCounts, getOrganizationId,updateTransaction,
+        updateStatusUpdate}
 

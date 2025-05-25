@@ -50,7 +50,8 @@ CREATE TABLE IF NOT EXISTS is_part_of (
     CONSTRAINT ispartof_organizationid_fk FOREIGN KEY(organization_id) REFERENCES organization(organization_id),
     CONSTRAINT ispartof_pk PRIMARY KEY(
         student_number, organization_id, committee, batch, semester, academic_year, date_of_status_update, membership_status
-    )
+    ),
+    CONSTRAINT ispartof_uk UNIQUE KEY(student_number, organization_id,semester, academic_year)
 ) AUTO_INCREMENT=1000;
 
 -- FEE(Fee_id, Fee_name, Fee_amount, issue_date, semester_issued, academic_year_issued, due_date,  Organization_id)
