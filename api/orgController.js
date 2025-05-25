@@ -390,17 +390,25 @@ const orgLatePayments = async (req, res) => {
     res.send(rows)
 }
 
+// REVISED 5/25
 // Add a fee
 const addFee = async (req, res) => {
 
     let fee_id = req.body.fee_id;
     let fee_name = req.body.fee_name;
     let fee_amount = req.body.fee_amount;
+    let issue_date = req.body.issue_date;
+    let semester_issued = req.body.semester_issued;
+    let academic_year_issued = req.body.academic_year_issued;
+    let due_date = req.body.due_date;
     let organization_id = req.body.organization_id; // not entered manually by user
 
     const query =
-    `INSERT INTO fee (fee_id, fee_name, fee_amount, organization_id)
-    VALUES ('${fee_id}', '${fee_name}', '${fee_amount}', '${organization_id}');`
+    `INSERT INTO fee (fee_id, fee_name, fee_amount,  issue_date, semester_issued,
+    academic_year_issued, due_date, organization_id)
+    VALUES 
+    ('${fee_id}', '${fee_name}', '${fee_amount}', '${issue_date}',
+    '${semester_issued}', '${academic_year_issued}','${due_date}', '${organization_id}');`
 
     try {
         console.log(query)
@@ -436,26 +444,21 @@ const deleteFee = async (req, res) => {
 // '2024-12-10', 'Paid', '1S', '2024-2025');
 
 
+// REVISED 5/25/2025
 // Add transaction
 const addPays = async (req, res) => {
 
     let student_number = req.body.student_number;
     let fee_id = req.body.fee_id;
-    let issue_date = req.body.issue_date;
-    let semester_issued = req.body.semester_issued;
-    let academic_year_issued = req.body.academic_year_issued;
-    let due_date = req.body.due_date;
     let payment_date = req.body.payment_date;
     let payment_status = req.body.payment_status;
     let semester = req.body.semester;
     let academic_year = req.body.academic_year;
 
     const query = 
-    `INSERT INTO pays (student_number, fee_id, issue_date, semester_issued,
-    academic_year_issued, due_date, payment_date, payment_status, semester, academic_year)
+    `INSERT INTO pays (student_number, fee_id, payment_date, payment_status, semester, academic_year)
     VALUES 
-    ('${student_number}', '${fee_id}', '${issue_date}', '${semester_issued}', '${academic_year_issued}',
-    '${due_date}', '${payment_date}', '${payment_status}', '${semester}', '${academic_year}');`
+    ('${student_number}', '${fee_id}','${payment_date}', '${payment_status}', '${semester}', '${academic_year}');`
 
     try {
         console.log(query)
@@ -518,13 +521,20 @@ const addStatusUpdate = async (req, res) => {
 
 }
 
+// REVISED 5/25/2025
 // Delete a status update
 const deleteStatusUpdate = async (req, res) => {
 
-    let status_update_id = req.body.status_update_id;
+    let status_update_id = req.body.student_number;
+    let semester = req.body.semester;
+    let academic_year = req.body.academic_year;
+    let student_number = req.body.student_number;
+    let organization_id = req.body.organization_id;
 
     const query = 
-    `DELETE FROM is_part_of WHERE status_update_id = '${status_update_id}';`
+    `DELETE FROM is_part_of WHERE status_update_id = '${status_update_id}' AND 
+    semester = '${semester}' AND academic_year = '${academic_year}' AND student_number = '${student_number}'
+    AND organization_id = '${organization_id}';`
 
     try {
         console.log(query)
@@ -536,23 +546,47 @@ const deleteStatusUpdate = async (req, res) => {
     }
 }
 
+// REVISED 5/25/2025
 // Update a fee
 const updateFee = async (req, res) => {
 
     let fee_id = req.body.fee_id;
     let fee_name = req.body.fee_name;
     let fee_amount = req.body.fee_amount;
+    let due_date = req.body.fee_due_date;
+    let issue_date = req.body.fee_issue_date;
+    let semester_issued = req.body.fee_semester_issued;
+    let academic_year_issued = req.body.fee_academic_year_issued;
 
     var query = `UPDATE fee SET `;
 
-    if (fee_amount !=="" && fee_amount !== null) {
-        query += ` fee_amount = ${fee_amount}`
-        if (fee_name !== "" && fee_name !== null) {
-            query += `, fee_name = '${fee_name}'`
-        }
-    } else if (fee_name !== "" && fee_name !== null) {
-        query += ` fee_name = '${fee_name}'`
+    var updateColumnsStr = '';
+    var updateColumns = [];
+
+    if (fee_name !=="") {
+        updateColumns.push(` fee_name = '${fee_name}'`)
     } 
+    if (fee_amount !=="") {
+        updateColumns.push(`, fee_amount = '${fee_amount}'`)
+    }
+    if (due_date !=="") {
+        updateColumns.push(`, due_date = '${due_date}'`)
+    } 
+    if (issue_date !== "") {
+        updateColumns.push(`, issue_date = '${issue_date}'`)
+    }
+    if (semester_issued !== "") {
+        updateColumns.push(`, semester_issued = '${semester_issued}'`)
+    } 
+    if (academic_year_issued !== "") {
+        updateColumns.push(`, academic_year_issued = ${academic_year_issued}`)
+    }
+
+    updateColumnsStr = updateColumns.join()
+
+    if (updateColumnsStr[0]==',') {
+        query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
+    }
 
     query += ` WHERE fee_id = '${fee_id}';`
 
@@ -567,65 +601,65 @@ const updateFee = async (req, res) => {
 
 }
 
+// TO DO: Edit to reflect ddl revisions
 // Change a status update
-const changeStatusUpdate = async (req, res) => {
+// const changeStatusUpdate = async (req, res) => {
 
-    let status_update_id = req.body.status_update_id;
-    let committee = req.body.committee;
-    let batch = req.body.batch;
-    let semester = req.body.semester;
-    let academic_year = req.body.academic_year;
-    let role = req.body.role;
-    let membership_status = req.body.membership_status
+//     let committee = req.body.committee;
+//     let batch = req.body.batch;
+//     let semester = req.body.semester;
+//     let academic_year = req.body.academic_year;
+//     let role = req.body.role;
+//     let membership_status = req.body.membership_status
 
-    var query = `UPDATE is_part_of SET`;
-    var updateColumnsStr = '';
-    var updateColumns = [];
+//     var query = `UPDATE is_part_of SET`;
+//     var updateColumnsStr = '';
+//     var updateColumns = [];
 
-    if (committee !=="") {
-        updateColumns.push(` committee = '${committee}'`)
-    } 
-    if (batch !=="") {
-        updateColumns.push(`, batch = '${batch}'`)
-    }
-    if (semester !=="") {
-        updateColumns.push(`, semester = '${semester}'`)
-    } 
-    if (academic_year !== "") {
-        updateColumns.push(`, academic_year = '${academic_year}'`)
-    }
-    if (role !== "") {
-        updateColumns.push(`, role = '${role}'`)
-    } 
-    if (membership_status !== "") {
-        updateColumns.push(`, membership_status=${membership_status}`)
-    }
+//     if (committee !=="") {
+//         updateColumns.push(` committee = '${committee}'`)
+//     } 
+//     if (batch !=="") {
+//         updateColumns.push(`, batch = '${batch}'`)
+//     }
+//     if (semester !=="") {
+//         updateColumns.push(`, semester = '${semester}'`)
+//     } 
+//     if (academic_year !== "") {
+//         updateColumns.push(`, academic_year = '${academic_year}'`)
+//     }
+//     if (role !== "") {
+//         updateColumns.push(`, role = '${role}'`)
+//     } 
+//     if (membership_status !== "") {
+//         updateColumns.push(`, membership_status=${membership_status}`)
+//     }
 
-    updateColumnsStr = updateColumns.join()
+//     updateColumnsStr = updateColumns.join()
 
-    if (updateColumnsStr[0]==',') {
-        query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
-    }
+//     if (updateColumnsStr[0]==',') {
+//         query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
+//     }
 
-    query += ` WHERE status_update_id = '${status_update_id}';`
+//     query += ` WHERE status_update_id = '${status_update_id}';`
 
-    try {
-        console.log(query)
-        await pool.query(query);
-        res.status(200).json({message: "Successfully updated status update"})
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({message: "Error updating status update"})
-    }
+//     try {
+//         console.log(query)
+//         await pool.query(query);
+//         res.status(200).json({message: "Successfully updated status update"})
+//     } catch (err) {
+//         console.log(err)
+//         res.status(500).json({message: "Error updating status update"})
+//     }
 
-}
+// }
 
 // View all fees
 const viewFees = async (req, res) => {
 
     let user = req.params.user;
     const query = 
-    `SELECT fee_id, fee_name, fee_amount FROM fee 
+    `SELECT fee_id, fee_name, fee_amount, issue_date, semester_issued, academic_year_issued, due_date FROM fee 
     NATURAL JOIN organization WHERE organization_username = '${user}';`
 
     try {
