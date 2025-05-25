@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS member(
     member_name VARCHAR(70),
     gender CHAR(1) CHARACTER SET utf8 CHECK (gender IN ('M','F')),  -- only allow such values
     degree_program VARCHAR(70),
-    CONSTRAINT member_studentnumber_pk PRIMARY KEY(student_number)
+    CONSTRAINT member_studentnumber_pk PRIMARY KEY(student_number),
+    CONSTRAINT member_memberusername_uk UNIQUE(member_username)
 );
 
 -- ORGANIZATION(Organization_id, Organization_username, Organization_password, Organization_name)
@@ -42,14 +43,14 @@ CREATE TABLE IF NOT EXISTS organization (
     organization_username VARCHAR(50) NOT NULL,
     organization_password VARCHAR(50) NOT NULL,
     organization_name VARCHAR(70),
-    CONSTRAINT organization_organizationid_pk PRIMARY KEY(organization_id)
+    CONSTRAINT organization_organizationid_pk PRIMARY KEY(organization_id),
+    CONSTRAINT organization_organizationusername_uk UNIQUE(organization_username)
 );
 
 -- IS_PART_OF(Status_update_id, Student_number, Organization_id, Committee, Batch, Semester, Academic_year, Date_of_status_update, Role, Membership_status)
 
 DROP TABLE IF EXISTS `is_part_of`;
 CREATE TABLE IF NOT EXISTS is_part_of (
-    status_update_id INT(4) AUTO_INCREMENT,
     student_number VARCHAR(15),
     organization_id VARCHAR(15),
     committee VARCHAR(50),
@@ -62,45 +63,43 @@ CREATE TABLE IF NOT EXISTS is_part_of (
     role VARCHAR(50),
     membership_status VARCHAR(9) CHECK (
         membership_status IN ('Active','Inactive','Expelled','Suspended','Alumni')), -- only allow such values
-    CONSTRAINT ispartof_statusupdateid_pk PRIMARY KEY(status_update_id),
     CONSTRAINT ispartof_studentnumber_fk FOREIGN KEY(student_number) REFERENCES member(student_number),
     CONSTRAINT ispartof_organizationid_fk FOREIGN KEY(organization_id) REFERENCES organization(organization_id),
-    CONSTRAINT ispartof_studentnumber_semester_academicyear_uk UNIQUE(student_number, semester, academic_year) -- only one update per sem
+    CONSTRAINT ispartof_pk PRIMARY KEY(
+        student_number, organization_id, committee, batch, semester, academic_year, date_of_status_update, membership_status
+    )
 ) AUTO_INCREMENT=1000;
 
--- FEE(Fee_id, Fee_name, Fee_amount, Organization_id)
+-- FEE(Fee_id, Fee_name, Fee_amount, issue_date, semester_issued, academic_year_issued, due_date,  Organization_id)
 
 DROP TABLE IF EXISTS `fee`;
 CREATE TABLE IF NOT EXISTS fee (
     fee_id VARCHAR(15),
     fee_name VARCHAR(50),
     fee_amount FLOAT(15) CHECK(fee_amount > 0), -- fee should be a positive number
+    issue_date DATE,
+    semester_issued CHAR(2) CHECK (semester_issued IN ('1S','2S','M')),
+    academic_year_issued CHAR(9),    
+    due_date DATE,
     organization_id VARCHAR(15),
     CONSTRAINT fee_feeid_pk PRIMARY KEY(fee_id),
     CONSTRAINT fee_organizationid_fk FOREIGN KEY(organization_id) REFERENCES organization(organization_id)
 );
 
--- PAYS(Transaction_id, Student_number, Fee_id, Due_date, Payment_date, Payment_status, Semester, Academic_year)
+-- PAYS(student_number, fee_id, payment_date, payment_status, semester, academic_year)
 
 DROP TABLE IF EXISTS `pays`;
 CREATE TABLE IF NOT EXISTS pays (
     transaction_id INT(4) AUTO_INCREMENT,
     student_number VARCHAR(15),
     fee_id VARCHAR(15),
-    issue_date DATE,
-    semester_issued CHAR(2) CHECK (semester_issued IN ('1S','2S','M')),
-    academic_year_issued CHAR(9),
-    due_date DATE CHECK(due_date >= issue_date),          -- due date should be after issue date 
-    payment_date DATE CHECK (payment_date >= issue_date), -- payment date should be after issue date
+    payment_date DATE, -- payment date should be after issue date
     payment_status VARCHAR(15) CHECK (payment_status IN ('Paid','Unpaid')), -- only allow such values
     semester CHAR(2) CHECK (semester IN ('1S','2S','M')),                   -- only allow such values
     academic_year CHAR(9) CHECK (academic_year LIKE '%-%'),                 -- specify valid format
     CONSTRAINT pays_transactionid_pk PRIMARY KEY(transaction_id),
     CONSTRAINT pays_studentnumber_fk FOREIGN KEY(student_number) REFERENCES member(student_number),
-    CONSTRAINT pays_feeid_fk FOREIGN KEY(fee_id) REFERENCES fee(fee_id),
-    -- issue date should be before payment date and be within the academic year issued
-    CONSTRAINT issue_date_valid CHECK((issue_date <= payment_date AND
-        YEAR(issue_date) BETWEEN SUBSTRING(academic_year_issued,1,4) AND SUBSTRING(academic_year_issued, 6,4)))
+    CONSTRAINT pays_feeid_fk FOREIGN KEY(fee_id) REFERENCES fee(fee_id)
 ) AUTO_INCREMENT=1000;
 
 ---------------------------------------------------------------------------------------------
@@ -147,29 +146,31 @@ VALUES
 	('2020-93922','MS-101123','Finance','2024B','2S','2024-2025','2025-05-02','Member','Inactive')
 ;
 
+-- FEE(Fee_id, Fee_name, Fee_amount, issue_date, semester_issued, academic_year_issued, due_date,  Organization_id)
+
 DELETE FROM `fee`;
 INSERT INTO fee VALUES
-    ('FE-101193','Membership Fee',80,'MS-101123'),
-	('FE-101297','Inactivity Fee',100,'ES-101124'),
-	('FE-101392','Membership Fee',100,'ES-101124'),
-	('FE-193921','Miscellaneous A',200,'MS-101123'),
-	('FE-384922','Miscellaneous B',50,'MS-101123')
+    ('FE-101193','Membership Fee',80,'2022-05-01','2S','2021-2022','2022-06-01','MS-101123'),
+	('FE-101297','Inactivity Fee',100, '2025-05-01', '2S', '2024-2025', '2025-06-01', 'ES-101124'),
+	('FE-101392','Membership Fee',100,'2023-10-20','1S','2023-2024','2023-11-20','ES-101124'),
+	('FE-193921','Miscellaneous A',200,'2023-04-21','2S','2022-2023','2023-05-20','MS-101123'),
+	('FE-384922','Miscellaneous B',50,'2025-01-01','2S','2024-2025','2025-05-01','MS-101123')
 ;
 
 DELETE FROM `pays`;
 INSERT INTO pays 
-(student_number, fee_id, issue_date, semester_issued, academic_year_issued, due_date, payment_date, payment_status, semester, academic_year)
+(student_number, fee_id, payment_date, payment_status, semester, academic_year)
 VALUES
-	('2022-04382','FE-101297','2025-05-01','2S','2024-2025','2025-06-01',NULL,'Unpaid',NULL,NULL),
-	('2019-04339','FE-101193','2022-05-01','2S','2021-2022','2022-06-01','2022-06-01','Paid','2S','2021-2022'),
-	('2019-04339','FE-193921','2023-04-21','2S','2022-2023','2023-05-20',NULL,'Unpaid',NULL,NULL),
-	('2019-04339','FE-193921','2024-05-21','2S','2023-2024','2024-06-21',NULL,'Unpaid',NULL,NULL),
-	('2019-04339','FE-193921','2024-05-21','2S','2023-2024','2024-06-21',NULL,'Unpaid',NULL,NULL),
-	('2019-04339','FE-384922','2025-01-01','2S','2024-2025','2025-05-01',NULL,'Unpaid',NULL,NULL),
-	('2022-04382','FE-193921','2024-05-21','2S','2023-2024','2024-06-21',NULL,'Unpaid',NULL,NULL),
-	('2023-20302','FE-101392','2023-10-20','1S','2023-2024','2023-11-20',NULL,'Unpaid',NULL,NULL),
-	('2023-20302','FE-101392','2024-10-21','1S','2023-2024','2024-11-21','2025-04-21','Paid','2S','2023-2024'),
-	('2022-04382','FE-101193','2024-10-19','1S','2023-2024','2024-11-19','2025-04-19','Paid','2S','2023-2024')
+	('2022-04382','FE-101297',NULL,'Unpaid',NULL,NULL),
+	('2019-04339','FE-101193','2022-06-01','Paid','2S','2021-2022'),
+	('2019-04339','FE-193921',NULL,'Unpaid',NULL,NULL),
+	('2019-04339','FE-193921',NULL,'Unpaid',NULL,NULL),
+	('2019-04339','FE-193921',NULL,'Unpaid',NULL,NULL),
+	('2019-04339','FE-384922',NULL,'Unpaid',NULL,NULL),
+	('2022-04382','FE-193921',NULL,'Unpaid',NULL,NULL),
+	('2023-20302','FE-101392',NULL,'Unpaid',NULL,NULL),
+	('2023-20302','FE-101392','2025-04-21','Paid','2S','2023-2024'),
+	('2022-04382','FE-101193','Paid','2S','2025-04-19','2023-2024')
 ;
 
 ---------------------------------------------------------------------------------------------
@@ -196,8 +197,8 @@ GRANT SELECT, UPDATE ON studentorg.member_janlevinson TO 'janlevinson'@'localhos
 -- (2) pays - shows only the payments of the students
 CREATE VIEW studentorg.feepays_janlevinson AS
 SELECT org.organization_id, org.organization_name, fee.fee_id, fee.fee_name, fee.fee_amount,
-pays.transaction_id, pays.student_number, pays.issue_date, pays.semester_issued, pays.academic_year_issued,
-pays.due_date, pays.payment_date, pays.payment_status, pays.semester, pays.academic_year
+pays.transaction_id, pays.student_number, fee.issue_date, fee.semester_issued, fee.academic_year_issued,
+fee.due_date, pays.payment_date, pays.payment_status, pays.semester, pays.academic_year
 FROM (SELECT organization_id, organization_name FROM organization) AS org
 JOIN fee ON org.organization_id = fee.organization_id 
 JOIN pays ON fee.fee_id = pays.fee_id
@@ -482,46 +483,6 @@ SELECT student_number, member_name, SUM(fee_amount) AS debt
     ORDER BY debt DESC LIMIT 1 -- get member with highest debt
 ;
 ---------------------------------------------------------------------------------------------
--- [05]     INSERT new data
-
--- Add new member (user)
-INSERT INTO member (student_number, member_username, member_password, member_name, gender, degree_program)
-VALUES ('2022-15733', 'michaelscott', 'mscott456', 'Michael Scott', 'M', 'BS Biology');
-
--- Add new organization
-INSERT INTO organization (organization_id, organization_username, organization_password, organization_name)
-VALUES ('BS-101134', 'biosoc', 'bsoc123', 'Biology Society');
-
--- Add new fee
-INSERT INTO fee (fee_id, fee_name, fee_amount, organization_id)
-VALUES ('FE-00044', 'Membership Fee', '100', 'BS-101134');
-
--- Add new status change (is_part_of)
-INSERT INTO is_part_of (student_number, organization_id, committee, batch, semester, academic_year, date_of_status_update, role, membership_status)
-VALUES ('2022-15733', 'BS-101134', 'Executive', '2024A', '2S', '2023-2024', '2024-05-01', 'President', 'Active');
-
-INSERT INTO is_part_of (student_number, organization_id, committee, batch, semester, academic_year, date_of_status_update, role, membership_status)
-VALUES ('2022-15733', 'BS-101134', 'Executive', '2024A', '1S', '2024-2025', '2024-10-01', 'Secretary', 'Active');
-
--- Add new transaction (pays)
-INSERT INTO pays (student_number, fee_id, issue_date, semester_issued, academic_year_issued, due_date, payment_date, payment_status, semester, academic_year)
-VALUES ('2022-15733', 'FE-00044', '2024-05-01', '2S', '2023-2024', '2024-06-01', '2024-05-20', 'Paid', '2S', '2023-2024');
-
-INSERT INTO pays (student_number, fee_id, issue_date, semester_issued, academic_year_issued, due_date, payment_date, payment_status, semester, academic_year)
-VALUES ('2022-15733', 'FE-00044', '2024-05-02', '1S', '2024-2025', '2024-10-01', '2024-12-10', 'Paid', '1S', '2024-2025');
-
--- test:
-SELECT * FROM member WHERE student_number = '2022-15733';
-SELECT * FROM organization WHERE organization_id = 'BS-101134';
-SELECT * FROM is_part_of WHERE student_number = '2022-15733';
-SELECT * FROM fee WHERE fee_id = 'FE-00044';
-SELECT * FROM pays WHERE fee_id = 'FE-00044';
-
--- status update id and transaction id have auto incrementing primary keys
-SELECT * FROM is_part_of WHERE status_update_id = '1019';
-SELECT * FROM pays WHERE transaction_id = '1011';
-
----------------------------------------------------------------------------------------------
 -- [06]     DELETE a student, organization, fee, or specific status update/transaction
 
 -- NOTE: in actual implementation, deletion of one member / organization / fee also deletes
@@ -542,9 +503,8 @@ DELETE FROM organization WHERE organization_id = 'BS-101134';
 DELETE FROM pays WHERE fee_id = 'FE-00044';
 DELETE FROM fee WHERE fee_id = 'FE-00044';
 
--- Can also have standalone queries for deleting individual status updates and transactions
+-- Can also have standalone queries for deleting individual transactions
 DELETE FROM pays WHERE transaction_id = '1012';
-DELETE FROM is_part_of WHERE status_update_id = '1020';
 
 -- test: should return empty
 SELECT * FROM member WHERE student_number = '2022-15733';
@@ -553,7 +513,6 @@ SELECT * FROM is_part_of WHERE student_number = '2022-15733';
 SELECT * FROM fee WHERE fee_id = 'FE-00044';
 SELECT * FROM pays WHERE fee_id = 'FE-00044';
 SELECT * FROM pays WHERE transaction_id = '1012';
-SELECT * FROM is_part_of WHERE status_update_id = '1020';
 
 ---------------------------------------------------------------------------------------------
 -- [07]     UPDATE existing data
