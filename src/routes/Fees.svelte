@@ -19,6 +19,35 @@
   let feeStatus = {'unpaid':999, 'paid':999}
   let currdate = new Date().toISOString().slice(0, 10);
   let dateInput = '2025-05-10';
+  let showAddFeeModal = false;
+  let showUpdateFeeModal = false;
+  let showDeleteFeeModal = false;
+  
+  let updateFeeQuery = {
+    fee_id: '',
+    fee_name: '',
+    fee_amount: 0,
+    due_date: '',
+    issue_date: '',
+    semester_issued: '',
+    academic_year_issued: ''
+  }
+
+  let addFeeQuery = {
+    fee_id: '',
+    fee_name: '',
+    fee_amount: 0,
+    issue_date: '',
+    semester_issued: '',
+    academic_year_issued: '',
+    due_date: '',
+    organization_id: id
+  };
+
+  let deleteFeeQuery = {
+    fee_id: ''
+  }
+
 
   function changeDate(date) {
     currdate = date;
@@ -27,6 +56,8 @@
 
   // NEW: getting username
   var username = JSON.parse(localStorage.getItem('user')).organization_username
+  var id = JSON.parse(localStorage.getItem('user')).organization_id
+  console.log(id)
   console.log(username)
 
   // NEW: import member with unpaid fees data from db server
@@ -69,7 +100,131 @@
     });
   };
 
+  // NEW: add fee
+  async function addFee() {
+    await fetch(`http://localhost:5000/organization/addFee`,
+      {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(addFeeQuery)
+    }
+    )
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    }).catch(error => {
+      console.log(error);
+      return [];
+    });
+  };
+
+  // NEW: update fee
+  async function updateFee() {
+    console.log("UPDATE FEE ")
+    console.log(updateFeeQuery)
+
+    await fetch(`http://localhost:5000/organization/updateFee`,
+      {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updateFeeQuery)
+    }
+    )
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    }).catch(error => {
+      console.log(error);
+      return [];
+    });
+  };
+
+  // NEW: delete fee
+  async function deleteFee() {
+    console.log("DELETE FEE ")
+    console.log(deleteFeeQuery)
+
+    await fetch(`http://localhost:5000/organization/deleteFee`,
+      {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(deleteFeeQuery)
+    }
+    )
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+    }).catch(error => {
+      console.log(error);
+      return [];
+    });
+  };
+
+  // handle submit for add fee
+  async function addFeeSubmit() {
+    addFeeQuery.organization_id = id
+    console.log(addFeeQuery)
+    await addFee();
+    getFees();
+
+    // reset query
+    addFeeQuery = {
+      fee_id: '',
+      fee_name: '',
+      fee_amount: 0,
+      issue_date: '',
+      semester_issued: '',
+      academic_year_issued: '',
+      due_date: '',
+      organization_id: id
+    };
+
+    showAddFeeModal = false; 
+  }
+
+  // handle submit for update fee
+  async function updateFeeSubmit() {
+    updateFeeQuery.organization_id = id
+    console.log(updateFeeQuery)
+    await updateFee();
+
+    // reset query
+    updateFeeQuery = {
+      fee_id: '',
+      fee_name: '',
+      fee_amount: 0,
+      issue_date: '',
+      semester_issued: '',
+      academic_year_issued: '',
+      due_date: '',
+      organization_id: id
+    };
+
+    showUpdateFeeModal = false; 
+    getFees();
+  }
   
+  // handle submit for delete fee
+  async function deleteFeeSubmit() {
+    deleteFeeQuery.organization_id = id
+    console.log(deleteFeeQuery)
+    await deleteFee();
+
+    // reset query
+    deleteFeeQuery = {
+      fee_id: ''
+    };
+
+    showDeleteFeeModal = false; 
+    getFees();
+  }
+
   onMount(async () => {
     if (!$auth || $auth.type !== 'organization') {
       navigate('/login');
@@ -330,6 +485,20 @@
     </div>
 
 </div>
+<br>
+<div class="glass-card p-6">
+    <h2 class="text-xl font-semibold text-primary mb-4"> Manage Fees </h2>
+    <button on:click={()=>{showAddFeeModal=true}} class="glass-button text-sm py-2 flex items-center" type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal">
+      Add Fee
+    </button> <br>
+    <button on:click={()=>{showUpdateFeeModal=true}} class="glass-button text-sm py-2 flex items-center">
+      Update fee details
+    </button> <br>
+    <button on:click={()=>{showDeleteFeeModal=true}} class="glass-button text-sm py-2 flex items-center">
+      Delete fee
+    </button>
+</div>
+
 
 {#if showPopup && selectedFee}
   <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
@@ -451,6 +620,177 @@
       </div>
     </div>
   </div>
+{/if}
+
+<!-- Add fee modal -->
+{#if showAddFeeModal}
+
+<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Add Fee
+                </h3>
+                <button on:click={()=>{showAddFeeModal=false}} type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form id = "addFeeForm" class="p-4 md:p-5" on:submit|preventDefault={()=>addFeeSubmit()}>
+                <div class="grid gap-4 mb-4 grid-cols-2">
+                    <div class="col-span-2">
+                        <label for="fee_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee ID</label>
+                        <input bind:value={addFeeQuery.fee_id} type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="fee_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Name</label>
+                        <input bind:value={addFeeQuery.fee_name} type="text" name="fee_name" id="fee_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="fee_amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Amount</label>
+                        <input bind:value={addFeeQuery.fee_amount} type="number" name="fee_amount" id="fee_amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 100" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="issue_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Issue Date</label>
+                        <input bind:value={addFeeQuery.issue_date} type="date" name="issue_date" id="issue_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester Issued</label>
+                        <select bind:value={addFeeQuery.semester_issued} id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option selected="">Select option</option>
+                            <option value="1S">1st Semester</option>
+                            <option value="2S">2nd Semester</option>
+                            <option value="M">Midyear</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="academic_year_issued" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year Issued</label>
+                        <input bind:value={addFeeQuery.academic_year_issued} type="text" name="academic_year_issued" id="academic_year_issued" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="issue_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Due Date</label>
+                        <input bind:value={addFeeQuery.due_date} type="date" name="issue_date" id="issue_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                    </div>
+                </div>
+                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                    Add
+                </button>
+            </form>
+        </div>
+    </div>
+</div> 
+
+{/if}
+
+<!-- Update fee modal -->
+{#if showUpdateFeeModal}
+
+<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Update Fee
+                </h3>
+                <button on:click={()=>{showUpdateFeeModal=false}} type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form id = "updateFeeForm" class="p-4 md:p-5" on:submit|preventDefault={()=>updateFeeSubmit()}>
+                <div class="grid gap-4 mb-4 grid-cols-2">
+                    <div class="col-span-2">
+                        <label for="fee_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee ID</label>
+                        <input bind:value={updateFeeQuery.fee_id} type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="fee_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Name</label>
+                        <input bind:value={updateFeeQuery.fee_name} type="text" name="fee_name" id="fee_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="fee_amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Amount</label>
+                        <input bind:value={updateFeeQuery.fee_amount} type="number" name="fee_amount" id="fee_amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 100" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="issue_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Issue Date</label>
+                        <input bind:value={updateFeeQuery.issue_date} type="date" name="issue_date" id="issue_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester Issued</label>
+                        <select bind:value={updateFeeQuery.semester_issued} id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option selected="">Select option</option>
+                            <option value="1S">1st Semester</option>
+                            <option value="2S">2nd Semester</option>
+                            <option value="M">Midyear</option>
+                        </select>
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="academic_year_issued" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year Issued</label>
+                        <input bind:value={updateFeeQuery.academic_year_issued} type="text" name="academic_year_issued" id="academic_year_issued" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                    </div>
+                    <div class="col-span-2 sm:col-span-1">
+                        <label for="due_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Due Date</label>
+                        <input bind:value={updateFeeQuery.due_date} type="date" name="due_date" id="due_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                    </div>
+                </div>
+                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                    Update
+                </button>
+            </form>
+        </div>
+    </div>
+</div> 
+
+{/if}
+
+<!-- Update fee modal -->
+{#if showDeleteFeeModal}
+
+<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                    Delete Fee
+                </h3>
+                <button on:click={()=>{showDeleteFeeModal=false}} type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <form id = "deleteFeeForm" class="p-4 md:p-5" on:submit|preventDefault={()=>deleteFeeSubmit()}>
+                <div class="grid gap-4 mb-4 grid-cols-2">
+                    <div class="col-span-2">
+                        <label for="fee_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee ID</label>
+                        <input bind:value={deleteFeeQuery.fee_id} type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000" required="">
+                    </div>
+                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div> 
+
 {/if}
 
 <style>

@@ -8,6 +8,7 @@
   let userType = 'member'; // 'member' or 'organization'
   let error = '';
   let loading = false;
+  let id = '';
 
   onMount(() => {
     // Check if user is already logged in
@@ -20,13 +21,32 @@
     }
   });
 
-  function handleLogin() {
+    async function getOrganizationId(username) {
+      await fetch(`http://localhost:5000/organization/getOrganizationId/user/${username}`,
+        {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      )
+      .then(response => response.json())
+      .then(data => {
+        id = data[0].organization_id;
+        //console.log(id)
+      }).catch(error => {
+        console.log(error);
+        return '';
+      });
+  }; 
+
+  async function handleLogin() {
     loading = true;
     error = '';
     
     // TODO: Implement actual login logic with database
     // For now, just simulate a login
-    setTimeout(() => {
+    setTimeout(async() => {
       if (userType === 'member') {
         // Check member credentials
         // if (username === 'johndoe' && password === 'password') {
@@ -43,9 +63,12 @@
         // Check organization credentials
         // if (username === 'compsoc' && password === 'password') {
         if (auth.validateCredentials(username, password, 'organization')) {
+          await getOrganizationId(username);
+          console.log("ID: " + id)
           auth.login({
             type: 'organization',
-            organization_username: username
+            organization_username: username,
+            organization_id: id
           });
           navigate('/organization-dashboard');
         } else {

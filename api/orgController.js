@@ -403,14 +403,14 @@ const addFee = async (req, res) => {
     let semester_issued = req.body.semester_issued;
     let academic_year_issued = req.body.academic_year_issued;
     let due_date = req.body.due_date;
-    let organization_id = req.body.organization_id; // not entered manually by user
+    let organization_id = req.body.organization_id;
 
     const query =
     `INSERT INTO fee (fee_id, fee_name, fee_amount,  issue_date, semester_issued,
     academic_year_issued, due_date, organization_id)
     VALUES 
     ('${fee_id}', '${fee_name}', '${fee_amount}', '${issue_date}',
-    '${semester_issued}', '${academic_year_issued}','${due_date}', '${organization_id}');`
+    '${semester_issued}', '${academic_year_issued}','${due_date}','${organization_id}');`
 
     try {
         console.log(query)
@@ -555,39 +555,46 @@ const updateFee = async (req, res) => {
     let fee_id = req.body.fee_id;
     let fee_name = req.body.fee_name;
     let fee_amount = req.body.fee_amount;
-    let due_date = req.body.fee_due_date;
-    let issue_date = req.body.fee_issue_date;
-    let semester_issued = req.body.fee_semester_issued;
-    let academic_year_issued = req.body.fee_academic_year_issued;
+    let due_date = req.body.due_date;
+    let issue_date = req.body.issue_date;
+    let semester_issued = req.body.semester_issued;
+    let academic_year_issued = req.body.academic_year_issued;
+
+    console.log(fee_name)
 
     var query = `UPDATE fee SET `;
 
     var updateColumnsStr = '';
     var updateColumns = [];
 
-    if (fee_name !=="") {
+    if (fee_name !==""&&fee_amount!==undefined) {
         updateColumns.push(` fee_name = '${fee_name}'`)
     } 
-    if (fee_amount !=="") {
-        updateColumns.push(`, fee_amount = '${fee_amount}'`)
+    if (fee_amount !=="" && fee_amount!==undefined) {
+        updateColumns.push(` fee_amount = '${fee_amount}'`)
     }
-    if (due_date !=="") {
-        updateColumns.push(`, due_date = '${due_date}'`)
+    if (due_date !==""&&due_date!==undefined) {
+        updateColumns.push(` due_date = '${due_date}'`)
     } 
-    if (issue_date !== "") {
-        updateColumns.push(`, issue_date = '${issue_date}'`)
+    if (issue_date !== ""&&issue_date!==undefined) {
+        updateColumns.push(` issue_date = '${issue_date}'`)
     }
-    if (semester_issued !== "") {
-        updateColumns.push(`, semester_issued = '${semester_issued}'`)
+    if (semester_issued !== ""&&semester_issued!==undefined) {
+        updateColumns.push(` semester_issued = '${semester_issued}'`)
     } 
-    if (academic_year_issued !== "") {
-        updateColumns.push(`, academic_year_issued = ${academic_year_issued}`)
+    if (academic_year_issued !== ""&&academic_year_issued!==undefined) {
+        updateColumns.push(` academic_year_issued = ${academic_year_issued}`)
     }
 
     updateColumnsStr = updateColumns.join()
 
+    console.log(updateColumns)
+    console.log(updateColumnsStr)
+
     if (updateColumnsStr[0]==',') {
         query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
+    } else {
+        query = query + updateColumnsStr
     }
 
     query += ` WHERE fee_id = '${fee_id}';`
@@ -710,8 +717,21 @@ const viewTransactions = async (req, res) => {
     }
 }
 
+const getOrganizationId = async (req, res) => {
+    let username = req.params.user;
+    const query = 
+    `SELECT organization_id FROM organization WHERE organization_username = '${username}'`;
+    try {
+        const [rows] = await pool.query(query);
+        res.send(rows)
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error retrieving id"})
+    }
+}
+
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
         orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
-        updateFee, viewFees, viewStatusUpdates, viewTransactions, orgMemberCounts}
+        updateFee, viewFees, viewStatusUpdates, viewTransactions, orgMemberCounts, getOrganizationId}
 
