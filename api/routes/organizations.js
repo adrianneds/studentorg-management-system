@@ -33,8 +33,8 @@ orgRouter.get('/viewStatusUpdates/user/:user', viewStatusUpdates);
 orgRouter.get('/viewTransactions/user/:user', viewTransactions);
 orgRouter.get('/orgMemberCounts/user/:user', orgMemberCounts);
 orgRouter.get('/getOrganizationId/user/:user', getOrganizationId);
-orgRouter.get('/addMember', getOrganizationId);
-orgRouter.get('/updateMember', getOrganizationId);
-orgRouter.get('/deleteMember', getOrganizationId);
+orgRouter.post('/addMember', addMember);
+orgRouter.post('/updateMember', updateMember);
+orgRouter.post('/deleteMember', deleteMember);
 
 export {orgRouter}

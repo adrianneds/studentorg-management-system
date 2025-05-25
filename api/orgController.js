@@ -833,7 +833,7 @@ const addMember = async (req, res) => {
     `INSERT INTO member 
     (student_number, member_username, member_password, member_name, gender, degree_program)
     VALUES 
-    ('${student_number}', '${member_username}', '${member_password}', '${member_name}', '${gender}', '${degree_program}';`
+    ('${student_number}', '${member_username}', '${member_password}', '${member_name}', '${gender}', '${degree_program}');`
 
     const ispartof_query = 
     `INSERT INTO is_part_of 
@@ -841,7 +841,7 @@ const addMember = async (req, res) => {
     date_of_status_update, role, membership_status)
     VALUES 
     ('${student_number}', '${organization_id}', '${committee}', '${batch}', '${semester}',
-    '${academic_year}', '${date_of_status_update}', '${role}', '${membership_status}';`
+    '${academic_year}', '${date_of_status_update}', '${role}', '${membership_status}');`
 
     try {
         console.log(query)
@@ -863,14 +863,11 @@ const updateMember = async (req, res) => {
     let gender = req.body.gender;
     let degree_program = req.body.degree_program;
 
-    var query = `UPDATE fee SET `;
+    var query = `UPDATE member SET `;
 
     var updateColumnsStr = '';
     var updateColumns = [];
 
-    if (student_number !==""&&student_number!==undefined) {
-        updateColumns.push(` student_number = '${student_number}'`)
-    } 
     if (member_username !=="" && member_username!==undefined) {
         updateColumns.push(` member_username = '${member_username}'`)
     }
@@ -881,7 +878,7 @@ const updateMember = async (req, res) => {
         updateColumns.push(` gender = '${gender}'`)
     } 
     if (degree_program !== ""&&degree_program!==undefined) {
-        updateColumns.push(` degree_program = ${degree_program}`)
+        updateColumns.push(` degree_program = '${degree_program}'`)
     }
 
     updateColumnsStr = updateColumns.join()
@@ -913,12 +910,20 @@ const deleteMember = async (req, res) => {
 
     let student_number = req.body.student_number;
 
+    const pays_query = 
+    `DELETE FROM pays WHERE student_number = '${student_number}';`;
+
+    const ispartof_query = 
+    `DELETE FROM is_part_of WHERE student_number = '${student_number}';`;
+
     const query = 
     `DELETE FROM member 
     WHERE student_number = '${student_number}';`
 
     try {
         console.log(query)
+        await pool.query(pays_query);
+        await pool.query(ispartof_query);
         await pool.query(query);
         res.status(200).json({message: "Successfully deleted member"})
     } catch (err) {

@@ -380,3 +380,9 @@ html {
   display: flex;
   flex-direction: column;
 }
+
+.add-member.glass-card.cud {
+  height: 45vmax;
+  border: 1px solid black;
+  overflow-y: auto;
+}
