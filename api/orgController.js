@@ -164,14 +164,22 @@ const orgUnpaidMembers = async (req, res) => {
 };
 
 
-//
+// REVISED 5/25 
 //View total members and total active members
 const orgMemberCounts = async (req, res) => {
 
-    let user = req.params.user;
+    let organization_username = req.params.organization_username;
 
     const query = 
-    'SELECT COUNT(DISTINCT c.student_number) AS total_members, COUNT(DISTINCT CASE WHEN b.membership_status = "Active" THEN c.student_number END) AS total_active_members FROM organization o JOIN is_part_of b ON o.organization_id = b.organization_id JOIN member c ON b.student_number = c.student_number WHERE o.organization_username = ? AND b.date_of_status_update = ( SELECT MAC(date_of_status_update) FROM is_part_of WHERE student_number = b.student_number AND organization_id = o.organization_id); '
+    `SELECT 
+    COUNT(DISTINCT student_number) AS count_total,
+    SUM(CASE WHEN membership_status = 'Active' THEN 1 ELSE 0 END) AS count_active
+    FROM member NATURAL JOIN organization NATURAL JOIN is_part_of 
+        WHERE CONCAT(student_number, date_of_status_update, organization_id) IN
+        (SELECT CONCAT(student_number, MAX(date_of_status_update), organization_id)
+        FROM member NATURAL JOIN organization NATURAL JOIN is_part_of
+        WHERE organization_username='${organization_username}'
+        GROUP BY student_number);`
 
     try {
         const [rows] = await pool.query(query, [user]);
@@ -182,12 +190,6 @@ const orgMemberCounts = async (req, res) => {
       }
 
 }
-
-
-
-
-//
-
 
 // View members of a specific committee given an AY
 // TEST: http://localhost:5000/organization/committeeMembers/user/mathsoc?ay=2023-2024&committee=Executive
