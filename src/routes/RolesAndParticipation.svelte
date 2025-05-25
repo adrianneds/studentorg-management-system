@@ -19,6 +19,10 @@
     let nsemCountInput = 0;
     let statusProps = [];
 
+    let showCommmitee = true;
+    let showRoles = false;
+    let showStatus = false;
+
     // NEW: getting username
     var username = JSON.parse(localStorage.getItem('user')).organization_username
     console.log(username)
@@ -152,49 +156,66 @@
   
 </script>
 
+<div class="options-container">
+<div class="options">
+    <button class = "glass-button options-button" on:click={() => {showCommmitee=true;showRoles=false;showStatus=false}}>
+        Committees
+    </button>
+    <button class = "glass-button options-button" on:click={() => {showCommmitee=false;showRoles=true;showStatus=false}}>
+        Roles
+    </button>
+    <button class = "glass-button options-button" on:click={() => {showCommmitee=false;showRoles=false;showStatus=true}}>
+        Status
+    </button>
+</div>
+</div>
+
+
 
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
-<div class="max-w-7xl mx-auto h-full flex flex-col">
 
+{#if showCommmitee}
+<div class="max-w-7xl mx-auto h-full flex flex-col">
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-primary mb-2"> Committee Members </h1>
         <p class="text-secondary"> Table view of committee members for a given academic year </p>
     </div>
 
+    <div class="committee-options">
     <div class="mb-8">
     <!-- Dropdown menu -->
-    <button id="committeeDropdown" data-dropdown-toggle="dropdown" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+    <button id="committeeDropdown" data-dropdown-toggle="dropdown-committee" class="glass-dropdown" type="button">
         {committee!=""?committee : "Committee"}
     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>
     </button>
-    <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+    <div id="dropdown-committee" class="dropdown-options z-10 hidden">
+        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
         {#each committeeOptions as committee}
             <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateCommittee(committee)}>{committee}</a>
+                <a href="#" class="block px-4 py-2" on:click={() => updateCommittee(committee)}>{committee}</a>
             </li>
         {/each}
             <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateCommittee("")}> Any </a>
+                <a href="#" class="block px-4 py-2" on:click={() => updateCommittee("")}> Any </a>
             </li>
         </ul>
     </div>
     </div>
-
     <div class = "mb-8">
     <div class="w-full max-w-sm min-w-[200px]">
         <div class="relative">
-            <input id = "AYInput" type="email" class="w-full bg-transparent placeholder:text-slate-600 text-slate-700 text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+            <input id = "AYInput" type="email" class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
             placeholder="Academic Year e.g., 2023-2024" bind:value={ayInput} />
             <button id = "AYsubmitButton"
-            class="absolute right-1 top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            class="text-input-submit absolute right-1 top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="button" on:click={updateAY(ayInput)}
             >
             Submit
             </button>
         </div>
+    </div>
     </div>
     </div>
 
@@ -247,8 +268,11 @@
     </table>
 </div>
 </div>
+{/if}
 
 <!-- ROLES  -->
+{#if showRoles}
+<div class="max-w-7xl mx-auto h-full flex flex-col">
     <div class="mb-8">
         <a name = "role"> </a>
         <h1 class="text-3xl font-bold text-primary mb-2"> Roles </h1>
@@ -257,21 +281,21 @@
 
     <div class="mb-8">
     <!-- Dropdown menu -->
-    <button id="roleDropdown" data-dropdown-toggle="dropdown2" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+    <button id="roleDropdown" data-dropdown-toggle="role-dropdown" class="glass-dropdown" type="button">
         {role!=""?role : "Role"}
     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>
     </button>
-    <div id="dropdown2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+    <div id="role-dropdown" class="dropdown-options z-10 hidden">
+        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
         {#each roleOptions as role}
             <li>
-                <a href="#role" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateRole(role)}>{role}</a>
+                <a href="#role" class="block px-4 py-2" on:click={() => updateRole(role)}>{role}</a>
             </li>
         {/each}
             <li>
-                <a href="#role" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateRole("")}> Any </a>
+                <a href="#role" class="block px-4 py-2" on:click={() => updateRole("")}> Any </a>
             </li>
         </ul>
     </div>
@@ -325,9 +349,12 @@
         {/each}
     </table>
 </div>
-<br>
+</div>
+{/if}
 
 <!-- MEMBERSHIP STATUS -->
+ {#if showStatus}
+ <div class="max-w-7xl mx-auto h-full flex flex-col">
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-primary mb-2"> Membership Status throughout the Semesters </h1>
         <p class="text-secondary"> Table view of percentage of active, inactive, miscellaneous status for the last n semesters </p>
@@ -383,7 +410,9 @@
         {/each}
     </table>
     </div>
-    <br><br>
+    </div>
+
+    {/if}
 
 </div>
 
@@ -391,18 +420,6 @@
   h1 {
     color: var(--text-primary);
   }
-  #committeeDropdown, #roleDropdown {
-    background-color: var(--primary);
-  }
-    #AYInput {
-    background-color: white;
-    color:var(--primary)
-  }
-
-   #AYsubmitButton {
-    background-color: var(--primary);
-   }
-
    #quantity-input {
     width: 50px;
     height: 30px;

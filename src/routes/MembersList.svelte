@@ -72,7 +72,6 @@
   
 </script>
 
-
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
 <div class="max-w-7xl mx-auto h-full flex flex-col">
 
@@ -84,117 +83,123 @@
     <div class="mb-8">
         
     <!-- Dropdown menu -->
-    <button id="genderDropdown" data-dropdown-toggle="dropdown" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-        Gender
-    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-    </svg>
+    <button id="genderDropdown" data-dropdown-toggle="dropdown" 
+        class= "glass-dropdown" type="button">
+            Gender
+        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+        </svg>
     </button>
-    <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        <div id="dropdown" class="dropdown-options z-10 hidden">
+        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('gender','F')}>Female</a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('gender','F')}>Female</a>
         </li>
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('gender','M')}>Male</a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('gender','M')}>Male</a>
         </li>
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('gender','')}>Any</a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('gender','')}>Any</a>
         </li>
         </ul>
     </div>
 
-    <button id="statusDropdown" data-dropdown-toggle="dropdown2" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+    <button id="statusDropdown" data-dropdown-toggle="dropdown2"
+    class="glass-dropdown" type="button">
         Status
     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>
     </button>
-    <div id="dropdown2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        <div id="dropdown2" class="dropdown-options z-10 hidden">
+        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
         { #each statuses as status}
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('membership_status',status)}>{status}</a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('membership_status',status)}>{status}</a>
         </li>
         { /each }
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('membership_status','')}> Any </a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('membership_status','')}> Any </a>
         </li>
         </ul>
     </div>
 
-    <button id="degreeProgramDropdown" data-dropdown-toggle="dropdown3" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+    <button id="degreeProgramDropdown" data-dropdown-toggle="dropdown3"
+    class="glass-dropdown" type="button">
         Degree Program
     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>
     </button>
-        <div id="dropdown3" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        <div id="dropdown3" class="dropdown-options z-10 hidden">
+        <ul class="py-2 text-sm w-40" aria-labelledby="dropdownDefaultButton">
         { #each degreePrograms as degprog}
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('degree_program',degprog)}>{degprog}</a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('degree_program',degprog)}>{degprog}</a>
         </li>
         { /each }
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('degree_program','')}> Any </a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('degree_program','')}> Any </a>
         </li>
         </ul>
     </div>
 
-    <button id="committeeDropdown" data-dropdown-toggle="dropdown4" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+    <button id="committeeDropdown" data-dropdown-toggle="dropdown4"
+    class="glass-dropdown" type="button">
         Committee
     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>
     </button>
-        <div id="dropdown4" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        <div id="dropdown4" class="dropdown-options z-10 hidden">
+        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
         { #each committees as committee}
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('committee',committee)}>{committee}</a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('committee',committee)}>{committee}</a>
         </li>
         { /each }
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('committee','')}> Any </a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('committee','')}> Any </a>
         </li>
         </ul>
     </div>
 
-    <button id="roleDropdown" data-dropdown-toggle="dropdown5" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+    <button id="roleDropdown" data-dropdown-toggle="dropdown5"
+    class="glass-dropdown" type="button">
         Role
     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>
     </button>
-        <div id="dropdown5" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        <div id="dropdown5" class="dropdown-options z-10 hidden">
+        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
         { #each roles as role}
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('role',role)}>{role}</a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('role',role)}>{role}</a>
         </li>
         { /each }
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('role','')}> Any </a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('role','')}> Any </a>
         </li>
         </ul>
     </div>
 
-    <button id="batchDropdown" data-dropdown-toggle="dropdown6" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+    <button id="batchDropdown" data-dropdown-toggle="dropdown6"
+    class="glass-dropdown" type="button">
         Batch
     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>
     </button>
-        <div id="dropdown6" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        <div id="dropdown6" class="dropdown-options z-10 hidden">
+        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
         { #each batches as batch}
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('batch',batch)}>{batch}</a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('batch',batch)}>{batch}</a>
         </li>
         { /each }
         <li>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => filterQuery('batch','')}> Any </a>
+            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('batch','')}> Any </a>
         </li>
         </ul>
     </div>
@@ -270,8 +275,7 @@
   h1 {
     color: var(--text-primary);
   }
-  #genderDropdown, #statusDropdown, #degreeProgramDropdown, #committeeDropdown, #roleDropdown, #batchDropdown {
+  table {
     color: black;
-    background-color: var(--text-primary)
   }
 </style> 

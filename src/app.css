@@ -162,3 +162,114 @@ body {
 .glass-divider {
   @apply h-px bg-gradient-to-r from-transparent via-blue-400/20 to-transparent my-6;
 } 
+
+.glass-dropdown {
+  background: rgba(255, 255, 255, 0.20); 
+  backdrop-filter: blur(30px);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.28);
+  color: var(--text-primary);
+  @apply px-5 py-2.5 font-medium text-sm inline-flex items-center shadow-lg transition-all duration-200;
+}
+
+.glass-dropdown:hover {
+  background: rgba(255, 255, 255, 0.30);
+}
+
+.dropdown-options {
+  background-color: rgb(118, 108, 165);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(147, 138, 255, 0.28);
+  color: white;
+  width: 6vw;
+  margin-left: -10vw;
+}
+
+.dropdown-options li {
+    transition: 0.2s;
+}
+
+.dropdown-options li:hover {
+  background-color: rgba(181, 177, 226, 0.592);
+  color:white;
+    border-radius: 0.75rem;
+  transition: 0.2s;
+}
+
+td {
+  background-color: rgba(209, 208, 255, 0.2);
+}
+
+tr {
+  background-color: rgba(209, 208, 255, 0.2);
+}
+
+th {
+  background-color: rgba(209, 208, 255, 0.2);
+}
+
+#dropdown3 {
+  width: 11.5vw;
+  margin-left: -5vw;
+}
+
+#dropdown4, #dropdown-committee {
+  width: 9vw;
+}
+
+.options {
+  width: 70vw;
+  height: 7vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1vw;
+  justify-content: space-around;
+}
+
+.options-button {
+  height: 2.5vw;
+  width: 20vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8vmax;
+  border-radius: 5vw;
+  border: 1px solid rgba(255, 255, 255, 0.397);
+}
+
+.options-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 1vw;
+}
+
+.options-container h1 {
+  font-size: 2vw;
+  font-weight: bolder;
+}
+
+.committee-options {
+  display: flex;
+  flex-direction: row;
+  column-gap: 2vw;
+}
+
+.text-input {
+  width: 23vw;
+  background: rgba(255, 255, 255, 0.20); 
+  border: 1px solid rgba(147, 138, 255, 0.28);
+  color: white;
+  height: 3vw;
+  border-radius: 0.75rem;
+}
+
+.text-input-submit {
+  background-color: rgba(52, 35, 130, 0.777);
+  font-weight: bolder;
+  margin-top: 0.2vh;
+  margin-right: 0.5vw;
+  border-radius: 0.75rem;
+}
