@@ -145,7 +145,7 @@
   // });
 </script>
 
-<div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
+<div class="min-h-[calc(100vh-6rem)] py-8 pb-16 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto h-full flex flex-col">
     <div class="mb-8">
       <div class="flex items-center gap-4 mb-2">
@@ -165,11 +165,12 @@
           </Link>
         {/if}
       </div>
+          <br>
       <h1 class="text-3xl font-bold text-primary mb-2">{organization?.name || 'Organization'} Members</h1>
       <p class="text-secondary">View and manage organization members</p>
     </div>
 
-    <div class="flex-1 overflow-hidden">
+    <div class="flex-1">
       {#if loading}
         <div class="flex justify-center items-center h-full">
           <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>

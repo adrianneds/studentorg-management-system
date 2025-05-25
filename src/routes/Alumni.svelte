@@ -61,11 +61,10 @@
     </div>
 
     <div class="mb-8">
-          <div class="glass-card p-6">
-      <div class="text-sm text-secondary mb-1"> Select date </div>
-      <input class = "dateInput" type="date" min="1970-01-01" bind:value={alumniDateInput} />
-      <button id = "submitButton" type="button" on:click={changeDate(alumniDateInput)}> Submit </button>
-    </div>
+        <div class="date-container glass-card p-6">
+      <input class = "dateInput text-input" type="date" min="1970-01-01" bind:value={alumniDateInput} />
+      <button class = "date-input-submit" id = "submitButton" type="button" on:click={changeDate(alumniDateInput)}> Submit </button>
+        </div>
     </div>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -119,15 +118,5 @@
   h1 {
     color: var(--text-primary);
   }
-   #submitButton {
-    background-color: var(--primary);
-    color:white;
-    padding: 4px;
-    font-size:15px;
-    border-radius: 8px;
-   }
-   .dateInput {
-    color: black;
-   }
 
 </style>
