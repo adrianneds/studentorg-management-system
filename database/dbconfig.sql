@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS member(
     member_name VARCHAR(70),
     gender CHAR(1) CHARACTER SET utf8 CHECK (gender IN ('M','F')),  -- only allow such values
     degree_program VARCHAR(70),
-    CONSTRAINT member_studentnumber_pk PRIMARY KEY(student_number)
+    CONSTRAINT member_studentnumber_pk PRIMARY KEY(student_number),
+    CONSTRAINT member_memberusername_uk UNIQUE(member_username)
 );
 
 -- ORGANIZATION(Organization_id, Organization_username, Organization_password, Organization_name)
@@ -25,14 +26,14 @@ CREATE TABLE IF NOT EXISTS organization (
     organization_username VARCHAR(50) NOT NULL,
     organization_password VARCHAR(50) NOT NULL,
     organization_name VARCHAR(70),
-    CONSTRAINT organization_organizationid_pk PRIMARY KEY(organization_id)
+    CONSTRAINT organization_organizationid_pk PRIMARY KEY(organization_id),
+    CONSTRAINT organization_organizationusername_uk UNIQUE(organization_username)
 );
 
 -- IS_PART_OF(Status_update_id, Student_number, Organization_id, Committee, Batch, Semester, Academic_year, Date_of_status_update, Role, Membership_status)
 
 DROP TABLE IF EXISTS `is_part_of`;
 CREATE TABLE IF NOT EXISTS is_part_of (
-    status_update_id INT(4) AUTO_INCREMENT,
     student_number VARCHAR(15),
     organization_id VARCHAR(15),
     committee VARCHAR(50),
@@ -45,10 +46,11 @@ CREATE TABLE IF NOT EXISTS is_part_of (
     role VARCHAR(50),
     membership_status VARCHAR(9) CHECK (
         membership_status IN ('Active','Inactive','Expelled','Suspended','Alumni')), -- only allow such values
-    CONSTRAINT ispartof_statusupdateid_pk PRIMARY KEY(status_update_id),
     CONSTRAINT ispartof_studentnumber_fk FOREIGN KEY(student_number) REFERENCES member(student_number),
     CONSTRAINT ispartof_organizationid_fk FOREIGN KEY(organization_id) REFERENCES organization(organization_id),
-    CONSTRAINT ispartof_studentnumber_semester_org_academicyear_uk UNIQUE(student_number, organization_id, semester, academic_year) -- only one update per sem
+    CONSTRAINT ispartof_pk PRIMARY KEY(
+        student_number, organization_id, committee, batch, semester, academic_year, date_of_status_update, membership_status
+    )
 ) AUTO_INCREMENT=1000;
 
 -- FEE(Fee_id, Fee_name, Fee_amount, Organization_id)
@@ -59,6 +61,8 @@ CREATE TABLE IF NOT EXISTS fee (
     fee_name VARCHAR(50),
     fee_amount FLOAT(15) CHECK(fee_amount > 0), -- fee should be a positive number
     organization_id VARCHAR(15),
+    due_date DATE,
+    issue_date DATE,
     CONSTRAINT fee_feeid_pk PRIMARY KEY(fee_id),
     CONSTRAINT fee_organizationid_fk FOREIGN KEY(organization_id) REFERENCES organization(organization_id)
 );
@@ -70,7 +74,6 @@ CREATE TABLE IF NOT EXISTS pays (
     transaction_id INT(4) AUTO_INCREMENT,
     student_number VARCHAR(15),
     fee_id VARCHAR(15),
-    issue_date DATE,
     semester_issued CHAR(2) CHECK (semester_issued IN ('1S','2S','M')),
     academic_year_issued CHAR(9),
     due_date DATE CHECK(due_date >= issue_date),          -- due date should be after issue date 
@@ -80,10 +83,7 @@ CREATE TABLE IF NOT EXISTS pays (
     academic_year CHAR(9) CHECK (academic_year LIKE '%-%'),                 -- specify valid format
     CONSTRAINT pays_transactionid_pk PRIMARY KEY(transaction_id),
     CONSTRAINT pays_studentnumber_fk FOREIGN KEY(student_number) REFERENCES member(student_number),
-    CONSTRAINT pays_feeid_fk FOREIGN KEY(fee_id) REFERENCES fee(fee_id),
-    -- issue date should be before payment date and be within the academic year issued
-    CONSTRAINT issue_date_valid CHECK((issue_date <= payment_date AND
-        YEAR(issue_date) BETWEEN SUBSTRING(academic_year_issued,1,4) AND SUBSTRING(academic_year_issued, 6,4)))
+    CONSTRAINT pays_feeid_fk FOREIGN KEY(fee_id) REFERENCES fee(fee_id)
 ) AUTO_INCREMENT=1000;
 
 ---------------------------------------------------------------------------------------------
