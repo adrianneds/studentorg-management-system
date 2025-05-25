@@ -163,6 +163,32 @@ const orgUnpaidMembers = async (req, res) => {
     res.send(rows)
 };
 
+
+//
+//View total members and total active members
+const orgMemberCounts = async (req, res) => {
+
+    let user = req.params.user;
+
+    const query = 
+    'SELECT COUNT(DISTINCT c.student_number) AS total_members, COUNT(DISTINCT CASE WHEN b.membership_status = "Active" THEN c.student_number END) AS total_active_members FROM organization o JOIN is_part_of b ON o.organization_id = b.organization_id JOIN member c ON b.student_number = c.student_number WHERE o.organization_username = ? AND b.date_of_status_update = ( SELECT MAC(date_of_status_update) FROM is_part_of WHERE student_number = b.student_number AND organization_id = o.organization_id); '
+
+    try {
+        const [rows] = await pool.query(query, [user]);
+        res.status(200).json(rows[0]); 
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Error fetching member counts" });
+      }
+
+}
+
+
+
+
+//
+
+
 // View members of a specific committee given an AY
 // TEST: http://localhost:5000/organization/committeeMembers/user/mathsoc?ay=2023-2024&committee=Executive
 // FIELDS
