@@ -129,6 +129,9 @@ const orgMembers = async (req, res) => {
 
 // TO DO: Update a transaction status, payment date, sem, AY of payment
 
+
+
+
 // TO DO: Delete a transaction
 
 // TO DO: Add a status update
@@ -473,6 +476,65 @@ const addPays = async (req, res) => {
 
 }
 
+// Update a transaction
+const updateTransaction = async (req, res) => {
+
+    let transaction_id = req.body.transaction_id;
+    let student_number = req.body.student_number;
+    let fee_id = req.body.fee_id;
+    let payment_date = req.body.payment_date;
+    let payment_status = req.body.payment_status;
+    let semester = req.body.semester;
+    let academic_year = req.body.academic_year;
+
+    var query = `UPDATE pays SET `;
+
+    var updateColumnsStr = '';
+    var updateColumns = [];
+
+    if (student_number !==""&&student_number!==undefined) {
+        updateColumns.push(` student_number = '${student_number}'`)
+    } 
+    if (fee_id !=="" && fee_id!==undefined) {
+        updateColumns.push(` fee_id = '${fee_id}'`)
+    }
+    if (payment_date !==""&&payment_date!==undefined) {
+        updateColumns.push(` payment_date = '${payment_date}'`)
+    } 
+    if (payment_status !== ""&&payment_status!==undefined) {
+        updateColumns.push(` payment_status = '${payment_status}'`)
+    }
+    if (semester !== ""&&semester!==undefined) {
+        updateColumns.push(` semester = '${semester}'`)
+    } 
+    if (academic_year !== ""&&academic_year!==undefined) {
+        updateColumns.push(` academic_year = ${academic_year}`)
+    }
+
+    updateColumnsStr = updateColumns.join()
+
+    console.log(updateColumns)
+    console.log(updateColumnsStr)
+
+    if (updateColumnsStr[0]==',') {
+        query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
+    } else {
+        query = query + updateColumnsStr
+    }
+
+    query += ` WHERE transaction_id = '${transaction_id}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully updated transaction"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error updating transaction"})
+    }
+
+}
+
 // Delete transaction
 const deletePays = async (req, res) => {
 
@@ -733,5 +795,5 @@ const getOrganizationId = async (req, res) => {
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
         orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
-        updateFee, viewFees, viewStatusUpdates, viewTransactions, orgMemberCounts, getOrganizationId}
+        updateFee, viewFees, viewStatusUpdates, viewTransactions, orgMemberCounts, getOrganizationId,updateTransaction}
 
