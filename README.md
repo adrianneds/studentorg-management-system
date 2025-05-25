@@ -56,15 +56,18 @@ To get started with this project, follow these steps:
    ```bash
    npm install
    ```
+3. **Run dbconfig.sql in MariaDB**
+`` source studentorg-management-system\database\dbconfig.sql
+``
 
-3. **Run the development server:**
+4. **Run the development server:**
    ```bash
    npm run dev
    ```
 
 4. **Open your browser and navigate to:**
    ```
-   http://localhost:5000
+   http://localhost:5173
    ```
 
 ## Features
