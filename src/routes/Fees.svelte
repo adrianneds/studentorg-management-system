@@ -49,6 +49,26 @@
     });
   };
 
+  // NEW: get fees
+  async function getFees() {
+    await fetch(`http://localhost:5000/organization/viewFees/user/${username}`,
+      {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    )
+    .then(response => response.json())
+    .then(data => {
+      fees = data;
+      console.log(fees);
+    }).catch(error => {
+      console.log(error);
+      return [];
+    });
+  };
+
   
   onMount(async () => {
     if (!$auth || $auth.type !== 'organization') {
@@ -56,58 +76,60 @@
       return;
     }
     getFeeStatus();
+    getFees();
+    loading = false;
 
-    // Simulate loading organization and fees
-    setTimeout(() => {
-      organization = {
-        id: 1,
-        name: 'Computer Society',
-        description: 'A community of computer science enthusiasts',
-        totalMembers: 150,
-        activeMembers: 145,
-        totalRevenue: 75000,
-        pendingPayments: 25000,
-        overduePayments: 5000
-      };
+    // // Simulate loading organization and fees
+    // setTimeout(() => {
+    //   organization = {
+    //     id: 1,
+    //     name: 'Computer Society',
+    //     description: 'A community of computer science enthusiasts',
+    //     totalMembers: 150,
+    //     activeMembers: 145,
+    //     totalRevenue: 75000,
+    //     pendingPayments: 25000,
+    //     overduePayments: 5000
+    //   };
 
-      // NOTE: replace with fees from database
-      fees = [
-        {
-          id: 1,
-          name: 'Annual Membership Fee',
-          amount: 500,
-          dueDate: '2024-03-31',
-          status: 'pending',
-          paymentMethod: null,
-          paymentDate: null,
-          pendingPayments: 75,
-          overduePayments: 15
-        },
-        {
-          id: 2,
-          name: 'Event Registration Fee',
-          amount: 200,
-          dueDate: '2024-02-28',
-          status: 'paid',
-          paymentMethod: 'GCash',
-          paymentDate: '2024-02-15',
-          pendingPayments: 0,
-          overduePayments: 0
-        },
-        {
-          id: 3,
-          name: 'Workshop Fee',
-          amount: 300,
-          dueDate: '2024-01-31',
-          status: 'overdue',
-          paymentMethod: null,
-          paymentDate: null,
-          pendingPayments: 30,
-          overduePayments: 20
-        }
-      ];
-      loading = false;
-    }, 1000);
+    //   // NOTE: replace with fees from database
+    //   fees = [
+    //     {
+    //       id: 1,
+    //       name: 'Annual Membership Fee',
+    //       amount: 500,
+    //       dueDate: '2024-03-31',
+    //       status: 'pending',
+    //       paymentMethod: null,
+    //       paymentDate: null,
+    //       pendingPayments: 75,
+    //       overduePayments: 15
+    //     },
+    //     {
+    //       id: 2,
+    //       name: 'Event Registration Fee',
+    //       amount: 200,
+    //       dueDate: '2024-02-28',
+    //       status: 'paid',
+    //       paymentMethod: 'GCash',
+    //       paymentDate: '2024-02-15',
+    //       pendingPayments: 0,
+    //       overduePayments: 0
+    //     },
+    //     {
+    //       id: 3,
+    //       name: 'Workshop Fee',
+    //       amount: 300,
+    //       dueDate: '2024-01-31',
+    //       status: 'overdue',
+    //       paymentMethod: null,
+    //       paymentDate: null,
+    //       pendingPayments: 30,
+    //       overduePayments: 20
+    //     }
+    //   ];
+    //   loading = false;
+    // }, 1000);
   });
 
   function handleViewFee(fee) {
@@ -185,11 +207,11 @@
     showPaymentModal = false;
   }
 
-  $: filteredFees = fees.filter(fee => {
-    const matchesSearch = fee.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || fee.status === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
+  // $: filteredFees = fees.filter(fee => {
+  //   const matchesSearch = fee.name.toLowerCase().includes(searchQuery.toLowerCase());
+  //   const matchesStatus = filterStatus === 'all' || fee.status === filterStatus;
+  //   return matchesSearch && matchesStatus;
+  // });
 </script>
 
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
@@ -244,58 +266,33 @@
       {:else}
         <div class="h-full overflow-y-auto pr-2">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {#each filteredFees as fee}
+            {#each fees as fee}
               <div class="glass-card p-6">
                 <div class="flex justify-between items-start mb-4">
                   <div>
-                    <h3 class="text-lg font-semibold text-primary mb-1">{fee.name}</h3>
-                    <p class="text-secondary text-sm">Due: {new Date(fee.dueDate).toLocaleDateString()}</p>
+                    <h3 class="text-lg font-semibold text-primary mb-1">{fee.fee_name}</h3>
+                    <p class="text-secondary text-sm">Due: {fee.due_date.slice(0,10)}</p>
                   </div>
-                  <div class="glass-badge {
-                    fee.status === 'paid' ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20' :
-                    fee.status === 'overdue' ? 'bg-gradient-to-r from-red-500/20 to-pink-500/20' :
-                    'bg-gradient-to-r from-yellow-500/20 to-orange-500/20'
-                  }">
-                    {fee.status.charAt(0).toUpperCase() + fee.status.slice(1)}
+                  <div class="glass-badge bg-gradient-to-r from-green-500/20 to-emerald-500/20
+                    bg-gradient-to-r from-yellow-500/20 to-orange-500/20 ">
+                    {fee.fee_id}
                   </div>
                 </div>
 
                 <div class="space-y-2 mb-4">
                   <div class="flex justify-between text-sm">
                     <span class="text-secondary">Amount:</span>
-                    <span class="text-primary">₱{fee.amount.toLocaleString()}</span>
+                    <span class="text-primary">₱{fee.fee_amount}</span>
                   </div>
                   <div class="flex justify-between text-sm">
-                    <span class="text-secondary">Pending:</span>
-                    <span class="text-primary">{fee.pendingPayments} members</span>
+                    <span class="text-secondary">Sem/AY Issued:</span>
+                    <span class="text-primary">{fee.semester_issued}/{fee.academic_year_issued} </span>
                   </div>
                   <div class="flex justify-between text-sm">
-                    <span class="text-secondary">Overdue:</span>
-                    <span class="text-primary">{fee.overduePayments} members</span>
+                    <span class="text-secondary">Date Issued:</span>
+                    <span class="text-primary">{fee.issue_date.slice(0,10)} </span>
                   </div>
-                  {#if fee.paymentMethod}
-                    <div class="flex justify-between text-sm">
-                      <span class="text-secondary">Payment Method:</span>
-                      <span class="text-primary">{fee.paymentMethod}</span>
-                    </div>
-                    <div class="flex justify-between text-sm">
-                      <span class="text-secondary">Payment Date:</span>
-                      <span class="text-primary">{new Date(fee.paymentDate).toLocaleDateString()}</span>
-                    </div>
-                  {/if}
                 </div>
-
-                {#if fee.status !== 'paid'}
-                  <button 
-                    class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
-                    on:click={() => handlePayment(fee)}
-                  >
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    Process Payment
-                  </button>
-                {/if}
               </div>
             {/each}
           </div>
@@ -319,6 +316,19 @@
         Pending Members
     </Link>
     </div>
+    <br>
+    <div class="space-y-3">
+    <Link 
+        to="/transactions" 
+        class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+    >
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        All Transactions
+    </Link>
+    </div>
+
 </div>
 
 {#if showPopup && selectedFee}

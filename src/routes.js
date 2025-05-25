@@ -11,6 +11,8 @@ import MembersList from './routes/MembersList.svelte';
 import OrganizationFeeMembers from './routes/OrganizationFeeMembers.svelte';
 import RolesAndParticipation from './routes/RolesAndParticipation.svelte';
 import Alumni from './routes/Alumni.svelte';
+import Transactions from './routes/Transactions.svelte';
+import StatusUpdate from './routes/StatusUpdates.svelte';
 
 // All routes
 export const routes = {
@@ -29,5 +31,7 @@ export const routes = {
   '/organization-fee-members': OrganizationFeeMembers,
   '/roles-and-participation': RolesAndParticipation,
   '/alumni': Alumni,
+  '/transactions': Transactions,
+  '/status-updates':StatusUpdate,
   '*': NotFound // Catch-all route
 }; 

@@ -678,16 +678,17 @@ const viewStatusUpdates = async (req, res) => {
 
     let user = req.params.user;
     const query = 
-    `SELECT status_update_id, student_number, committee, batch, semester,
-    academic_year, date_of_status_update, role, membership_status FROM is_part_of 
-    NATURAL JOIN organization WHERE organization_username = '${user}';`
+    `SELECT student_number, member_name, committee, batch, semester,
+    academic_year, date_of_status_update, role, membership_status FROM 
+    member NATURAL JOIN is_part_of NATURAL JOIN organization
+    WHERE organization_username = '${user}';`
 
     try {
         const [rows] = await pool.query(query);
         res.send(rows)
     } catch (err) {
         console.log(err)
-        res.status(500).json({message: "Error retrieving fees"})
+        res.status(500).json({message: "Error retrieving status updates"})
     }
 }
 
@@ -696,9 +697,9 @@ const viewTransactions = async (req, res) => {
 
     let user = req.params.user;
     const query = 
-    `SELECT transaction_id, student_number, fee_id, fee_amount, fee_name issue_date, semester_issued,
+    `SELECT transaction_id, student_number, member_name, fee_id, fee_amount, fee_name, issue_date, semester_issued,
     academic_year_issued, due_date, payment_date, payment_status, semester, academic_year
-    FROM pays NATURAL JOIN fee NATURAL JOIN organization WHERE organization_username = '${user}';`
+    FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization WHERE organization_username = '${user}';`
 
     try {
         const [rows] = await pool.query(query);
@@ -712,5 +713,5 @@ const viewTransactions = async (req, res) => {
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
         orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
-        updateFee, changeStatusUpdate, viewFees, viewStatusUpdates, viewTransactions}
+        updateFee, viewFees, viewStatusUpdates, viewTransactions, orgMemberCounts}
 

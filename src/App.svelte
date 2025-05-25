@@ -17,6 +17,8 @@
   import OrganizationFeeMembers from './routes/OrganizationFeeMembers.svelte';
   import RolesAndParticipation from './routes/RolesAndParticipation.svelte';
   import Alumni from './routes/Alumni.svelte';
+  import Transactions from "./routes/Transactions.svelte";
+  import StatusUpdates from "./routes/StatusUpdates.svelte";
 
   export let url = "";
 
@@ -44,6 +46,8 @@
       <Route path='/organization-fee-members' component={OrganizationFeeMembers} />
       <Route path='/roles-and-participation' component={RolesAndParticipation} />
       <Route path='/alumni' component={Alumni} />
+      <Route path='/transactions' component={Transactions} />
+      <Route path='/status-updates' component={StatusUpdates} />
       <Route path="*" component={NotFound} />
     </div>
   </main>
