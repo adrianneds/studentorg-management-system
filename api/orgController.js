@@ -171,7 +171,7 @@ const orgUnpaidMembers = async (req, res) => {
 //View total members and total active members
 const orgMemberCounts = async (req, res) => {
 
-    let organization_username = req.params.organization_username;
+    let organization_id = req.params.user;
 
     const query = 
     `SELECT 
@@ -181,12 +181,12 @@ const orgMemberCounts = async (req, res) => {
         WHERE CONCAT(student_number, date_of_status_update, organization_id) IN
         (SELECT CONCAT(student_number, MAX(date_of_status_update), organization_id)
         FROM member NATURAL JOIN organization NATURAL JOIN is_part_of
-        WHERE organization_username='${organization_username}'
+        WHERE organization_id='${organization_id}'
         GROUP BY student_number);`
 
     try {
-        const [rows] = await pool.query(query, [user]);
-        res.status(200).json(rows[0]); 
+        const [rows] = await pool.query(query);
+        res.send(rows)
       } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Error fetching member counts" });

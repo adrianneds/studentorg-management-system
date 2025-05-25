@@ -190,7 +190,7 @@
                     <p class="text-secondary text-sm">{member.student_number}</p>
                   </div>
                   <div class="glass-badge {member.status === 'active' ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20' : 'bg-gradient-to-r from-yellow-500/20 to-orange-500/20'}">
-                    {member.role}
+                    {member.batch}
                   </div>
                 </div>
 
@@ -198,14 +198,6 @@
                   <div class="flex justify-between text-sm">
                     <span class="text-secondary">Recent status update:</span>
                     <span class="text-primary">{new Date(member.recent_status_date).toLocaleDateString()}</span>
-                  </div>
-                  <div class="flex justify-between text-sm">
-                    <span class="text-secondary">Batch</span>
-                    <span class="text-primary">{member.batch}</span>
-                  </div>
-                  <div class="flex justify-between text-sm">
-                    <span class="text-secondary">Committee</span>
-                    <span class="text-primary">{member.committee}</span>
                   </div>
                 </div>
 

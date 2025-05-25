@@ -8,6 +8,9 @@
   let loading = true;
   let error = null;
   let orgInfo = [];
+
+  let totalMembers = null;
+  let totalActiveMembers = null;
   
   onMount(async () => {
     if (!$auth || $auth.type !== 'organization') {
@@ -17,6 +20,7 @@
 
     // NEW: getting username
     var username = JSON.parse(localStorage.getItem('user')).organization_username
+    var id =  JSON.parse(localStorage.getItem('user')).organization_id
 
     // NEW: import org data from db server
     async function getOrganizationInfo() {
@@ -31,8 +35,25 @@
       });
     };
 
-    getOrganizationInfo()
+    // NEW: import member data from db server
+    async function getMemberCounts() {
+      fetch(`http://localhost:5000/organization/orgMemberCounts/user/${id}`)
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        totalMembers = data[0].count_total;
+        totalActiveMembers = data[0].count_active;
+      }).catch(error => {
+        console.log(error);
+        return [];
+      });
+    };
+
+    await getOrganizationInfo()
+    await getMemberCounts()
     console.log(orgInfo)
+    console.log(totalMembers)
+    console.log(totalActiveMembers)
 
     // Simulate loading organization
     // setTimeout(() => {
@@ -62,15 +83,15 @@
       <!-- NEW: for organization info -->
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1"> Orgniazation ID </div>
-        <div class="text-2xl font-semibold text-primary">{orgInfo?.organization_id || 0}</div>
+        <div class="text-2xl font-semibold text-primary">{orgInfo?.organization_id || 'OR-9999'}</div>
       </div>
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Total Members</div>
-        <div class="text-2xl font-semibold text-primary">{organization?.totalMembers || 0}</div>
+        <div class="text-2xl font-semibold text-primary">{totalMembers || 999}</div>
       </div>
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Active Members</div>
-        <div class="text-2xl font-semibold text-primary">{organization?.activeMembers || 0}</div>
+        <div class="text-2xl font-semibold text-primary">{totalActiveMembers || 999}</div>
       </div>
       <!-- <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Officers</div>
