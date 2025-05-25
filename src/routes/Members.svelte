@@ -32,7 +32,7 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({committee:"", role:"",status:"",gender:"",
+        body: JSON.stringify({student_number:"",committee:"", role:"",status:"",gender:"",
                             degree_program:"", batch:"", membership_status:""})
       }
       )
