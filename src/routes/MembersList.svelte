@@ -6,12 +6,13 @@
   import { Dropdown, initFlowbite } from 'flowbite';
 
     let members = [];
-    let memberQuery = {committee:"", role:"", gender:"", degree_program:"", batch:"",membership_status:""} 
+    let memberQuery = {student_number:'',  committee:"", role:"", gender:"", degree_program:"", batch:"",membership_status:""} 
     let committees = [];
     let roles = [];
     let degreePrograms = [];
     let batches = [];
     let statuses = [];
+    let student_number_input = ""
 
     let showAddMemberModal = false;
     let showUpdateMemberModal = false;
@@ -46,6 +47,11 @@
 
     let deleteMemberQuery = {
         student_number: ''
+    }
+
+    function resetFilterQuery() {
+        memberQuery = {student_number:'',  committee:"", role:"", gender:"", degree_program:"", batch:"",membership_status:""} 
+        getMembers()
     }
 
     // NEW: add member
@@ -386,8 +392,25 @@
         </li>
         </ul>
     </div>
+    </div>
 
-
+    <div class = "mb-8">
+        <div class="w-full max-w-sm min-w-[200px]">
+            <div class="flex flex-row relative">
+                <input id = "studno_input" type="email" class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                placeholder="Student Num i.e., 2020-04040" bind:value={student_number_input}/>
+                <button id = "studno_input"
+                class="ml-2 search text-input-submit rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                type="button" on:click={() => filterQuery('student_number',student_number_input)}
+                >
+                Search
+                </button>
+                <button class = "search text-input-submit rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                on:click={() => resetFilterQuery()}>
+                    Reset 
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">

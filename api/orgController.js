@@ -63,6 +63,7 @@ const orgMembers = async (req, res) => {
 
     var user = req.params.user
 
+    let student_number = req.body.student_number;
     let committee = req.body.committee
     let role = req.body.role
     let status = req.body.membership_status
@@ -84,9 +85,12 @@ const orgMembers = async (req, res) => {
 
     var whereClause = "";
 
-    if (committee !== "") {
-        whereClause += ` WHERE committee = '${committee}'`
+    if (student_number !== "") {
+        whereClause += ` WHERE c.student_number = '${student_number}'`
     }
+    if (committee !== "") {
+        whereClause += ` AND committee = '${committee}'`
+    } 
     if (role !== "") {
         whereClause += ` AND role = '${role}'`
     } 
@@ -116,25 +120,6 @@ const orgMembers = async (req, res) => {
     const [rows] = await pool.query(query);
     res.send(rows)
 };
-
-// TO DO: Add a fee
-
-// TO DO: Update a fee amount
-
-// TO DO: Update a fee name
-
-// TO DO: Delete a fee
-
-// TO DO: Add a transaction (pays)
-
-// TO DO: Update a transaction status, payment date, sem, AY of payment
-
-
-
-
-// TO DO: Delete a transaction
-
-// TO DO: Add a status update
 
 // View members with unpaid fees for a given semester/AY
 // TEST: http://localhost:5000/organization/unpaidMembers/user/mathsoc?sem=2S&ay=2023-2024
