@@ -320,3 +320,63 @@ html {
   display: flex;
   flex-direction: row;
 }
+
+.cud-options-container {
+  display: flex;
+  flex-direction: row;
+  column-gap: 1vw;
+  justify-self: flex-end;
+}
+
+.cud-container {
+  align-self: center;
+  justify-self: center;
+  width: 78vw;
+}
+
+.cud-modal-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: rgba(87, 84, 128, 0.5);
+}
+
+.cud.glass-card {
+  background: rgba(255, 255, 255, 0.80);
+}
+
+.cud.glass-card form button {
+  background-color: rgba(52, 35, 130, 0.777);
+  transition: 0.3s;
+}
+
+.cud.glass-card form button:hover {
+  background-color: rgba(219, 216, 232, 0.777);
+  color: var(--secondary);
+  transition: 0.3s;
+}
+
+.cud-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.fee-card-container {
+  max-height: 80vh;
+  /* border: 1px solid black; */
+}
+
+.dateInput.fee-dashboard {
+  margin-top: 0.5vw;
+  color: black;
+  font-size: smaller;
+  text-align: center;
+  border-radius: 0.5vw;
+}
+
+.fee-dashboard-date {
+  display: flex;
+  flex-direction: column;
+}

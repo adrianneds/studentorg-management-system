@@ -369,9 +369,14 @@
   // });
 </script>
 
-<div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
+<div class="h-full py-8 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto h-full flex flex-col">
+    
+    
+    <div class="fee cud-header mb-1">
+      
     <div class="mb-8">
+
       <div class="flex items-center gap-4 mb-2">
         <Link to="/organization-dashboard" class="glass-button text-sm py-2 flex items-center">
           <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -380,8 +385,25 @@
           Back to Dashboard
         </Link>
       </div>
-      <h1 class="text-3xl font-bold text-primary pt-4 mb-2">Fee Management</h1>
+
+      <h1 class="text-3xl font-bold text-primary pt-4 mb-2 w-50">Fee Management</h1>
       <p class="text-secondary">Manage organization fees and payments</p>
+
+    </div>
+    <div class="cud-container p-6">
+        <div class="cud-options-container">
+            <button on:click={()=>{showAddFeeModal=true}} class="glass-button text-sm py-2 flex items-center" type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal">
+            Add Fee
+            </button> <br>
+            <button on:click={()=>{showUpdateFeeModal=true}} class="glass-button text-sm py-2 flex items-center">
+            Update Fee
+            </button>
+            <br>
+            <button on:click={()=>{showDeleteFeeModal=true}} class="glass-button text-sm py-2 flex items-center">
+            Delete Fee
+            </button>
+        </div>
+    </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -393,11 +415,14 @@
         <div class="text-sm text-secondary mb-1">Pending Payments</div>
         <div class="text-2xl font-semibold text-primary">₱{feeStatus.unpaid}</div>
       </div>
-      <div class="glass-card p-6">
-      <div class="text-sm text-secondary mb-1"> Total revenue and pending fees as of... </div>
-      <input class = "dateInput" type="date" bind:value={dateInput} min="1970-01-01" />
-      <button id = "submitButton" type="button" on:click={() => changeDate(dateInput)}> Submit </button>
-    </div>
+
+      <div class="fee-dashboard-date glass-card p-6">
+        <div class="text-sm text-secondary mb-1"> Revenue and pending fees as of... </div>
+        <div class = "flex flex-row">
+          <input class = "dateInput fee-dashboard" type="date" bind:value={dateInput} min="1970-01-01" />
+          <button class = "date-input-submit" id = "submitButton" type="button" on:click={() => changeDate(dateInput)}> Submit </button>
+        </div>
+      </div>
 
       <!-- <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Overdue Payments</div>
@@ -419,7 +444,7 @@
           {error}
         </div>
       {:else}
-        <div class="h-full overflow-y-auto pr-2">
+        <div class="fee-card-container overflow-y-auto pr-2">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {#each fees as fee}
               <div class="glass-card p-6">
@@ -456,49 +481,6 @@
     </div>
   </div>
 </div>
-
-<!-- NEW: buttons for viewing full reports  -->
-<div class="glass-card p-6">
-    <h2 class="text-xl font-semibold text-primary mb-4">Reports</h2>
-    <div class="space-y-3">
-    <Link 
-        to="/organization-fee-members" 
-        class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
-    >
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-        Pending Members
-    </Link>
-    </div>
-    <br>
-    <div class="space-y-3">
-    <Link 
-        to="/transactions" 
-        class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
-    >
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-        All Transactions
-    </Link>
-    </div>
-
-</div>
-<br>
-<div class="glass-card p-6">
-    <h2 class="text-xl font-semibold text-primary mb-4"> Manage Fees </h2>
-    <button on:click={()=>{showAddFeeModal=true}} class="glass-button text-sm py-2 flex items-center" type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal">
-      Add Fee
-    </button> <br>
-    <button on:click={()=>{showUpdateFeeModal=true}} class="glass-button text-sm py-2 flex items-center">
-      Update fee details
-    </button> <br>
-    <button on:click={()=>{showDeleteFeeModal=true}} class="glass-button text-sm py-2 flex items-center">
-      Delete fee
-    </button>
-</div>
-
 
 {#if showPopup && selectedFee}
   <div class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
@@ -625,10 +607,10 @@
 <!-- Add fee modal -->
 {#if showAddFeeModal}
 
-<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="cud-modal-container overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
         <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+        <div class="glass-card cud relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -692,10 +674,10 @@
 <!-- Update fee modal -->
 {#if showUpdateFeeModal}
 
-<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="cud-modal-container overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
         <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+        <div class="glass-card cud relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -759,10 +741,10 @@
 <!-- Delete fee modal -->
 {#if showDeleteFeeModal}
 
-<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="cud-modal-container overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-md max-h-full">
         <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+        <div class="glass-card cud relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
@@ -782,7 +764,7 @@
                         <label for="fee_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee ID</label>
                         <input bind:value={deleteFeeQuery.fee_id} type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000" required="">
                     </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button type="submit" class="w-20 text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Delete
                 </button>
             </form>
@@ -796,15 +778,4 @@
   h1 {
     color: var(--text-primary);
   }
-  .dateInput {
-    color:black;
-  }
-  input[type="date"]{
-    background-color: whitesmoke;
-    border-radius: 5px;
-    margin-right:10px;
-    padding: 1px;
-    color: black;
-    font-size: 18px;
-}
 </style>
