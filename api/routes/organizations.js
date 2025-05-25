@@ -4,7 +4,7 @@ import {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
      orgLatePayments,orgMembers, logIn, addFee, deleteFee, addPays, deletePays,
      addStatusUpdate, deleteStatusUpdate, updateFee, viewFees,
      viewStatusUpdates, viewTransactions,orgMemberCounts, getOrganizationId,
-     updateTransaction,updateStatusUpdate} from '../orgController.js';
+     updateTransaction,updateStatusUpdate, addMember, updateMember, deleteMember} from '../orgController.js';
 // import all the functions from controller.js
 
 const orgRouter = express.Router();  // use Router to define and manage the API routes 
@@ -33,5 +33,8 @@ orgRouter.get('/viewStatusUpdates/user/:user', viewStatusUpdates);
 orgRouter.get('/viewTransactions/user/:user', viewTransactions);
 orgRouter.get('/orgMemberCounts/user/:user', orgMemberCounts);
 orgRouter.get('/getOrganizationId/user/:user', getOrganizationId);
+orgRouter.get('/addMember', getOrganizationId);
+orgRouter.get('/updateMember', getOrganizationId);
+orgRouter.get('/deleteMember', getOrganizationId);
 
 export {orgRouter}

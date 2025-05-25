@@ -479,7 +479,7 @@
         overflow-y:auto;
     }
     th, tr, td {
-        font-size: 0.7vw;
+        font-size: 0.8vw;
     }
     td {
         padding-left: 0;

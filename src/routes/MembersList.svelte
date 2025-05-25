@@ -13,6 +13,10 @@
     let batches = [];
     let statuses = [];
 
+    let showAddMemberModal = false;
+    let showUpdateMemberModal = false;
+    let showDeleteMemberModal = false;
+
     function onlyUnique(value, index, array) {
         return array.indexOf(value) === index;
     }
@@ -80,12 +84,28 @@
         </svg>
         Back to Dashboard
     </Link>
-    <br>
+    <br><br>
 <div class="max-w-7xl mx-auto h-full flex flex-col">
 
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-primary mb-2"> Manage Members </h1>
-        <p class="text-secondary"> Table view of organization members </p>
+    <div class="cud-header mb-3">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-primary mb-2"> Manage Members </h1>
+            <p class="text-secondary"> Add, update, and delete members. See a list view of all members throughout the semesters </p>
+        </div>
+        <div class="cud-container p-6">
+            <div class="cud-options-container">
+                <button on:click={()=>{showAddMemberModal=true}} class="glass-button text-sm py-2 flex items-center" type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal">
+                Add Member
+                </button> <br>
+                <button on:click={()=>{showUpdateMemberModal=true}} class="glass-button text-sm py-2 flex items-center">
+                Change Member
+                </button>
+                <br>
+                <button on:click={()=>{showDeleteMemberModal=true}} class="glass-button text-sm py-2 flex items-center">
+                Delete Member
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="mb-8">

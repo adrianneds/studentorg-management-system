@@ -731,59 +731,6 @@ const updateFee = async (req, res) => {
 
 }
 
-// TO DO: Edit to reflect ddl revisions
-// Change a status update
-// const changeStatusUpdate = async (req, res) => {
-
-//     let committee = req.body.committee;
-//     let batch = req.body.batch;
-//     let semester = req.body.semester;
-//     let academic_year = req.body.academic_year;
-//     let role = req.body.role;
-//     let membership_status = req.body.membership_status
-
-//     var query = `UPDATE is_part_of SET`;
-//     var updateColumnsStr = '';
-//     var updateColumns = [];
-
-//     if (committee !=="") {
-//         updateColumns.push(` committee = '${committee}'`)
-//     } 
-//     if (batch !=="") {
-//         updateColumns.push(`, batch = '${batch}'`)
-//     }
-//     if (semester !=="") {
-//         updateColumns.push(`, semester = '${semester}'`)
-//     } 
-//     if (academic_year !== "") {
-//         updateColumns.push(`, academic_year = '${academic_year}'`)
-//     }
-//     if (role !== "") {
-//         updateColumns.push(`, role = '${role}'`)
-//     } 
-//     if (membership_status !== "") {
-//         updateColumns.push(`, membership_status=${membership_status}`)
-//     }
-
-//     updateColumnsStr = updateColumns.join()
-
-//     if (updateColumnsStr[0]==',') {
-//         query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
-//     }
-
-//     query += ` WHERE status_update_id = '${status_update_id}';`
-
-//     try {
-//         console.log(query)
-//         await pool.query(query);
-//         res.status(200).json({message: "Successfully updated status update"})
-//     } catch (err) {
-//         console.log(err)
-//         res.status(500).json({message: "Error updating status update"})
-//     }
-
-// }
-
 // View all fees
 const viewFees = async (req, res) => {
 
@@ -851,9 +798,138 @@ const getOrganizationId = async (req, res) => {
     }
 }
 
+// DELETE FROM `member`;
+// INSERT INTO member VALUES
+//     ('2022-04382','pambeesly','pb123','Pam Beesly','F','BS Statistics'),
+// 	('2022-12034','jimhalpert','jh456','Jim Halpert','M','BS Computer Science'),
+// 	('2023-20302','erinhannon','ekh123','Erin Kelly Hannon','F','BS Economics'),
+// 	('2021-20392','dwightschrute','ds456','Dwight Schrute','M','BS Math'),
+// 	('2019-04339','janlevinson','jl123','Jan Levinson','F','BS Math'),
+// 	('2020-93922','andybernard','ab456','Andy Bernard','M','BS Economics'),
+// 	('2020-83492','kellykapoor','kk123','Kelly Kapoor','F','BS Economics')
+// ;
+
+
+// add member
+const addMember = async (req, res) => {
+
+    let student_number = req.body.student_number;
+    let member_username = req.body.member_username;
+    let member_password = req.body.member_password;   // NOTE: note sure if organization ba magseset nito????
+    let member_name = req.body.member_name;
+    let gender = req.body.gender;
+    let degree_program = req.body.degree_program;
+
+    let organization_id = req.body.organization_id;
+    let committee = req.body.committee;
+    let batch = req.body.batch;
+    let semester = req.body.semester;
+    let academic_year = req.body.academic_year;
+    let date_of_status_update = req.body.date_of_status_update;
+    let role = req.body.role;
+    let membership_status = req.body.membership_status;
+
+    const query = 
+    `INSERT INTO member 
+    (student_number, member_username, member_password, member_name, gender, degree_program)
+    VALUES 
+    ('${student_number}', '${member_username}', '${member_password}', '${member_name}', '${gender}', '${degree_program}';`
+
+    const ispartof_query = 
+    `INSERT INTO is_part_of 
+    (student_number, organization_id, committee, batch, semester, academic_year,
+    date_of_status_update, role, membership_status)
+    VALUES 
+    ('${student_number}', '${organization_id}', '${committee}', '${batch}', '${semester}',
+    '${academic_year}', '${date_of_status_update}', '${role}', '${membership_status}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        await pool.query(ispartof_query)
+        res.status(200).json({message: "Successfully added member"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error adding member"})
+    }
+}
+
+// update member
+const updateMember = async (req, res) => {
+
+    let student_number = req.body.student_number;
+    let member_username = req.body.member_username;
+    let member_name = req.body.member_name;
+    let gender = req.body.gender;
+    let degree_program = req.body.degree_program;
+
+    var query = `UPDATE fee SET `;
+
+    var updateColumnsStr = '';
+    var updateColumns = [];
+
+    if (student_number !==""&&student_number!==undefined) {
+        updateColumns.push(` student_number = '${student_number}'`)
+    } 
+    if (member_username !=="" && member_username!==undefined) {
+        updateColumns.push(` member_username = '${member_username}'`)
+    }
+    if (member_name !== ""&&member_name!==undefined) {
+        updateColumns.push(` member_name = '${member_name}'`)
+    }
+    if (gender !== ""&&gender!==undefined) {
+        updateColumns.push(` gender = '${gender}'`)
+    } 
+    if (degree_program !== ""&&degree_program!==undefined) {
+        updateColumns.push(` degree_program = ${degree_program}`)
+    }
+
+    updateColumnsStr = updateColumns.join()
+
+    console.log(updateColumns)
+    console.log(updateColumnsStr)
+
+    if (updateColumnsStr[0]==',') {
+        query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
+    } else {
+        query = query + updateColumnsStr
+    }
+
+    query += ` WHERE student_number = '${student_number}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully updated member"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error updating member"})
+    }
+
+}
+
+//delete member
+const deleteMember = async (req, res) => {
+
+    let student_number = req.body.student_number;
+
+    const query = 
+    `DELETE FROM member 
+    WHERE student_number = '${student_number}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully deleted member"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error deleting member"})
+    }
+}
+
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
         orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
         updateFee, viewFees, viewStatusUpdates, viewTransactions, orgMemberCounts, getOrganizationId,updateTransaction,
-        updateStatusUpdate}
+        updateStatusUpdate, addMember, updateMember, deleteMember}
 
