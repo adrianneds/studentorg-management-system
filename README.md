@@ -57,10 +57,11 @@ To get started with this project, follow these steps:
    npm install
    ```
 3. **Run dbconfig.sql in MariaDB**
-`` source studentorg-management-system\database\dbconfig.sql
+``bash
+source studentorg-management-system\database\dbconfig.sql
 ``
 
-4. **Run the development server:**
+5. **Run the development server:**
    ```bash
    npm run dev
    ```
