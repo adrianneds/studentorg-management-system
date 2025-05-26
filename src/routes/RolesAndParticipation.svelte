@@ -1,6 +1,6 @@
 <script>
     import { Link } from 'svelte-routing';
-    import { onMount } from 'svelte';
+    import { onMount, afterUpdate  } from 'svelte';
     import { auth } from '../stores/auth';
     import { navigate } from 'svelte-routing';
     import { Dropdown, initFlowbite } from 'flowbite';
@@ -153,6 +153,10 @@
 
   });
 
+      afterUpdate(() => {
+        initFlowbite();
+    });
+
   
 </script>
 
@@ -184,8 +188,9 @@
     <div class="committee-options">
     <div class="mb-8">
     <!-- Dropdown menu -->
-    <button id="committeeDropdown" data-dropdown-toggle="dropdown-committee" class="glass-dropdown" type="button">
-        {committee!=""?committee : "Committee"}
+    <button id="committeeDropdown" data-dropdown-toggle="dropdown-committee"
+    class="glass-dropdown" type="button">
+        Committee
     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>
@@ -283,7 +288,7 @@
     <div class="mb-8">
     <!-- Dropdown menu -->
     <button id="roleDropdown" data-dropdown-toggle="role-dropdown" class="glass-dropdown" type="button">
-        {role!=""?role : "Role"}
+        Role
     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>

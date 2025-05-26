@@ -9,6 +9,7 @@
   let error = '';
   let loading = false;
   let id = '';
+  let studno = '';
 
   onMount(() => {
     // Check if user is already logged in
@@ -40,6 +41,25 @@
       });
   }; 
 
+    async function getStudentNumber(username) {
+      await fetch(`http://localhost:5000/member/getStudentNumber/user/${username}`,
+        {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      )
+      .then(response => response.json())
+      .then(data => {
+        studno = data[0].student_number;
+        //console.log(id)
+      }).catch(error => {
+        console.log(error);
+        return '';
+      });
+  }; 
+
   async function handleLogin() {
     loading = true;
     error = '';
@@ -51,9 +71,12 @@
         // Check member credentials
         // if (username === 'johndoe' && password === 'password') {
         if (auth.validateCredentials(username, password, 'member')) {
+          await getStudentNumber(username);
+          console.log("STUDNO: " + studno)
           auth.login({
             type: 'member',
-            member_username: username
+            member_username: username,
+            student_number: studno
           });
           navigate('/member-dashboard');
         } else {

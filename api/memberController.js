@@ -71,8 +71,44 @@ const memberTransactions = async (req, res) => {
   res.send(rows);
 }
 
+// Get student number
+const getStudentNumber = async (req, res) => {
+  const user = req.params.user;
+  const query = 
+  `SELECT student_number FROM member WHERE member_username = '${user}';`
+
+  const [rows] = await pool.query(query);
+  res.send(rows);
+}
+
 // TO DO: view the member's organizations
+const getOrganizations = async (req, res) => {
+  const student_number = req.params.user;
+
+  const query = 
+  `SELECT DISTINCT b.organization_id, a.organization_name, b.batch, b.committee, b.role, b.membership_status, recent_status_date
+  FROM 
+      (SELECT student_number, organization_name, MAX(date_of_status_update) as recent_status_date
+      FROM is_part_of NATURAL JOIN organization WHERE student_number = '${student_number}'
+      GROUP BY is_part_of.organization_id) AS a
+  JOIN is_part_of AS b 
+  ON (a.recent_status_date = b.date_of_status_update)`
+
+  const [rows] = await pool.query(query);
+  res.send(rows);
+}
+
+    // `SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
+    // b.membership_status, b.batch, b.committee, b.role
+    // FROM
+    //     (SELECT student_number, MAX(date_of_status_update) as recent_status_date
+    //     FROM is_part_of NATURAL JOIN organization WHERE organization_username = '${user}'
+    //     GROUP BY is_part_of.student_number) AS a
+    // JOIN is_part_of AS b 
+    // ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
+    // JOIN member AS c
+    // ON (b.student_number = c.student_number)`
 
 // TO DO: View a member’s unpaid membership fees or dues for all their organizations 
 
-export {memberInfo, memberTransactions, logIn}
+export {memberInfo, memberTransactions, logIn, getStudentNumber, getOrganizations}

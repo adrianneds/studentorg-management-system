@@ -390,3 +390,15 @@ html {
 .search {
   border-color: rgba(215, 206, 228, 0.476);
 }
+
+.member-organization-card {
+  width: 25vmax;
+}
+
+.member-home.glass-button {
+  width: 21vmax;
+}
+
+.member-home.grid {
+  width: 55vmax;
+}
