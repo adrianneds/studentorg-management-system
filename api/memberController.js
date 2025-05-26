@@ -126,6 +126,52 @@ const getMemberUnpaidFees = async (req, res) => {
   res.send(rows);
 }
 
-// View a meb
+// Update member info
+const updateMember = async (req, res) => {
 
-export {memberInfo, memberTransactions, logIn, getStudentNumber, getOrganizations, getMemberUnpaidFees}
+    let student_number = req.body.student_number;
+    let member_username = req.body.member_username;
+    let member_name = req.body.member_name;
+    let gender = req.body.gender;
+    let degree_program = req.body.degree_program;
+
+    var query = `UPDATE member SET `;
+
+    var updateColumnsStr = '';
+    var updateColumns = [];
+
+    if (member_username !=="" && member_username!==undefined) {
+        updateColumns.push(` member_username = '${member_username}'`)
+    }
+    if (member_name !== ""&&member_name!==undefined) {
+        updateColumns.push(` member_name = '${member_name}'`)
+    }
+    if (gender !== ""&&gender!==undefined) {
+        updateColumns.push(` gender = '${gender}'`)
+    } 
+    if (degree_program !== ""&&degree_program!==undefined) {
+        updateColumns.push(` degree_program = '${degree_program}'`)
+    }
+
+    updateColumnsStr = updateColumns.join()
+
+    if (updateColumnsStr[0]==',') {
+        query = query + updateColumnsStr.slice(1,updateColumnsStr.length)
+    } else {
+        query = query + updateColumnsStr
+    }
+
+    query += ` WHERE student_number = '${student_number}';`
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully updated member"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error updating member"})
+    }
+
+}
+
+export {memberInfo, memberTransactions, logIn, getStudentNumber, getOrganizations, getMemberUnpaidFees, updateMember}
