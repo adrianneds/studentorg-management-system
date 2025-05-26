@@ -383,7 +383,6 @@ html {
 
 .add-member.glass-card.cud {
   height: 45vmax;
-  border: 1px solid black;
   overflow-y: auto;
 }
 
@@ -401,4 +400,12 @@ html {
 
 .member-home.grid {
   width: 55vmax;
+}
+
+.unpaid-status-badge {
+  background-color: rgba(153, 106, 120, 0.476) !important;
+}
+
+.transaction-container {
+  max-height: 60vmax;
 }

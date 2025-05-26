@@ -3,9 +3,10 @@
   import { onMount } from 'svelte';
   import { auth } from '../stores/auth';
   import { navigate } from 'svelte-routing';
+  import { Dropdown, initFlowbite } from 'flowbite';
   
   export let params = {};
-  let organization = null;
+  //let organization = null;
   let fees = [];
   let loading = true;
   let error = null;
@@ -16,19 +17,14 @@
   let paymentMethod = '';
   let processingPayment = false;
   let paymentError = null;
-  
-  onMount(async () => {
-    if (!$auth || $auth.type !== 'member') {
-      navigate('/login');
-      return;
-    }
 
-  // NEW: getting username
-  var username = JSON.parse(localStorage.getItem('user')).member_username
+  let organizations = []
+  let fee_status = "";
+  let organization_selection = "";
 
-    // NEW: import fee data from db server
+  // NEW: import fee data from db server
   async function getFees() {
-    fetch(`http://localhost:5000/member/transactions/user/${username}`)
+    fetch(`http://localhost:5000/member/transactions?student_number=${$auth.student_number}&status=${fee_status}&organization_id=${organization_selection}`)
     .then(response => response.json())
     .then(data => {
       fees = data;
@@ -39,15 +35,34 @@
     });
   };
 
+  // NEW: get organization data from db server
+  async function getOrganizations() {
+    fetch(`http://localhost:5000/member/getOrganizations/user/${$auth.student_number}`)
+    .then(response => response.json())
+    .then(data => {
+      organizations = data;
+    }).catch(error => {
+      console.log(error);
+      return [];
+    });
+  };
+  
+  onMount(async () => {
+    if (!$auth || $auth.type !== 'member') {
+      navigate('/login');
+      return;
+    }
+    getFees();
+    getOrganizations();
+    initFlowbite();
+
     // Simulate loading organization and fees
     setTimeout(() => {
-      organization = {
-        id: params.orgId || 1,
-        name: 'Computer Society',
-        description: 'A community of computer science enthusiasts'
-      };
-
-      getFees();
+      // organization = {
+      //   id: params.orgId || 1,
+      //   name: 'Computer Society',
+      //   description: 'A community of computer science enthusiasts'
+      // };
 
       loading = false;
     }, 1000);
@@ -90,14 +105,9 @@
     }, 1500);
   }
 
-  // $: filteredFees = fees.filter(fee => {
-  //   const matchesSearch = fee.name.toLowerCase().includes(searchQuery.toLowerCase());
-  //   const matchesStatus = filterStatus === 'all' || fee.status === filterStatus;
-  //   return matchesSearch && matchesStatus;
-  // });
 </script>
 
-<div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
+<div class="h-full py-8 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto h-full flex flex-col">
     <div class="mb-8">
       <div class="flex items-center gap-4 mb-2">
@@ -108,9 +118,53 @@
           Back to Dashboard
         </Link>
       </div>
-      <h1 class="text-3xl font-bold text-primary mb-2"> Organization Fees</h1>
-      <!-- <h1 class="text-3xl font-bold text-primary mb-2">{organization?.name || 'Organization'} Fees</h1> -->
+      <h1 class="mt-5 text-3xl font-bold text-primary mb-2"> Organization Fees</h1>
       <p class="text-secondary">View and manage your transactions </p>
+    </div>
+
+    <div class="mb-8 flex flex-row">
+    <!-- Dropdown menu -->
+    <button id="paymentStatusDropdown" data-dropdown-toggle="payment-status-dropdown" class="glass-dropdown" type="button">
+        Payment Status
+    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+    </svg>
+    </button>
+    <div id="payment-status-dropdown" class="dropdown-options z-10 hidden">
+        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
+            <li>
+                <a href="#role" class="block px-4 py-2" on:click={() => {fee_status='Paid'; getFees()}}> Paid </a>
+            </li>
+            <li>
+                <a href="#role" class="block px-4 py-2" on:click={() => {fee_status='Unpaid'; getFees()}}> Unpaid </a>
+            </li>
+            <li>
+                <a href="#role" class="block px-4 py-2" on:click={() => {fee_status=''; getFees()}}> Any </a>
+            </li>
+        </ul>
+    </div>
+
+    <button id="paymentStatusDropdown" data-dropdown-toggle="organization-dropdown" class="ml-5 glass-dropdown" type="button">
+        Organization
+    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+    </svg>
+    </button>
+    <div id="organization-dropdown" class="dropdown-options z-10 hidden">
+        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
+          {#each organizations as org}
+            <li>
+              <a href="#role" class="block px-4 py-2" on:click={() => {organization_selection=org.organization_id; getFees()}}>
+                {org.organization_name}
+              </a>
+            </li>
+          {/each}
+            <li>
+                <a href="#role" class="block px-4 py-2" on:click={() => {organization_selection=''; getFees()}}> Any </a>
+            </li>
+        </ul>
+    </div>
+
     </div>
 
     <div class="flex-1 overflow-hidden">
@@ -123,7 +177,7 @@
           {error}
         </div>
       {:else}
-        <div class="h-full overflow-y-auto pr-2">
+        <div class="transaction-container h-full overflow-y-auto pr-2">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {#each fees as fee}
               <div class="glass-card p-6">
@@ -134,8 +188,8 @@
                     <p class="text-secondary text-sm">Due: {new Date(fee.due_date).toLocaleDateString()}</p>
                   </div>
                   <div class="glass-badge {
-                    fee.payment_status === 'paid' ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20' :
-                    'bg-gradient-to-r from-yellow-500/20 to-orange-500/20'
+                    fee.payment_status === 'Paid' ? 'bg-gradient-to-r from-green-500/20 to-emerald-500/20' :
+                    'unpaid-status-badge'
                   }">
                     {fee.payment_status.charAt(0).toUpperCase() + fee.payment_status.slice(1)}
                   </div>
@@ -163,7 +217,7 @@
                   {/if}
                 </div>
 
-                {#if fee.payment_status !== 'Paid'}
+                <!-- {#if fee.payment_status !== 'Paid'}
                   <button 
                     class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
                     on:click={() => handlePayment(fee)}
@@ -173,7 +227,7 @@
                     </svg>
                     Pay Now
                   </button>
-                {/if}
+                {/if} -->
               </div>
             {/each}
           </div>

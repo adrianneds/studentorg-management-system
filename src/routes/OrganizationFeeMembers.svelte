@@ -1,6 +1,6 @@
 <script>
     import { Link } from 'svelte-routing';
-    import { onMount } from 'svelte';
+    import { onMount, afterUpdate } from 'svelte';
     import { auth } from '../stores/auth';
     import { navigate } from 'svelte-routing';
     import { Dropdown, initFlowbite } from 'flowbite';
@@ -14,6 +14,9 @@
     let ayDebt = "2023-2024";
     let ayInputDebt = "";
     let memberDebt = [];
+
+    let showUnpaidMembers = true;
+    let showHighestDebtor = false;
 
     function validateAY(ayIn) {
          if ( isNaN(parseInt(ayIn.slice(0,4))) || isNaN(parseInt(ayIn.slice(4,9)))  
@@ -126,9 +129,26 @@
         getMemberHighestDebt();
     });
 
+    afterUpdate(() => {
+        initFlowbite();
+    });
+
 </script> 
-    
+
+<div class="options-container">
+<div class="options">
+    <button class = "glass-button options-button" on:click={() => {showUnpaidMembers=true;showHighestDebtor=false;}}>
+        Late and Unpaid Fees
+    </button>
+    <button class = "glass-button options-button" on:click={() => {showUnpaidMembers=false;showHighestDebtor=true;}}>
+        Highest Debtor
+    </button>
+</div>
+</div>
+
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
+
+{#if showUnpaidMembers}
 <div class="max-w-7xl mx-auto h-full flex flex-col">
 
     <div class="mb-8">
@@ -139,40 +159,44 @@
     <div class="mb-8">
 
         <!-- Dropdown menu -->
-        <button id="statusDropdown" data-dropdown-toggle="dropdown2" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-            {status.toUpperCase()}
+        <button id="statusdropdown" data-dropdown-toggle="dropdown-status"
+        class="glass-dropdown" type="button">
+            Status
         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
         </svg>
         </button>
-        <div id="dropdown2" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        <div id="dropdown-status"
+        class="dropdown-options z-10 hidden">
+            <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
             <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateSemAY("unpaid", sem ,ay)}>Unpaid</a>
+                <a href="#" class="block px-4 py-2" on:click={() => updateSemAY("unpaid", sem ,ay)}>Unpaid</a>
             </li>
             <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateSemAY("late",sem, ay)}>Late</a>
+                <a href="#" class="block px-4 py-2" on:click={() => updateSemAY("late",sem, ay)}>Late</a>
             </li>
             </ul>
         </div>
 
         <!-- Dropdown menu -->
-        <button id="semDropdown" data-dropdown-toggle="dropdown" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+        <button id="semDropdown" data-dropdown-toggle="dropdown-sem"
+        class="glass-dropdown" type="button">
             {sem}
         <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
         </svg>
         </button>
-        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+        <div id="dropdown-sem"
+        class="dropdown-options z-10 hidden">
+            <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
             <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateSemAY(status, "1S",ay)}>1st Semester</a>
+                <a href="#" class="block px-4 py-2" on:click={() => updateSemAY(status, "1S",ay)}>1st Semester</a>
             </li>
             <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateSemAY(status,"2S",ay)}>2nd Semester</a>
+                <a href="#" class="block px-4 py-2" on:click={() => updateSemAY(status,"2S",ay)}>2nd Semester</a>
             </li>
             <li>
-                <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={updateSemAY(status, "M",ay)}>Midyear</a>
+                <a href="#" class="block px-4 py-2" on:click={updateSemAY(status, "M",ay)}>Midyear</a>
             </li>
             </ul>
         </div>
@@ -180,18 +204,20 @@
     </div>
 
     <div class = "mb-8">
-    <div class="w-full max-w-sm min-w-[200px]">
-        <div class="relative">
-            <input id = "AYInput" type="email" class="w-full bg-transparent placeholder:text-slate-600 text-slate-700 text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-            placeholder="{status == 'unpaid' ? 'A.Y. Issued' : 'A.Y. Paid'} e.g., 2023-2024" bind:value={ayInput} />
+        <div class="flex flex-row">
+            <div class="w-full max-w-sm min-w-[200px]">
+                <div class="relative">
+                    <input id = "AYInput" class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                    placeholder="{status == 'unpaid' ? 'A.Y. Issued' : 'A.Y. Paid'} e.g., 2023-2024" bind:value={ayInput} />
+                </div>
+            </div>
             <button id = "AYsubmitButton"
-            class="absolute right-1 top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-            type="button" on:click={updateSemAY(status,sem,ayInput)}
-            >
-            Submit
+                class="text-input-submit top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                type="button" on:click={updateSemAY(status,sem,ayInput)}
+                >
+                Submit
             </button>
         </div>
-    </div>
     </div>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -255,7 +281,9 @@
     </table>
 </div>
 </div>
+{/if}
 
+{#if showHighestDebtor}
 <div class="max-w-7xl mx-auto h-full flex flex-col">
     <div class="mb-8">
         <a name = "debt"> </a>
@@ -263,42 +291,67 @@
         <p class="text-secondary"> Member with highest debt as of a given semester/academic year </p>
     </div>
 
+            <!-- <button id="semDropdown" data-dropdown-toggle="dropdown-sem"
+        class="glass-dropdown" type="button">
+            {sem}
+        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+        </svg>
+        </button>
+        <div id="dropdown-sem"
+        class="dropdown-options z-10 hidden">
+            <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
+            <li>
+                <a href="#" class="block px-4 py-2" on:click={() => updateSemAY(status, "1S",ay)}>1st Semester</a>
+            </li>
+            <li>
+                <a href="#" class="block px-4 py-2" on:click={() => updateSemAY(status,"2S",ay)}>2nd Semester</a>
+            </li>
+            <li>
+                <a href="#" class="block px-4 py-2" on:click={updateSemAY(status, "M",ay)}>Midyear</a>
+            </li>
+            </ul>
+        </div> -->
+
     <!-- Dropdown menu -->
     <div class = "mb-8">
-    <button id="semDropdown2" data-dropdown-toggle="dropdown3" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+    <button id="semDropdown2" data-dropdown-toggle="sem-debt"
+    class="glass-dropdown" type="button">
         {semDebt}
     <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>
     </button>
-    <div id="dropdown3" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
+    <div id="sem-debt" class="dropdown-options z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-40 dark:bg-gray-700">
+        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
         <li>
-            <a href="#debt" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateSemAYDebt("1S",ayDebt)}>1st Semester</a>
+            <a href="#debt" class="block px-4 py-2" on:click={() => updateSemAYDebt("1S",ayDebt)}>1st Semester</a>
         </li>
         <li>
-            <a href="#debt" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={() => updateSemAYDebt("2S",ayDebt)}>2nd Semester</a>
+            <a href="#debt" class="block px-4 py-2" on:click={() => updateSemAYDebt("2S",ayDebt)}>2nd Semester</a>
         </li>
         <li>
-            <a href="#debt" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" on:click={updateSemAYDebt("M",ayDebt)}>Midyear</a>
+            <a href="#debt" class="block px-4 py-2" on:click={updateSemAYDebt("M",ayDebt)}>Midyear</a>
         </li>
         </ul>
     </div>
     </div>
 
     <div class = "mb-8">
-    <div class="w-full max-w-sm min-w-[200px]">
-        <div class="relative">
-            <input id = "AYInput" type="email" class="w-full bg-transparent placeholder:text-slate-600 text-slate-700 text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-            placeholder="e.g., 2023-2024" bind:value={ayInputDebt} />
-            <button id = "AYsubmitButton"
-            class="absolute right-1 top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        <div class="flex flex-row">
+            <div class="w-full max-w-sm min-w-[200px]">
+                <div class="relative">
+                    <input id = "AYInput" class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                    placeholder="e.g., 2023-2024" bind:value={ayInputDebt} />
+                </div>
+            </div>
+            <button id =  "AYsubmitButton"
+            class="text-input-submit top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             type="button" on:click={updateSemAYDebt(semDebt, ayInputDebt)}
             >
             Submit
             </button>
         </div>
-    </div>
     </div>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -334,6 +387,7 @@
     </table>
     </div>
 </div>
+{/if}
 
 </div>
 
@@ -341,7 +395,7 @@
   h1 {
     color: var(--text-primary);
   }
-
+/* 
     #semDropdown, #semDropdown2 {
     color: black;
     background-color: var(--text-primary)
@@ -358,6 +412,6 @@
 
    #statusDropdown {
     background-color: var(--primary)
-   }
+   } */
 
 </style>

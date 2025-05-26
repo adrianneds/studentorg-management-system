@@ -62,12 +62,26 @@ const memberInfo = async (req, res) => {
 //   "academic_year": "2021-2022"
 const memberTransactions = async (req, res) => {
 
-  const user = req.params.user;
+  const student_number = req.query.student_number;
+  const status = req.query.status;
+  const organization_id = req.query.organization_id;
 
-  const query = 
-  `SELECT * FROM fee NATURAL JOIN pays NATURAL JOIN member NATURAL JOIN organization WHERE member_username = '${user}';`
+  var query = 
+  `SELECT * FROM fee NATURAL JOIN pays NATURAL JOIN organization
+  WHERE student_number = '${student_number}'`
+
+  if (status != "" && status != undefined) {
+    query += ` AND payment_status = '${status}';`
+  } 
+  if (organization_id !="" && organization_id != undefined) {
+    query += ` AND organization_id = '${organization_id}'`
+  }
+  query += ';'
+
+  console.log(query)
 
   const [rows] = await pool.query(query);
+  console.log(rows)
   res.send(rows);
 }
 
@@ -81,34 +95,37 @@ const getStudentNumber = async (req, res) => {
   res.send(rows);
 }
 
-// TO DO: view the member's organizations
+// view the member's organizations
 const getOrganizations = async (req, res) => {
   const student_number = req.params.user;
-
+  
   const query = 
-  `SELECT DISTINCT b.organization_id, a.organization_name, b.batch, b.committee, b.role, b.membership_status, recent_status_date
-  FROM 
-      (SELECT student_number, organization_name, MAX(date_of_status_update) as recent_status_date
+  `SELECT DISTINCT organization_id, organization_name, batch, committee, role, membership_status, date_of_status_update
+   FROM is_part_of NATURAL JOIN organization
+   WHERE CONCAT(date_of_status_update, organization_id) IN
+      (SELECT CONCAT(MAX(date_of_status_update), organization_id) as "recent_status_date"
       FROM is_part_of NATURAL JOIN organization WHERE student_number = '${student_number}'
-      GROUP BY is_part_of.organization_id) AS a
-  JOIN is_part_of AS b 
-  ON (a.recent_status_date = b.date_of_status_update)`
+      GROUP BY is_part_of.organization_id);`
 
   const [rows] = await pool.query(query);
   res.send(rows);
 }
 
-    // `SELECT c.student_number, c.member_name, c.gender, c.degree_program, a.recent_status_date,
-    // b.membership_status, b.batch, b.committee, b.role
-    // FROM
-    //     (SELECT student_number, MAX(date_of_status_update) as recent_status_date
-    //     FROM is_part_of NATURAL JOIN organization WHERE organization_username = '${user}'
-    //     GROUP BY is_part_of.student_number) AS a
-    // JOIN is_part_of AS b 
-    // ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
-    // JOIN member AS c
-    // ON (b.student_number = c.student_number)`
 
-// TO DO: View a member’s unpaid membership fees or dues for all their organizations 
+// View a member’s unpaid membership fees or dues for all their organizations 
+const getMemberUnpaidFees = async (req, res) => {
+  const student_number = req.params.user;
 
-export {memberInfo, memberTransactions, logIn, getStudentNumber, getOrganizations}
+  const query = 
+  `SELECT transaction_id, organization_id, organization_name, fee_id, payment_status,
+  fee_name, fee_amount, payment_status, due_date, semester_issued, academic_year_issued
+  FROM fee NATURAL JOIN pays NATURAL JOIN organization
+  WHERE student_number = '${student_number}' AND payment_status = "Unpaid";`
+
+  const [rows] = await pool.query(query);
+  res.send(rows);
+}
+
+// View a meb
+
+export {memberInfo, memberTransactions, logIn, getStudentNumber, getOrganizations, getMemberUnpaidFees}
