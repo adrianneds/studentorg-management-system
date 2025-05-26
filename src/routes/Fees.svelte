@@ -22,6 +22,9 @@
   let showAddFeeModal = false;
   let showUpdateFeeModal = false;
   let showDeleteFeeModal = false;
+
+  let deleteValid = false;
+  let updateValid = false;
   
   let updateFeeQuery = {
     fee_id: '',
@@ -118,7 +121,8 @@
       body: JSON.stringify(addFeeQuery)
     }
     )
-    .then(response => response.json())
+    .then(response => {if (response.ok) 
+        {alert("Successfully added fee!"); response.json()} })
     .then(data => {
       console.log(data);
     }).catch(error => {
@@ -141,7 +145,8 @@
       body: JSON.stringify(updateFeeQuery)
     }
     )
-    .then(response => response.json())
+    .then(response => {if (response.ok && updateValid == true) 
+        {alert("Successfully updated fee!"); response.json()} })
     .then(data => {
       console.log(data);
     }).catch(error => {
@@ -164,7 +169,8 @@
       body: JSON.stringify(deleteFeeQuery)
     }
     )
-    .then(response => response.json())
+    .then(response => {if (response.ok && deleteValid == true) 
+        {alert("Successfully deleted fee!"); response.json()} })
     .then(data => {
       console.log(data);
     }).catch(error => {
@@ -175,6 +181,9 @@
 
   // handle submit for add fee
   async function addFeeSubmit() {
+    if (!validateFormInput(addFeeQuery, 'add')) {
+      return;
+    }
     addFeeQuery.organization_id = id
     console.log(addFeeQuery)
     await addFee();
@@ -197,8 +206,14 @@
 
   // handle submit for update fee
   async function updateFeeSubmit() {
-    updateFeeQuery.organization_id = id
+    if (!validateFormInput(updateFeeQuery, 'update')) {
+      return;
+    }
+
+    console.log("AFTER VALIDATION")
     console.log(updateFeeQuery)
+
+    updateFeeQuery.organization_id = id
     await updateFee();
 
     // reset query
@@ -213,12 +228,18 @@
       organization_id: id
     };
 
+    console.log("AFTER UPDATE QUERY")
+    console.log(updateFeeQuery)
+
     showUpdateFeeModal = false; 
     getFees();
   }
   
   // handle submit for delete fee
   async function deleteFeeSubmit() {
+    if (!validateFormInput(deleteFeeQuery, 'delete')) {
+      return;
+    }
     deleteFeeQuery.organization_id = id
     console.log(deleteFeeQuery)
     await deleteFee();
@@ -240,104 +261,11 @@
     getFeeStatus();
     getFees();
     loading = false;
-
-    // // Simulate loading organization and fees
-    // setTimeout(() => {
-    //   organization = {
-    //     id: 1,
-    //     name: 'Computer Society',
-    //     description: 'A community of computer science enthusiasts',
-    //     totalMembers: 150,
-    //     activeMembers: 145,
-    //     totalRevenue: 75000,
-    //     pendingPayments: 25000,
-    //     overduePayments: 5000
-    //   };
-
-    //   // NOTE: replace with fees from database
-    //   fees = [
-    //     {
-    //       id: 1,
-    //       name: 'Annual Membership Fee',
-    //       amount: 500,
-    //       dueDate: '2024-03-31',
-    //       status: 'pending',
-    //       paymentMethod: null,
-    //       paymentDate: null,
-    //       pendingPayments: 75,
-    //       overduePayments: 15
-    //     },
-    //     {
-    //       id: 2,
-    //       name: 'Event Registration Fee',
-    //       amount: 200,
-    //       dueDate: '2024-02-28',
-    //       status: 'paid',
-    //       paymentMethod: 'GCash',
-    //       paymentDate: '2024-02-15',
-    //       pendingPayments: 0,
-    //       overduePayments: 0
-    //     },
-    //     {
-    //       id: 3,
-    //       name: 'Workshop Fee',
-    //       amount: 300,
-    //       dueDate: '2024-01-31',
-    //       status: 'overdue',
-    //       paymentMethod: null,
-    //       paymentDate: null,
-    //       pendingPayments: 30,
-    //       overduePayments: 20
-    //     }
-    //   ];
-    //   loading = false;
-    // }, 1000);
   });
-
-  function handleViewFee(fee) {
-    selectedFee = fee;
-    showPopup = true;
-  }
 
   function closePopup() {
     showPopup = false;
     selectedFee = null;
-  }
-
-  function formatCurrency(amount) {
-    return new Intl.NumberFormat('en-PH', {
-      style: 'currency',
-      currency: 'PHP'
-    }).format(amount);
-  }
-
-  function formatDate(dateString) {
-    if (!dateString) return 'Not paid';
-    return new Date(dateString).toLocaleDateString('en-PH', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  }
-
-  function getStatusColor(status) {
-    switch (status) {
-      case 'Paid':
-        return 'from-green-500/20 to-emerald-500/20';
-      case 'Pending':
-        return 'from-yellow-500/20 to-amber-500/20';
-      case 'Overdue':
-        return 'from-red-500/20 to-pink-500/20';
-      default:
-        return 'from-gray-500/20 to-slate-500/20';
-    }
-  }
-
-  function handlePayment(fee) {
-    selectedFee = fee;
-    showPaymentModal = true;
-    paymentMethod = '';
-    paymentError = null;
   }
 
   async function handlePaymentSubmit() {
@@ -369,11 +297,73 @@
     showPaymentModal = false;
   }
 
-  // $: filteredFees = fees.filter(fee => {
-  //   const matchesSearch = fee.name.toLowerCase().includes(searchQuery.toLowerCase());
-  //   const matchesStatus = filterStatus === 'all' || fee.status === filterStatus;
-  //   return matchesSearch && matchesStatus;
-  // });
+  async function validateFormInput(query, type) {
+
+    deleteValid = false; // indicates valid delete 
+    updateValid = false; // indicates valid update
+
+    var success = true; // indicates valid output
+    var alertText = "" // alert contents (pinagiisa ko na lahat ng error para mabilis)
+
+    console.log("VALIDATION STAGE")
+    console.log(query)
+
+    if (type == "add") {
+
+        if (query.academic_year.slice(4,5) != '-' || !isNaN(query.academic_year) || query.academic_year.length != 9)  {
+          alertText += "Please enter a valid academic year.\n"
+          success = false;
+        } 
+
+        if (parseInt(query.fee_amount) < 0) {
+          success = false;
+          alertText += "Please enter a valid fee amount.\n"
+        }
+
+        let feeid = fees.find(({ fee_id }) => fee_id == query.fee_id);
+        if (feeid || feeid != undefined) { 
+          console.log("found: " + feeid)
+          success = false;
+          alertText += "Please enter a unique fee ID.\n"
+        }
+
+    }
+
+    if (type == "delete" || type == 'update') {
+      console.log("validate update")
+        let feeid = fees.find(({ fee_id }) => fee_id == query.fee_id);
+        if (feeid == undefined) { // not found, not existing fee id
+          console.log("found: " + feeid)
+          success = false;
+          alertText += "Please enter an existing fee ID.\n"
+        }
+
+    }
+
+    if (type == 'update') {
+      if (query.academic_year_issued.slice(4,5) != '-' || !isNaN(query.academic_year_issued) || query.academic_year_issued.length != 9)  {
+        alertText += "Please enter a valid academic year.\n"
+        success = false;
+      } 
+
+      if (parseInt(query.fee_amount) < 0) {
+        success = false;
+        alertText += "Please enter a valid fee amount.\n"
+      }
+    }
+    
+    if (success == true) {
+        // all valid inputs, ready for querying in db
+        deleteValid = true;
+        updateValid = true;
+        return true;
+    } else {
+        alert(alertText) // error alert ; at least one condition is not met
+        return false;
+    }
+
+  }
+
 </script>
 
 <div class="h-full py-8 px-4 sm:px-6 lg:px-8">
@@ -706,15 +696,15 @@
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="fee_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Name</label>
-                        <input bind:value={updateFeeQuery.fee_name} type="text" name="fee_name" id="fee_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee" required="">
+                        <input bind:value={updateFeeQuery.fee_name} type="text" name="fee_name" id="fee_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="fee_amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Amount</label>
-                        <input bind:value={updateFeeQuery.fee_amount} type="number" name="fee_amount" id="fee_amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 100" required="">
+                        <input bind:value={updateFeeQuery.fee_amount} type="number" name="fee_amount" id="fee_amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 100">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="issue_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Issue Date</label>
-                        <input bind:value={updateFeeQuery.issue_date} type="date" name="issue_date" id="issue_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                        <input bind:value={updateFeeQuery.issue_date} type="date" name="issue_date" id="issue_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester Issued</label>
@@ -727,11 +717,12 @@
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="academic_year_issued" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year Issued</label>
-                        <input bind:value={updateFeeQuery.academic_year_issued} type="text" name="academic_year_issued" id="academic_year_issued" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                        <input bind:value={updateFeeQuery.academic_year_issued} type="text"
+                        name="academic_year_issued" id="academic_year_issued" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="due_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Due Date</label>
-                        <input bind:value={updateFeeQuery.due_date} type="date" name="due_date" id="due_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                        <input bind:value={updateFeeQuery.due_date} type="date" name="due_date" id="due_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                 </div>
                 <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">

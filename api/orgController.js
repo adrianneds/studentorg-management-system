@@ -687,7 +687,7 @@ const updateFee = async (req, res) => {
         updateColumns.push(` semester_issued = '${semester_issued}'`)
     } 
     if (academic_year_issued !== ""&&academic_year_issued!==undefined) {
-        updateColumns.push(` academic_year_issued = ${academic_year_issued}`)
+        updateColumns.push(` academic_year_issued = '${academic_year_issued}'`)
     }
 
     updateColumnsStr = updateColumns.join()
