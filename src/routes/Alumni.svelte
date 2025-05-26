@@ -11,7 +11,13 @@
     
     // NEW: getting username
     var username = JSON.parse(localStorage.getItem('user')).organization_username
-    console.log(username)
+
+    function incrementDate(dateString) {
+        const date = new Date(dateString);
+        const adjustedDate = new Date(date);
+        adjustedDate.setDate(adjustedDate.getDate() + 1);
+        return adjustedDate.toISOString().slice(0,10);
+    }
 
     // NEW: fetch alumni data from db server
     async function getAlumni() {
@@ -34,11 +40,10 @@
     };
 
     function changeDate(date) {
-        if (!isNaN(Date.parse(alumniDate))) {
-            console.log(date)
-            alumniDate = date;
-            getAlumni();
-        }
+        date = incrementDate(date)
+        console.log(date)
+        alumniDate = date;
+        getAlumni();
     }
 
 
@@ -63,7 +68,7 @@
     <div class="mb-8">
         <div class="date-container glass-card p-6">
       <input class = "dateInput text-input" type="date" min="1970-01-01" bind:value={alumniDateInput} />
-      <button class = "date-input-submit" id = "submitButton" type="button" on:click={changeDate(alumniDateInput)}> Submit </button>
+      <button class = "date-input-submit" id = "submitButton" type="button" on:click={()=>{changeDate(alumniDateInput)}}> Submit </button>
         </div>
     </div>
 
@@ -103,7 +108,7 @@
                     {member.batch}
                 </td>
                 <td class="px-6 py-4">
-                    {member.date_of_status_update.slice(0,10)}
+                    {incrementDate(member.date_of_status_update)}
                 </td>
             </tr>
         {/each}

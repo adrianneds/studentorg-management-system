@@ -34,7 +34,6 @@
       .then(response => response.json())
       .then(data => {
         id = data[0].organization_id;
-        //console.log(id)
       }).catch(error => {
         console.log(error);
         return '';
@@ -64,15 +63,12 @@
     loading = true;
     error = '';
     
-    // TODO: Implement actual login logic with database
-    // For now, just simulate a login
     setTimeout(async() => {
       if (userType === 'member') {
         // Check member credentials
         // if (username === 'johndoe' && password === 'password') {
         if (auth.validateCredentials(username, password, 'member')) {
           await getStudentNumber(username);
-          console.log("STUDNO: " + studno)
           auth.login({
             type: 'member',
             member_username: username,
@@ -87,7 +83,6 @@
         // if (username === 'compsoc' && password === 'password') {
         if (auth.validateCredentials(username, password, 'organization')) {
           await getOrganizationId(username);
-          console.log("ID: " + id)
           auth.login({
             type: 'organization',
             organization_username: username,

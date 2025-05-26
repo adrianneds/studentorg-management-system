@@ -50,7 +50,7 @@
 
 
   function changeDate(date) {
-    currdate = date;
+    currdate = incrementDate(date)
     getFeeStatus();
   }
 
@@ -59,6 +59,13 @@
   var id = JSON.parse(localStorage.getItem('user')).organization_id
   console.log(id)
   console.log(username)
+
+  function incrementDate(dateString) {
+      const date = new Date(dateString);
+      const adjustedDate = new Date(date);
+      adjustedDate.setDate(adjustedDate.getDate() + 1);
+      return adjustedDate.toISOString().slice(0,10);
+  }
 
   // NEW: import member with unpaid fees data from db server
   async function getFeeStatus() {
