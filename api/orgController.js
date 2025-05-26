@@ -840,6 +840,7 @@ const addMember = async (req, res) => {
 // update member
 const updateMember = async (req, res) => {
 
+    let organization_id = req.body.organization_id;
     let student_number = req.body.student_number;
     let member_username = req.body.member_username;
     let member_name = req.body.member_name;

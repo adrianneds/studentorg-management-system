@@ -65,7 +65,9 @@
         body: JSON.stringify(addMemberQuery)
         }
         )
-        .then(response => response.json())
+        .then(response => {if (!response.ok) 
+            {alert("Something went wrong. Make sure to enter a unique student number and username."); return}
+            else {alert("Successfully added member!"); response.json()} })
         .then(data => {
         console.log(data);
         }).catch(error => {
@@ -115,9 +117,41 @@
         });
     };
 
+    async function validateFormInput(query, type) {
+        var success = true;
+        var alertText = ""
+
+        if (type == 'add') {
+            if (query.academic_year.slice(4,5) != '-' || !isNaN(query.academic_year) || query.academic_year.length != 9)  {
+                alertText += "Please enter a valid academic year."
+                success = false;
+            } 
+        }
+        if (type == 'delete' || type == 'update') {
+            let studno = members.find(({ student_number }) => student_number === query.student_number);
+            console.log(members)
+            console.log(members.find(({ student_number }) => student_number === query.student_number))
+            console.log(studno)
+            if (studno == undefined) {
+                success = false;
+                alertText += "Please enter an existing student number."
+            }
+        }
+        if (success == true) {
+            return true;
+        } else {
+            alert(alertText)
+            return false;
+        }
+
+    }
+
 
     // handle submit for add status update
     async function addMemberSubmit() {
+        if (!validateFormInput(addMemberQuery, 'add')) {
+            return;
+        }
         addMemberQuery.organization_id = id
         await addMember();
 
@@ -146,6 +180,11 @@
 
     // handle submit for update status update
     async function updateMemberSubmit() {
+        let res = validateFormInput(updateMemberQuery, 'update')
+        console.log(res)
+        if (!res) {
+            return;
+        }
         updateMemberQuery.organization_id = id
         await updateMember();
 
@@ -165,6 +204,11 @@
 
     // handle submit for delete status update
     async function deleteMemberSubmit() {
+        let res = validateFormInput(deleteMemberQuery, 'delete')
+        console.log(res)
+        if (!res) {
+            return;
+        }
         deleteMemberQuery.organization_id = id
         await deleteMember();
 
@@ -533,7 +577,7 @@
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="organization_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Organization ID</label>
-                        <input bind:value={addMemberQuery.organization_id} type="text" name="organization_id" id="organization_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee" required="">
+                        <input bind:value={addMemberQuery.organization_id} type="text" name="organization_id" id="organization_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., OR-1000" required="">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="committee" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Committee</label>
