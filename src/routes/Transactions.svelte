@@ -86,23 +86,28 @@
 
     async function validateFormInput(query, type) {
 
-        deleteValid = false;
-        updateValid = false;
+        deleteValid = false; // indicates valid delete 
+        updateValid = false; // indicates valid update
 
-        var success = true;
-        var alertText = ""
+        var success = true; // indicates valid output
+        var alertText = "" // alert contents (pinagiisa ko na lahat ng error para mabilis)
 
         if (type != "delete") {
             if (query.academic_year.slice(4,5) != '-' || !isNaN(query.academic_year) || query.academic_year.length != 9)  {
                 alertText += "Please enter a valid academic year.\n"
                 success = false;
             } 
+
+            // syntax for finding value in array of objects (members) with key (student_number)
             let studno = members.find(({ student_number }) => student_number == query.student_number);
-            if (studno == undefined) {
+
+            if (studno == undefined) { // not found, not existing studno
                 console.log("found: " + studno)
                 success = false;
                 alertText += "Please enter an existing student number.\n"
             }
+
+            // do the same for fee id, not allowed nonexistent fee
             let feeid = fees.find(({ fee_id }) => fee_id == query.fee_id);
             if (feeid == undefined) {
                 console.log("found: " + feeid)
@@ -111,6 +116,7 @@
             }
         }
 
+        // do the same for transaction id
         if (type == "delete" || type == 'update') {
             let transactionid = currentTransactions.find(({ transaction_id }) => transaction_id == query.transaction_id);
             if (transactionid == undefined) {
@@ -121,11 +127,12 @@
         }
         
         if (success == true) {
+            // all valid inputs, ready for querying in db
             deleteValid = true;
             updateValid = true;
             return true;
         } else {
-            alert(alertText)
+            alert(alertText) // error alert ; at least one condition is not met
             return false;
         }
 

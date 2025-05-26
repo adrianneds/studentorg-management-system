@@ -431,3 +431,10 @@ div.left-col {
   justify-content: center;
   align-items: center;
 }
+
+.member-dashboard-actions {
+  height: 20vmax;
+  display: flex;
+  flex-direction: row;
+  width: 100vmax;
+}

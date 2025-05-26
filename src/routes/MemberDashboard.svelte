@@ -52,48 +52,10 @@
       getMemberInfo();
       getOrganizations();
       console.log(memberInfo);
-      // organizations = [
-      //   {
-      //     id: 1,
-      //     name: 'Computer Society',
-      //     description: 'A community of computer science enthusiasts',
-      //     role: 'Member',
-      //     joinDate: '2024-01-15',
-      //     fees: {
-      //       total: 3,
-      //       paid: 2,
-      //       pending: 1,
-      //       overdue: 0
-      //     },
-      //     status: 'active',
-      //     members: 150
-      //   },
-      //   {
-      //     id: 2,
-      //     name: 'Math Club',
-      //     description: 'Exploring the beauty of mathematics',
-      //     role: 'Officer',
-      //     joinDate: '2024-02-01',
-      //     fees: {
-      //       total: 2,
-      //       paid: 2,
-      //       pending: 0,
-      //       overdue: 0
-      //     },
-      //     status: 'active',
-      //     members: 80
-      //   }
-      // ];
       loading = false;
     }, 1000);
   });
 
-  // $: filteredOrganizations = organizations.filter(org => {
-  //   const matchesSearch = org.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  //                        org.description.toLowerCase().includes(searchQuery.toLowerCase());
-  //   const matchesStatus = filterStatus === 'all' || org.status === filterStatus;
-  //   return matchesSearch && matchesStatus;
-  // });
 </script>
 
 <div class="h-[calc(100vh-6rem)] flex flex-row py-8 px-4 sm:px-6 lg:px-8">
@@ -101,13 +63,50 @@
   <!-- NEW: Member information/profile -->
 
   <div class="dashboard-left-col">
-  <div class="flex-1 overflow-hidden">
-      <div class="mb-8">
-          <h1 class="text-3xl font-bold text-primary mb-2">Welcome, {memberInfo.member_name} </h1>
-          <p class="text-secondary"> Student Number: {memberInfo.student_number} </p>
-          <p class="text-secondary"> Degree Program: {memberInfo.degree_program} </p>
-          <p class="text-secondary"> Gender: {memberInfo.gender == 'F' ? 'Female' : 'Male'} </p>
-      </div>
+  <div class="flex flex-row">
+    <div class="flex-1 overflow-hidden">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-primary mb-2">Welcome, {memberInfo.member_name} </h1>
+            <p class="text-secondary"> Student Number: {memberInfo.student_number} </p>
+            <p class="text-secondary"> Degree Program: {memberInfo.degree_program} </p>
+            <p class="text-secondary"> Gender: {memberInfo.gender == 'F' ? 'Female' : 'Male'} </p>
+        </div>
+    </div>
+
+    <div class="glass-card p-6">
+          <h2 class="text-xl font-semibold text-primary mb-4">Quick Actions </h2>
+          <div class="flex flex-row space-y-3">
+              <Link 
+              to="/fees" 
+              class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+            >
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              View Fees
+            </Link>
+              <Link 
+              to="/fees" 
+              class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+            >
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Change Password
+            </Link>
+              <Link 
+              to="/fees" 
+              class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+            >
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              Update Personal Details
+              </Link>
+          
+          </div>
+    </div>
+
   </div>
 
     <div class="max-w-7xl mx-auto h-full flex flex-col">
