@@ -26,6 +26,14 @@
     // NEW: getting username
     var username = JSON.parse(localStorage.getItem('user')).organization_username
     console.log(username)
+
+    function resetQuery() {
+        ayCommittee = "2023-2024"; // default
+        committee = "";
+        ayInput = "";
+        role = "";
+        initializeData ()
+    }
     
     function validateAY(ayIn) {
         if ( isNaN(parseInt(ayIn.slice(0,4))) || isNaN(parseInt(ayIn.slice(4,9)))  
@@ -210,17 +218,23 @@
     </div>
     
     <div class = "mb-8">
-        <div class="w-full max-w-sm min-w-[200px]">
-            <div class="relative">
-                <input id = "AYInput" type="email" class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                placeholder="Academic Year e.g., 2023-2024" bind:value={ayInput} />
-                <button id = "AYsubmitButton"
-                class="text-input-submit absolute right-1 top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button" on:click={updateAY(ayInput)}
-                >
-                Submit
-                </button>
+        <div class="flex flex-row">
+            <div class="w-full max-w-sm min-w-[200px]">
+                <div class="relative">
+                    <input id = "AYInput" type="email" class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                    placeholder="Academic Year e.g., 2023-2024" bind:value={ayInput} />
+                    <button id = "AYsubmitButton"
+                    class="text-input-submit absolute right-1 top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                    type="button" on:click={updateAY(ayInput)}
+                    >
+                    Submit
+                    </button>
+                </div>
             </div>
+            <button class = "ml-5 search text-input-submit rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                on:click={() => resetQuery()}>
+                    Reset 
+            </button>
         </div>
     </div>
     </div>
@@ -285,7 +299,7 @@
         <p class="text-secondary"> Table view of members given selected roles in reverse chronological order </p>
     </div>
 
-    <div class="mb-8">
+    <div class="mb-8 flex flex-row">
     <!-- Dropdown menu -->
     <button id="roleDropdown" data-dropdown-toggle="role-dropdown" class="glass-dropdown" type="button">
         Role
@@ -305,6 +319,10 @@
             </li>
         </ul>
     </div>
+    <button class = "ml-5 search text-input-submit rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+        on:click={() => resetQuery()}>
+            Reset 
+    </button>
     </div>
 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg">

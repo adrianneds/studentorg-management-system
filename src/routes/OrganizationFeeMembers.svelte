@@ -5,8 +5,6 @@
     import { navigate } from 'svelte-routing';
     import { Dropdown, initFlowbite } from 'flowbite';
 
-    // let semAYPending = {ay:'2023-2024', sem:'2S'};
-    // let semAYLate = {ay:'2023-2024', sem:'2S'};
     let sem = "2S";
     let ay = "2023-2024"
     let status = "unpaid";
