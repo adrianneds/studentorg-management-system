@@ -91,7 +91,7 @@
 
     // NEW: import member data from db server
     async function getCommittee() {
-      await fetch(`http://localhost:5000/organization/committeeMembers/user/${username}?ay=${ayCommittee}&committee=${committee}`,
+      await fetch(`http://localhost:5000/organization/committeeMembers/user/${$auth.organization_id}?ay=${ayCommittee}&committee=${committee}`,
         {
         method: 'GET',
         headers: {
@@ -111,7 +111,7 @@
 
     // NEW: import member data from db server
     async function getStatusProp() {
-      await fetch(`http://localhost:5000/organization/memberStatus/user/${username}?n=${nsemCount}`,
+      await fetch(`http://localhost:5000/organization/memberStatus/user/${$auth.organization_id}?n=${nsemCount}`,
         {
         method: 'GET',
         headers: {
@@ -131,7 +131,7 @@
 
     // NEW: import member data from db server
     async function getMemberRoles() {
-      await fetch(`http://localhost:5000/organization/roles/user/${username}?role=${role}`,
+      await fetch(`http://localhost:5000/organization/roles/user/${$auth.organization_id}?role=${role}`,
         {
         method: 'GET',
         headers: {

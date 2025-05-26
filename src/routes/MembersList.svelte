@@ -203,7 +203,7 @@
 
     // NEW: import member data from db server
     async function getMembers() {
-      await fetch(`http://localhost:5000/organization/orgMembers/user/${username}`,
+      await fetch(`http://localhost:5000/organization/orgMembers/user/${$auth.organization_id}`,
         {
         method: 'POST',
         headers: {

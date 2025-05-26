@@ -69,7 +69,7 @@
 
   // NEW: import member with unpaid fees data from db server
   async function getFeeStatus() {
-    await fetch(`http://localhost:5000/organization/feeStatus/user/${username}?date=${currdate}`,
+    await fetch(`http://localhost:5000/organization/feeStatus/user/${$auth.organization_id}?date=${currdate}`,
       {
       method: 'GET',
       headers: {
@@ -89,7 +89,7 @@
 
   // NEW: get fees
   async function getFees() {
-    await fetch(`http://localhost:5000/organization/viewFees/user/${username}`,
+    await fetch(`http://localhost:5000/organization/viewFees/user/${$auth.organization_id}`,
       {
       method: 'GET',
       headers: {

@@ -9,9 +9,6 @@
     let alumniMembers = [];
     let alumniDateInput = "";
     
-    // NEW: getting username
-    var username = JSON.parse(localStorage.getItem('user')).organization_username
-
     function incrementDate(dateString) {
         const date = new Date(dateString);
         const adjustedDate = new Date(date);
@@ -21,7 +18,7 @@
 
     // NEW: fetch alumni data from db server
     async function getAlumni() {
-      await fetch(`http://localhost:5000/organization/alumni/user/${username}?date=${alumniDate}`,
+      await fetch(`http://localhost:5000/organization/alumni/user/${$auth.organization_id}?date=${alumniDate}`,
         {
         method: 'GET',
         headers: {

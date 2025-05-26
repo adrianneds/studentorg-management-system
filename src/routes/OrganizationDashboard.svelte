@@ -24,7 +24,7 @@
 
     // NEW: import org data from db server
     async function getOrganizationInfo() {
-      fetch(`http://localhost:5000/organization/info/user/${username}`)
+      fetch(`http://localhost:5000/organization/info/user/${id}`)
       .then(response => response.json())
       .then(data => {
         console.log(data[0])

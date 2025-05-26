@@ -159,7 +159,7 @@
 
     // NEW: import member with late payments from db server
     async function getTransactions() {
-      await fetch(`http://localhost:5000/organization/viewTransactions/user/${username}`,
+      await fetch(`http://localhost:5000/organization/viewTransactions/user/${$auth.organization_id}`,
         {
         method: 'GET',
         headers: {
