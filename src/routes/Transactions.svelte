@@ -6,6 +6,14 @@
     import { Dropdown, initFlowbite } from 'flowbite';
 
     let transactions = [];
+    let currentTransactions = [];
+
+    let fees = [];
+    let members = [];
+    let memberQuery = {student_number:'',  committee:"", role:"", gender:"", degree_program:"", batch:"",membership_status:""} 
+
+    let updateValid = false;
+    let deleteValid = false;
 
     let showAddTransactionModal = false;
     let showUpdateTransactionModal = false;
@@ -34,6 +42,95 @@
         transaction_id: ''
     }
 
+    // NEW: import member data from db server
+    async function getMembers() {
+      await fetch(`http://localhost:5000/organization/orgMembers/user/${$auth.organization_id}`,
+        {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(memberQuery)
+      }
+      )
+      .then(response => response.json())
+      .then(data => {
+        members = data;
+        console.log(members);
+      }).catch(error => {
+        console.log(error);
+        return [];
+      });
+    };
+
+    // NEW: get fees
+    async function getFees() {
+        await fetch(`http://localhost:5000/organization/viewFees/user/${$auth.organization_id}`,
+        {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        }
+        )
+        .then(response => response.json())
+        .then(data => {
+        fees = data;
+        console.log(fees);
+        }).catch(error => {
+        console.log(error);
+        return [];
+        });
+    };
+
+
+    async function validateFormInput(query, type) {
+
+        deleteValid = false;
+        updateValid = false;
+
+        var success = true;
+        var alertText = ""
+
+        if (type != "delete") {
+            if (query.academic_year.slice(4,5) != '-' || !isNaN(query.academic_year) || query.academic_year.length != 9)  {
+                alertText += "Please enter a valid academic year.\n"
+                success = false;
+            } 
+            let studno = members.find(({ student_number }) => student_number == query.student_number);
+            if (studno == undefined) {
+                console.log("found: " + studno)
+                success = false;
+                alertText += "Please enter an existing student number.\n"
+            }
+            let feeid = fees.find(({ fee_id }) => fee_id == query.fee_id);
+            if (feeid == undefined) {
+                console.log("found: " + feeid)
+                success = false;
+                alertText += "Please enter an existing fee id.\n"
+            }
+        }
+
+        if (type == "delete" || type == 'update') {
+            let transactionid = currentTransactions.find(({ transaction_id }) => transaction_id == query.transaction_id);
+            if (transactionid == undefined) {
+                console.log("found: " + transactionid)
+                success = false;
+                alertText += "Please enter an existing transaction id."
+            }
+        }
+        
+        if (success == true) {
+            deleteValid = true;
+            updateValid = true;
+            return true;
+        } else {
+            alert(alertText)
+            return false;
+        }
+
+    }
+
     // NEW: add transaction
   async function addTransaction() {
     await fetch(`http://localhost:5000/organization/addTransaction`,
@@ -45,7 +142,8 @@
       body: JSON.stringify(addTransactionQuery)
     }
     )
-    .then(response => response.json())
+    .then(response => {if (response.ok) 
+        {alert("Successfully added transaction!"); response.json()} })
     .then(data => {
       console.log(data);
     }).catch(error => {
@@ -66,7 +164,8 @@
       body: JSON.stringify(updateTransactionQuery)
     }
     )
-    .then(response => response.json())
+    .then(response => {if (response.ok && updateValid == true) 
+        {alert("Successfully updated transaction!"); response.json()} })
     .then(data => {
       console.log(data);
     }).catch(error => {
@@ -87,7 +186,8 @@
       body: JSON.stringify(deleteTransactionQuery)
     }
     )
-    .then(response => response.json())
+    .then(response => {if (response.ok && deleteValid == true) 
+        {alert("Successfully deleted transaction!"); response.json()} })
     .then(data => {
       console.log(data);
     }).catch(error => {
@@ -98,8 +198,10 @@
 
     // handle submit for add transaction
   async function addTransactionSubmit() {
+    if (!validateFormInput(addTransactionQuery, 'add')) {
+        return;
+    }
     addTransactionQuery.organization_id = id
-    console.log(addTransactionQuery)
     await addTransaction();
 
     // reset query
@@ -118,8 +220,12 @@
   
     // handle submit for add transaction
   async function updateTransactionSubmit() {
+
+    currentTransactions = transactions;
+    if (!validateFormInput(updateTransactionQuery, 'update')) {
+        return;
+    }
     updateTransactionQuery.organization_id = id
-    console.log(updateTransactionQuery)
     await updateTransaction();
 
     // reset query
@@ -139,6 +245,12 @@
 
   // handle submit for delete fee
   async function deleteTransactionSubmit() {
+
+    currentTransactions = transactions;
+    if (!validateFormInput(deleteTransactionQuery, 'delete')) {
+        return;
+    }
+
     deleteTransactionQuery.organization_id = id
     console.log(deleteTransactionQuery)
     await deleteTransaction();
@@ -183,7 +295,9 @@
             return;
         }
         initFlowbite();
-        getTransactions();
+        await getTransactions();
+        await getFees();
+        await getMembers();
     });
 
 </script> 
