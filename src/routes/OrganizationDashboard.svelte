@@ -18,6 +18,8 @@
       return;
     }
 
+    console.log($auth)
+
     // NEW: getting username
     var username = JSON.parse(localStorage.getItem('user')).organization_username
     var id =  JSON.parse(localStorage.getItem('user')).organization_id

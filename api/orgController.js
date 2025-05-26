@@ -771,7 +771,7 @@ const viewTransactions = async (req, res) => {
 const getOrganizationId = async (req, res) => {
     let username = req.params.user;
     const query = 
-    `SELECT organization_id FROM organization WHERE organization_id = '${username}'`;
+    `SELECT organization_id FROM organization WHERE organization_username = '${username}'`;
     try {
         const [rows] = await pool.query(query);
         res.send(rows)

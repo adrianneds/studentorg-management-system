@@ -34,6 +34,7 @@
       .then(response => response.json())
       .then(data => {
         id = data[0].organization_id;
+        console.log(id)
       }).catch(error => {
         console.log(error);
         return '';
