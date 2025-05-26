@@ -11,6 +11,9 @@
     let showUpdateStatusUpdateModal = false;
     let showDeleteStatusUpdateModal = false;
 
+    let deleteValid = false;
+    let updateValid = false;
+
     // NEW: getting username
     var username = JSON.parse(localStorage.getItem('user')).organization_username
     var id = JSON.parse(localStorage.getItem('user')).organization_id
@@ -47,6 +50,38 @@
         organization_id: id
     }
 
+    async function validateFormInput(query, type) {
+
+        deleteValid = false;
+        updateValid = false;
+
+        var success = true;
+        var alertText = ""
+
+        if (query.academic_year.slice(4,5) != '-' || !isNaN(query.academic_year) || query.academic_year.length != 9)  {
+            alertText += "Please enter a valid academic year.\n"
+            success = false;
+        } 
+
+        if (type =='update' || type == 'delete') {
+            let studno = statusUpdates.find(({ student_number }) => student_number === query.student_number);
+            if (studno == undefined) {
+                success = false;
+                alertText += "Please enter an existing student number.\n"
+            }
+        }
+
+        if (success == true) {
+            deleteValid = true;
+            updateValid = true;
+            return true;
+        } else {
+            alert(alertText)
+            return false;
+        }
+
+    }
+
     // NEW: add status update
     async function addStatusUpdate() {
         await fetch(`http://localhost:5000/organization/addStatusUpdate`,
@@ -58,7 +93,9 @@
         body: JSON.stringify(addStatusUpdateQuery)
         }
         )
-        .then(response => response.json())
+        .then(response => {if (!response.ok) 
+            {alert("Something went wrong. Make sure to enter only one status update per student per semester."); return}
+            else {alert("Successfully added status update!"); response.json()} })
         .then(data => {
         console.log(data);
         }).catch(error => {
@@ -78,7 +115,8 @@
         body: JSON.stringify(updateStatusUpdateQuery)
         }
         )
-        .then(response => response.json())
+        .then(response => {if (response.ok && updateValid == true) 
+        {alert("Successfully changed status update!"); response.json()} })
         .then(data => {
         console.log(data);
         }).catch(error => {
@@ -99,7 +137,8 @@
         body: JSON.stringify(deleteStatusUpdateQuery)
         }
         )
-        .then(response => response.json())
+        .then(response => {if (response.ok && deleteValid == true) 
+        {alert("Successfully deleted status update!"); response.json()} })
         .then(data => {
         console.log(data);
         }).catch(error => {
@@ -110,6 +149,9 @@
 
     // handle submit for add status update
     async function addStatusUpdateSubmit() {
+        if (!validateFormInput(addStatusUpdateQuery, 'add')) {
+            return;
+        }
         addStatusUpdateQuery.organization_id = id
         await addStatusUpdate();
 
@@ -132,6 +174,9 @@
 
     // handle submit for update status update
     async function updateStatusUpdateSubmit() {
+        if (!validateFormInput(updateStatusUpdateQuery, 'update')) {
+            return;
+        }
         updateStatusUpdateQuery.organization_id = id
         await updateStatusUpdate();
 
@@ -154,6 +199,9 @@
 
     // handle submit for delete status update
     async function deleteStatusUpdateSubmit() {
+        if (!validateFormInput(deleteStatusUpdateQuery, 'delete')) {
+            return;
+        }
         deleteStatusUpdateQuery.organization_id = id
         await deleteStatusUpdate();
 

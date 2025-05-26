@@ -157,7 +157,6 @@
 
     }
 
-
     // handle submit for add status update
     async function addMemberSubmit() {
         if (!validateFormInput(addMemberQuery, 'add')) {
