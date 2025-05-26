@@ -1,4 +1,5 @@
 import { writable } from 'svelte/store';
+import { Link, navigate } from "svelte-routing";
 import { setLoading } from './loading';
 
 // Mock user data for testing
@@ -30,7 +31,7 @@ function createAuthStore() {
     subscribe,
 
     init: () => {
-      setLoading(true, 'Initializing...');
+      // setLoading(true, 'Initializing...');
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         const user = JSON.parse(storedUser);
@@ -41,7 +42,7 @@ function createAuthStore() {
           set(null);
         }
       }
-      setLoading(false);
+      // setLoading(false);
     },
 
     login: async (userData) => {
@@ -59,6 +60,11 @@ function createAuthStore() {
       const { password, ...userWithoutPassword } = userData;
       localStorage.setItem('user', JSON.stringify(userWithoutPassword));
       set(userWithoutPassword);
+      if (userData.type == 'member') {
+        navigate('/member-dashboard');
+      } else if (userData.type == 'organization') {
+        navigate('/organization-dashboard');
+      }
       setLoading(false);
     },
 
