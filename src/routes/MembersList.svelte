@@ -14,6 +14,9 @@
     let statuses = [];
     let student_number_input = ""
 
+    let deleteValid = false;
+    let updateValid = false;
+
     let showAddMemberModal = false;
     let showUpdateMemberModal = false;
     let showDeleteMemberModal = false;
@@ -87,7 +90,8 @@
         body: JSON.stringify(updateMemberQuery)
         }
         )
-        .then(response => response.json())
+        .then(response => {if (response.ok && updateValid == true) 
+        {alert("Successfully updated member!"); response.json()} })
         .then(data => {
         console.log(data);
         }).catch(error => {
@@ -108,7 +112,8 @@
         body: JSON.stringify(deleteMemberQuery)
         }
         )
-        .then(response => response.json())
+        .then(response => {if (response.ok && deleteValid == true) 
+        {alert("Successfully deleted member!"); response.json()} })
         .then(data => {
         console.log(data);
         }).catch(error => {
@@ -118,6 +123,10 @@
     };
 
     async function validateFormInput(query, type) {
+
+        deleteValid = false;
+        updateValid = false;
+
         var success = true;
         var alertText = ""
 
@@ -138,6 +147,8 @@
             }
         }
         if (success == true) {
+            deleteValid = true;
+            updateValid = true;
             return true;
         } else {
             alert(alertText)
