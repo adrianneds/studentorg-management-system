@@ -24,6 +24,7 @@
 
   // NEW: import fee data from db server
   async function getFees() {
+    console.log(organization_selection)
     fetch(`http://localhost:5000/member/transactions?student_number=${$auth.student_number}&status=${fee_status}&organization_id=${organization_selection}`)
     .then(response => response.json())
     .then(data => {

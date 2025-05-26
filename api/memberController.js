@@ -71,7 +71,7 @@ const memberTransactions = async (req, res) => {
   WHERE student_number = '${student_number}'`
 
   if (status != "" && status != undefined) {
-    query += ` AND payment_status = '${status}';`
+    query += ` AND payment_status = '${status}'`
   } 
   if (organization_id !="" && organization_id != undefined) {
     query += ` AND organization_id = '${organization_id}'`
