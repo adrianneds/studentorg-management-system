@@ -34,6 +34,7 @@
   <main class="min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-violet-900">
     <div class="container mx-auto px-4 py-6">
       <Route path="/" component={Home} />
+      <Route path="/home" component={Home} />
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/organization-dashboard" component={OrganizationDashboard} />

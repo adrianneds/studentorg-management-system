@@ -133,13 +133,13 @@
     <div id="payment-status-dropdown" class="dropdown-options z-10 hidden">
         <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
             <li>
-                <a href="#role" class="block px-4 py-2" on:click={() => {fee_status='Paid'; getFees()}}> Paid </a>
+                <a href="#payment" class="block px-4 py-2" on:click={() => {fee_status='Paid'; getFees()}}> Paid </a>
             </li>
             <li>
-                <a href="#role" class="block px-4 py-2" on:click={() => {fee_status='Unpaid'; getFees()}}> Unpaid </a>
+                <a href="#payment" class="block px-4 py-2" on:click={() => {fee_status='Unpaid'; getFees()}}> Unpaid </a>
             </li>
             <li>
-                <a href="#role" class="block px-4 py-2" on:click={() => {fee_status=''; getFees()}}> Any </a>
+                <a href="#payment" class="block px-4 py-2" on:click={() => {fee_status=''; getFees()}}> Any </a>
             </li>
         </ul>
     </div>
@@ -154,13 +154,13 @@
         <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
           {#each organizations as org}
             <li>
-              <a href="#role" class="block px-4 py-2" on:click={() => {organization_selection=org.organization_id; getFees()}}>
+              <a href="#organization" class="block px-4 py-2" on:click={() => {organization_selection=org.organization_id; getFees()}}>
                 {org.organization_name}
               </a>
             </li>
           {/each}
             <li>
-                <a href="#role" class="block px-4 py-2" on:click={() => {organization_selection=''; getFees()}}> Any </a>
+                <a href="#organization" class="block px-4 py-2" on:click={() => {organization_selection=''; getFees()}}> Any </a>
             </li>
         </ul>
     </div>

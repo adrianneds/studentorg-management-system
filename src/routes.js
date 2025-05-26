@@ -17,6 +17,7 @@ import StatusUpdate from './routes/StatusUpdates.svelte';
 // All routes
 export const routes = {
   '/': Home,
+  '/home': Home,
   '/login': Login,
   '/register': Register,
   '/organization-dashboard': OrganizationDashboard,
