@@ -24,7 +24,7 @@
 
   // NEW: get member data from db server
   async function getMemberInfo() {
-    fetch(`http://localhost:5000/member/info/user/${username}`)
+    fetch(`http://localhost:5000/member/info/user/${$auth.student_number}`)
     .then(response => response.json())
     .then(data => {
       console.log(data[0])

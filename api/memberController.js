@@ -40,8 +40,8 @@ const logIn = async (req, res) => {
 //   "gender": "F",
 //   "degree_program": "BS Statistics"
 const memberInfo = async (req, res) => {
-  const user = req.params.user;
-  const [rows] = await pool.query(`SELECT * FROM member WHERE member_username = '${user}';`);
+  const student_number = req.params.user;
+  const [rows] = await pool.query(`SELECT * FROM member WHERE student_number = '${student_number}';`);
   res.send(rows)
 };
 
