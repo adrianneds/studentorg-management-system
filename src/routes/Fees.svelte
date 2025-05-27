@@ -376,22 +376,22 @@
 
 </script>
 
-<div class="h-full py-8 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-7xl mx-auto h-full flex flex-col">
+<div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center gap-4 mb-2">
+        <Link to="/organization-dashboard" class="glass-button text-sm py-2 flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Dashboard
+        </Link>
+    </div>
+    <br>
+    <div class="max-w-7xl mx-auto h-full flex flex-col">
     
     
     <div class="fee cud-header mb-1">
       
     <div class="mb-8">
-
-      <div class="flex items-center gap-4 mb-2">
-        <Link to="/organization-dashboard" class="glass-button text-sm py-2 flex items-center">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Back to Dashboard
-        </Link>
-      </div>
 
       <h1 class="text-3xl font-bold text-primary pt-4 mb-2 w-50">Fee Management</h1>
       <p class="text-secondary">Manage organization fees and payments</p>
@@ -425,9 +425,9 @@
 
       <div class="fee-dashboard-date glass-card p-6">
         <div class="text-sm text-secondary mb-1"> Revenue and pending fees as of... </div>
-        <div class = "flex flex-row">
-          <input class = "dateInput fee-dashboard" type="date" bind:value={dateInput} min="1970-01-01" />
-          <button class = "date-input-submit" id = "submitButton" type="button" on:click={() => changeDate(dateInput)}> Submit </button>
+        <div class="flex flex-row gap-4">
+          <input class="glass-input" type="date" bind:value={dateInput} min="1970-01-01" />
+          <button class="glass-button" id="submitButton" type="button" on:click={() => changeDate(dateInput)}> Submit </button>
         </div>
       </div>
 
@@ -643,7 +643,7 @@
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="fee_amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Amount</label>
-                        <input bind:value={addFeeQuery.fee_amount} required type="number" name="fee_amount" id="fee_amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 100">
+                        <input bind:value={addFeeQuery.fee_amount} required type="number" name="fee_amount" id="fee_amount" class="glass-input" placeholder="i.e., 100">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="issue_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Issue Date</label>
@@ -667,7 +667,7 @@
                         <input bind:value={addFeeQuery.due_date} required type="date" name="issue_date" id="issue_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                 </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button type="submit" class="glass-button text-sm py-2 px-4 flex items-center justify-center">
                     <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
                     Add
                 </button>
@@ -710,7 +710,7 @@
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="fee_amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Amount</label>
-                        <input bind:value={updateFeeQuery.fee_amount} type="number" name="fee_amount" id="fee_amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 100">
+                        <input bind:value={updateFeeQuery.fee_amount} type="number" name="fee_amount" id="fee_amount" class="glass-input" placeholder="i.e., 100">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="issue_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Issue Date</label>
@@ -735,7 +735,7 @@
                         <input bind:value={updateFeeQuery.due_date} type="date" name="due_date" id="due_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                 </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button type="submit" class="glass-button text-sm py-2 px-4 flex items-center justify-center">
                     <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
                     Update
                 </button>
@@ -772,7 +772,7 @@
                         <label for="fee_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee ID</label>
                         <input bind:value={deleteFeeQuery.fee_id} required type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000">
                     </div>
-                <button type="submit" class="w-20 text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                <button type="submit" class="glass-button text-sm py-2 px-4 flex items-center justify-center">
                     Delete
                 </button>
             </form>
@@ -785,5 +785,15 @@
 <style>
   h1 {
     color: var(--text-primary);
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+  }
+
+  input[type="date"]::-webkit-inner-spin-button,
+  input[type="date"]::-webkit-clear-button {
+    filter: invert(1);
   }
 </style>

@@ -300,13 +300,14 @@
 </script>
 
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
-
-    <Link to="/organization-dashboard" class="back-to-dashboard glass-button text-sm py-2 flex items-center">
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        Back to Dashboard
-    </Link>
+    <div class="flex items-center gap-4 mb-2">
+        <Link to="/organization-dashboard" class="glass-button text-sm py-2 flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Dashboard
+        </Link>
+    </div>
     <br><br>
 <div class="max-w-7xl mx-auto h-full flex flex-col">
 
@@ -316,159 +317,162 @@
             <p class="text-secondary"> Add, update, and delete members. See a list view of all members throughout the semesters </p>
         </div>
         <div class="cud-container p-6">
-            <div class="cud-options-container">
-                <button on:click={()=>{showAddMemberModal=true}} class="glass-button text-sm py-2 flex items-center" type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal">
-                Add Member
-                </button> <br>
-                <!-- <button on:click={()=>{showUpdateMemberModal=true}} class="glass-button text-sm py-2 flex items-center">
-                Update Member
+            <div class="cud-options-container flex gap-3">
+                <button on:click={()=>{showAddMemberModal=true}} 
+                    class="glass-button text-sm h-11 px-4 flex items-center justify-center border border-slate-200 rounded-md" 
+                    type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal">
+                    Add Member
                 </button>
-                <br> -->
-                <button on:click={()=>{showDeleteMemberModal=true}} class="glass-button text-sm py-2 flex items-center">
-                Delete Member
+                <button on:click={()=>{showDeleteMemberModal=true}} 
+                    class="glass-button text-sm h-11 px-4 flex items-center justify-center border border-slate-200 rounded-md">
+                    Delete Member
                 </button>
             </div>
         </div>
     </div>
 
-    <div class="mb-8">
-        
-    <!-- Dropdown menu -->
-    <button id="genderDropdown" data-dropdown-toggle="dropdown" 
-        class= "glass-dropdown" type="button">
-            Gender
-        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-        </svg>
-    </button>
-        <div id="dropdown" class="dropdown-options z-10 hidden">
-        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('gender','F')}>Female</a>
-        </li>
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('gender','M')}>Male</a>
-        </li>
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('gender','')}>Any</a>
-        </li>
-        </ul>
+    <div class="mb-6">
+        <div class="flex flex-wrap gap-3">
+            <!-- Dropdown menu -->
+            <button id="genderDropdown" data-dropdown-toggle="dropdown" 
+                class="glass-dropdown h-11 flex items-center justify-between px-4 rounded-md" type="button">
+                <span>Gender</span>
+                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+            </button>
+            <div id="dropdown" class="dropdown-options z-10 hidden">
+                <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('gender','F')}>Female</a>
+                </li>
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('gender','M')}>Male</a>
+                </li>
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('gender','')}>Any</a>
+                </li>
+                </ul>
+            </div>
+
+            <button id="statusDropdown" data-dropdown-toggle="dropdown2"
+            class="glass-dropdown h-11 flex items-center justify-between px-4 rounded-md" type="button">
+                <span>Status</span>
+                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+            </button>
+            <div id="dropdown2" class="dropdown-options z-10 hidden">
+                <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
+                { #each statuses as status}
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('membership_status',status)}>{status}</a>
+                </li>
+                { /each }
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('membership_status','')}> Any </a>
+                </li>
+                </ul>
+            </div>
+
+            <button id="degreeProgramDropdown" data-dropdown-toggle="dropdown3"
+            class="glass-dropdown h-11 flex items-center justify-between px-4 rounded-md" type="button">
+                <span>Degree Program</span>
+                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+            </button>
+            <div id="dropdown3" class="dropdown-options z-10 hidden">
+                <ul class="py-2 text-sm w-40" aria-labelledby="dropdownDefaultButton">
+                { #each degreePrograms as degprog}
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('degree_program',degprog)}>{degprog}</a>
+                </li>
+                { /each }
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('degree_program','')}> Any </a>
+                </li>
+                </ul>
+            </div>
+
+            <button id="committeeDropdown" data-dropdown-toggle="dropdown4"
+            class="glass-dropdown h-11 flex items-center justify-between px-4 rounded-md" type="button">
+                <span>Committee</span>
+                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+            </button>
+            <div id="dropdown4" class="dropdown-options z-10 hidden">
+                <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
+                { #each committees as committee}
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('committee',committee)}>{committee}</a>
+                </li>
+                { /each }
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('committee','')}> Any </a>
+                </li>
+                </ul>
+            </div>
+
+            <button id="roleDropdown" data-dropdown-toggle="dropdown5"
+            class="glass-dropdown h-11 flex items-center justify-between px-4 rounded-md" type="button">
+                <span>Role</span>
+                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+            </button>
+            <div id="dropdown5" class="dropdown-options z-10 hidden">
+                <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
+                { #each roles as role}
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('role',role)}>{role}</a>
+                </li>
+                { /each }
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('role','')}> Any </a>
+                </li>
+                </ul>
+            </div>
+
+            <button id="batchDropdown" data-dropdown-toggle="dropdown6"
+            class="glass-dropdown h-11 flex items-center justify-between px-4 rounded-md" type="button">
+                <span>Batch</span>
+                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+            </button>
+            <div id="dropdown6" class="dropdown-options z-10 hidden">
+                <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
+                { #each batches as batch}
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('batch',batch)}>{batch}</a>
+                </li>
+                { /each }
+                <li>
+                    <a href="#" class="block px-4 py-2" on:click={() => filterQuery('batch','')}> Any </a>
+                </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
-    <button id="statusDropdown" data-dropdown-toggle="dropdown2"
-    class="glass-dropdown" type="button">
-        Status
-    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-    </svg>
-    </button>
-        <div id="dropdown2" class="dropdown-options z-10 hidden">
-        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
-        { #each statuses as status}
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('membership_status',status)}>{status}</a>
-        </li>
-        { /each }
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('membership_status','')}> Any </a>
-        </li>
-        </ul>
-    </div>
-
-    <button id="degreeProgramDropdown" data-dropdown-toggle="dropdown3"
-    class="glass-dropdown" type="button">
-        Degree Program
-    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-    </svg>
-    </button>
-        <div id="dropdown3" class="dropdown-options z-10 hidden">
-        <ul class="py-2 text-sm w-40" aria-labelledby="dropdownDefaultButton">
-        { #each degreePrograms as degprog}
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('degree_program',degprog)}>{degprog}</a>
-        </li>
-        { /each }
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('degree_program','')}> Any </a>
-        </li>
-        </ul>
-    </div>
-
-    <button id="committeeDropdown" data-dropdown-toggle="dropdown4"
-    class="glass-dropdown" type="button">
-        Committee
-    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-    </svg>
-    </button>
-        <div id="dropdown4" class="dropdown-options z-10 hidden">
-        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
-        { #each committees as committee}
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('committee',committee)}>{committee}</a>
-        </li>
-        { /each }
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('committee','')}> Any </a>
-        </li>
-        </ul>
-    </div>
-
-    <button id="roleDropdown" data-dropdown-toggle="dropdown5"
-    class="glass-dropdown" type="button">
-        Role
-    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-    </svg>
-    </button>
-        <div id="dropdown5" class="dropdown-options z-10 hidden">
-        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
-        { #each roles as role}
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('role',role)}>{role}</a>
-        </li>
-        { /each }
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('role','')}> Any </a>
-        </li>
-        </ul>
-    </div>
-
-    <button id="batchDropdown" data-dropdown-toggle="dropdown6"
-    class="glass-dropdown" type="button">
-        Batch
-    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-    </svg>
-    </button>
-        <div id="dropdown6" class="dropdown-options z-10 hidden">
-        <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
-        { #each batches as batch}
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('batch',batch)}>{batch}</a>
-        </li>
-        { /each }
-        <li>
-            <a href="#" class="block px-4 py-2" on:click={() => filterQuery('batch','')}> Any </a>
-        </li>
-        </ul>
-    </div>
-    </div>
-
-    <div class = "mb-8">
-        <div class="w-full max-w-sm min-w-[200px]">
-            <div class="flex flex-row relative">
-                <input id = "studno_input" type="email" class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                placeholder="Student Num i.e., 2020-04040" bind:value={student_number_input}/>
-                <button id = "studno_input"
-                class="ml-2 search text-input-submit rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                type="button" on:click={() => filterQuery('student_number',student_number_input)}
+    <div class="mb-6">
+        <div class="flex items-center space-x-4">
+            <div class="w-full max-w-sm min-w-[200px]">
+                <input id = "studno_input"
+                class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md px-4 h-11 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                placeholder="Student Num i.e., 2020-04040" bind:value={student_number_input} />
+            </div>
+            <div class="flex space-x-3">
+                <button id = "searchButton"
+                class="glass-button text-sm h-11 px-4 min-w-[80px] text-center flex items-center justify-center border border-slate-200 rounded-md"
+                type="button" on:click={() => filterQuery('student_number', student_number_input)}
                 >
                 Search
                 </button>
-                <button class = "search text-input-submit rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                on:click={() => resetFilterQuery()}>
+                <button class = "glass-button text-sm h-11 px-4 min-w-[80px] text-center flex items-center justify-center border border-slate-200 rounded-md"
+                    on:click={() => resetFilterQuery()}>
                     Reset 
                 </button>
             </div>
