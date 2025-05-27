@@ -216,7 +216,7 @@ const orgCountStatus = async (req, res) => {
         (SELECT * FROM is_part_of NATURAL JOIN organization WHERE organization_id = '${organization_id}'
         GROUP BY student_number, semester, academic_year) AS b 
     GROUP BY b.academic_year, b.semester      
-    ORDER BY b.academic_year DESC, b.semester DESC LIMIT ${n};`
+    ORDER BY b.academic_year DESC, (CASE b.semester WHEN '1S' THEN 1 WHEN 'M'  THEN 2 WHEN '2S' THEN 3 END) DESC LIMIT ${n};`
 
     const [rows] = await pool.query(query);
     res.send(rows)
@@ -266,11 +266,6 @@ const orgFeeStatus = async (req, res) => {
 }
 
 // Member with highest debt
-// TEST: http://localhost:5000/organization/highestDebt/user/MS-101123?ay=2024-2025&sem=1S
-// FIELDS
-//     "student_number": "2019-04339",
-//     "member_name": "Jan Levinson",
-//     "debt": 600
 const orgHighestDebt = async (req, res) => {
 
     let organization_id = req.params.user;
@@ -279,8 +274,7 @@ const orgHighestDebt = async (req, res) => {
     let semester_debt = req.query.sem;
 
     const query = 
-    `
-    SELECT * FROM
+    `SELECT * FROM
     (SELECT student_number, member_name, SUM(fee_amount) AS debt
     FROM member NATURAL JOIN pays NATURAL JOIN fee NATURAL JOIN organization
     WHERE organization_id = '${organization_id}'
