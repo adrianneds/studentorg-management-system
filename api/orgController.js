@@ -878,7 +878,7 @@ const deleteMember = async (req, res) => {
 
     const pays_query = 
     `DELETE FROM pays WHERE student_number = '${student_number}' AND
-    fee_id IN (SELECT fee_id FROM pays NATURAL JOIN fee WHERE organization_id = '${organization_id}');`;
+    fee_id IN (SELECT fee_id FROM pays NATURAL JOIN fee WHERE organization_id = '${organization_id}' AND student_number = '${student_number}');`;
 
     const ispartof_query = 
     `DELETE FROM is_part_of WHERE student_number = '${student_number} AND organization_id = '${organization_id}';`;
