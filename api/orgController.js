@@ -63,7 +63,8 @@ const orgMembers = async (req, res) => {
     JOIN is_part_of AS b 
     ON (a.recent_status_date = b.date_of_status_update AND a.student_number = b.student_number)
     JOIN member AS c
-    ON (b.student_number = c.student_number)`
+    ON (b.student_number = c.student_number)
+    WHERE organization_id = '${organization_id}'`
 
     var whereClause = "";
 
@@ -881,10 +882,9 @@ const deleteMember = async (req, res) => {
     fee_id IN (SELECT fee_id FROM pays NATURAL JOIN fee WHERE organization_id = '${organization_id}' AND student_number = '${student_number}');`;
 
     const ispartof_query = 
-    `DELETE FROM is_part_of WHERE student_number = '${student_number} AND organization_id = '${organization_id}';`;
+    `DELETE FROM is_part_of WHERE student_number = '${student_number}' AND organization_id = '${organization_id}';`;
 
     try {
-        console.log(query)
         await pool.query(pays_query);
         await pool.query(ispartof_query);
         res.status(200).json({message: "Successfully deleted member"})
