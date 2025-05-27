@@ -19,6 +19,13 @@
     let showUpdateTransactionModal = false;
     let showDeleteTransactionModal = false;
 
+  function incrementDate(dateString) {
+      const date = new Date(dateString);
+      const adjustedDate = new Date(date);
+      adjustedDate.setDate(adjustedDate.getDate() + 1);
+      return adjustedDate.toISOString().slice(0,10);
+  }
+
     let addTransactionQuery = {
         student_number: '',
         fee_id: '',
@@ -406,19 +413,19 @@
                     {transaction.payment_status}
                 </td>
                 <td>
-                    {transaction.issue_date.slice(0,10)}
+                    {incrementDate(transaction.issue_date)}
                 </td>
                 <td>
                     {transaction.semester_issued}/{transaction.academic_year_issued}
                 </td>
                 <td>
-                    {transaction.due_date.slice(0,10)}
+                    {incrementDate(transaction.due_date)}
                 </td>
                 <td>
                     {transaction.payment_status}
                 </td>
                 <td>
-                    {transaction.payment_date == null ? 'N/A' : transaction.payment_date.slice(0,10)}
+                    {transaction.payment_date == null ? 'N/A' : incrementDate(transaction.payment_date)}
                 </td>
             </tr>
         {/each}
