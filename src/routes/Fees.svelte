@@ -331,9 +331,8 @@
     }
 
     if (type == "delete" || type == 'update') {
-      console.log("validate update")
         let feeid = fees.find(({ fee_id }) => fee_id == query.fee_id);
-        if (feeid == undefined) { // not found, not existing fee id
+        if (feeid == undefined) { 
           console.log("found: " + feeid)
           success = false;
           alertText += "Please enter an existing fee ID.\n"
@@ -342,6 +341,12 @@
     }
 
     if (type == 'update') {
+
+      if (query.fee_amount== '' && query.due_date==''&&
+        query.issue_date==''&&query.semester_issued==''&&query.academic_year_issued=='') {
+        success = false;
+        alertText += "Please fill out at least one field."
+      }
 
       if (query.academic_year_issued != '') {
         if (query.academic_year_issued.slice(4,5) != '-' || !isNaN(query.academic_year_issued) || query.academic_year_issued.length != 9)  {
