@@ -11,6 +11,8 @@
   let id = '';
   let studno = '';
 
+  let credentialsValid = false;
+
   onMount(() => {
     // Check if user is already logged in
     if ($auth) {
@@ -67,30 +69,34 @@
       if (userType === 'member') {
         // Check member credentials
         // if (username === 'johndoe' && password === 'password') {
-        if (auth.validateCredentials(username, password, 'member')) {
+        credentialsValid = await auth.validateCredentials(username, password, 'member')
+        if (credentialsValid) {
           await getStudentNumber(username);
-          auth.login({
+          await auth.login({
             type: 'member',
             member_username: username,
             student_number: studno
           });
           navigate('/member-dashboard');
         } else {
-          error = 'Invalid member credentials';
+          alert('Invalid member credentials');
+          console.log(error)
+          return
         }
       } else {
         // Check organization credentials
-        // if (username === 'compsoc' && password === 'password') {
-        if (auth.validateCredentials(username, password, 'organization')) {
+        credentialsValid = await auth.validateCredentials(username, password, 'organization')
+        if (credentialsValid) {
           await getOrganizationId(username);
-          auth.login({
+          await auth.login({
             type: 'organization',
             organization_username: username,
             organization_id: id
           });
           navigate('/organization-dashboard');
         } else {
-          error = 'Invalid organization credentials';
+          alert('Invalid organization credentials');
+          return
         }
       }
     } catch (err) {
@@ -113,12 +119,6 @@
         <h1 class="text-3xl font-bold text-primary mb-2">Welcome Back</h1>
         <p class="text-secondary">Sign in to your account</p>
       </div>
-
-      {#if error}
-        <div class="glass-badge bg-gradient-to-r from-red-500/20 to-pink-500/20 mb-6 p-4 text-center">
-          {error}
-        </div>
-      {/if}
 
       <div class="space-y-6">
         <div>
@@ -178,12 +178,12 @@
           {/if} -->
         </button>
 
-        <div class="text-center pt-4">
+        <!-- <div class="text-center pt-4">
           <p class="text-secondary text-sm">
             Don't have an account? 
             <Link to="/register" class="text-primary hover:underline">Register here</Link>
           </p>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

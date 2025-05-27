@@ -117,7 +117,7 @@ const getMemberUnpaidFees = async (req, res) => {
   const student_number = req.params.user;
 
   const query = 
-  `SELECT transaction_id, organization_id, organization_name, fee_id, payment_status,
+  `SELECT transaction_id, organization_id, organization_name, fee_id,
   fee_name, fee_amount, payment_status, due_date, semester_issued, academic_year_issued
   FROM fee NATURAL JOIN pays NATURAL JOIN organization
   WHERE student_number = '${student_number}' AND payment_status = "Unpaid";`
