@@ -38,5 +38,6 @@ orgRouter.post('/addMember', addMember);
 orgRouter.post('/updateMember', updateMember);
 orgRouter.post('/deleteMember', deleteMember);
 orgRouter.post('/register', addOrganization);
+orgRouter.get('/unpaidMembersAsOf',orgUnpaidMembersAsOf);
 
 export {orgRouter}

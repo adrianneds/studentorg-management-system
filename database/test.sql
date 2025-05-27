@@ -73,12 +73,12 @@ SELECT student_number, member_name, transaction_id, fee_name, fee_amount,
 -- unpaid fees as of sem/ay
     SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount, payment_status,
     semester_issued, academic_year_issued
-    FROM member NATURAL JOIN pays NATURAL JOIN fee WHERE organization_id = '${organization_id}'
+    FROM member NATURAL JOIN pays NATURAL JOIN fee WHERE organization_id = 'MS-101123'
     AND 
     (
         (payment_status='Unpaid') 
         OR
         (payment_status = 'Paid' AND
         CONCAT(academic_year, CASE semester WHEN '1S' THEN '1' WHEN 'M' THEN '2' WHEN '2S' THEN '3' END) 
-        >= CONCAT ('${academic_year}', '${semester}'))
+        >= CONCAT ('2024-2025', '3'))
     );

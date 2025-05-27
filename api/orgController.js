@@ -123,6 +123,7 @@ const orgUnpaidMembers = async (req, res) => {
     res.send(rows)
 };
 
+
 // CHECKED 5/27
 // View members with unpaid fees as of a given semester/AY
 const orgUnpaidMembersAsOf = async (req, res) => {
@@ -132,13 +133,30 @@ const orgUnpaidMembersAsOf = async (req, res) => {
     let semester = req.query.sem;                  // need to pass to query
     let academic_year = req.query.ay;            
 
+    if (semester== '1S') {
+        sem = 1
+    } else if (semester == 'M') {
+        sem = 2
+    } else if (semester == '2S') {
+        sem = 3
+    }
+
     const query =
-    ``
+    `SELECT student_number, member_name, transaction_id, fee_id, fee_name, fee_amount, payment_status,
+    semester_issued, academic_year_issued
+    FROM member NATURAL JOIN pays NATURAL JOIN fee WHERE organization_id = '${organization_id}'
+    AND 
+    (
+        (payment_status='Unpaid') 
+        OR
+        (payment_status = 'Paid' AND
+        CONCAT(academic_year, CASE semester WHEN '1S' THEN '1' WHEN 'M' THEN '2' WHEN '2S' THEN '3' END) 
+        >= CONCAT ('${academic_year}', '${semester}'))
+    );`
 
     const [rows] = await pool.query(query);
     res.send(rows)
 };
-
 
 // CHECKED 5/27
 // REVISED 5/25 
@@ -901,5 +919,5 @@ export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
         orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
         updateFee, viewFees, viewStatusUpdates, viewTransactions, orgMemberCounts, getOrganizationId,updateTransaction,
-        updateStatusUpdate, addMember, updateMember, deleteMember, addOrganization}
+        updateStatusUpdate, addMember, updateMember, deleteMember, addOrganization, orgUnpaidMembersAsOf}
 
