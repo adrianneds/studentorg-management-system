@@ -12,18 +12,18 @@ const logIn = async (req, res) => {
   `SELECT organization_username, organization_password, organization_id FROM organization`
   const [rows] = await pool.query(query);
 
+  console.log("ROWS: ")
+  console.log(rows)
+  console.log(username)
+  console.log(password)
   try {
     let user = rows.find(o => o.organization_username === username && o.organization_password === password)
     console.log(user)
     if (!user) {
         res.status(401).json({message: "Invalid credentials"})
+        return
     }
-    try {
-      //const token = jwt.sign({userId: user.organization_id}, SECRET_KEY, {expiresIn: '1hr'})
-      res.status(200).json({message: "Successful login"})
-    } catch(err) {
-      res.status(500).json({message: 'Error logging in ' + err})
-    }
+    res.status(200).json({message: "Successful login"})
   } catch (err) {
     console.log(err)
     res.status(401).json({message: "Invalid credentials " + err})
@@ -877,7 +877,8 @@ const deleteMember = async (req, res) => {
     let organization_id = req.body.organization_id;
 
     const pays_query = 
-    `DELETE FROM pays WHERE student_number = '${student_number}' AND organization_id = '${organization_id}';`;
+    `DELETE FROM pays WHERE student_number = '${student_number}' AND
+    fee_id IN (SELECT fee_id FROM pays NATURAL JOIN fee WHERE organization_id = '${organization_id}');`;
 
     const ispartof_query = 
     `DELETE FROM is_part_of WHERE student_number = '${student_number} AND organization_id = '${organization_id}';`;
