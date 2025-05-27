@@ -1,8 +1,6 @@
 import {pool} from './connect.js';
 
-// SAMPLE USER
-// var user = 'mathsoc' //msoc123
-
+// CHECKED 5/27
 // Login function
 const SECRET_KEY ='secret'
 const logIn = async (req, res) => {
@@ -33,13 +31,8 @@ const logIn = async (req, res) => {
 
 };
 
+// CHECKED 5/27
 // View organization's own info
-// TEST     : http://localhost:5000/organization/info/user/MS-101123
-// FIELDS   
-//     "organization_id": "MS-101123",
-//     "organization_username": "mathsoc",
-//     "organization_password": "msoc123",
-//     "organization_name": "Mathematics Society"
 const orgInfo = async (req, res) => {
     var organization_id = req.params.user;
     var query = `SELECT * FROM organization WHERE organization_id = '${organization_id}';`
@@ -48,17 +41,6 @@ const orgInfo = async (req, res) => {
 };
 
 // View members of an organization (with filtering)
-// TEST:  node test.js
-// FIELDS
-//     student_number: '2022-04382',
-//     member_name: 'Pam Beesly',
-//     gender: 'F',
-//     degree_program: 'BS Statistics',
-//     recent_status_date: '2025-04-30T16:00:00.000Z',
-//     membership_status: 'Active',
-//     batch: '2022B',
-//     committee: 'Executive',
-//     role: 'President'
 const orgMembers = async (req, res) => {
 
     var organization_id = req.params.user
@@ -121,18 +103,8 @@ const orgMembers = async (req, res) => {
     res.send(rows)
 };
 
+// CHECKED 5/27
 // View members with unpaid fees for a given semester/AY
-// TEST: http://localhost:5000/organization/unpaidMembers/user/MS-101123?sem=2S&ay=2023-2024
-// FIELDS
-//     "student_number": "2019-04339",
-//     "member_name": "Jan Levinson",
-//     "transaction_id": 1003,
-//     "fee_id": "FE-193921",
-//     "fee_name": "Miscellaneous A",
-//     "fee_amount": 200,
-//     "payment_status": "Unpaid",
-//     "semester_issued": "2S",
-//     "academic_year_issued": "2023-2024"
 const orgUnpaidMembers = async (req, res) => {
 
     let organization_id = req.params.user;
@@ -152,6 +124,7 @@ const orgUnpaidMembers = async (req, res) => {
 };
 
 
+// CHECKED 5/27
 // REVISED 5/25 
 //View total members and total active members
 const orgMemberCounts = async (req, res) => {
@@ -176,17 +149,10 @@ const orgMemberCounts = async (req, res) => {
         console.error(err);
         res.status(500).json({ message: "Error fetching member counts" });
       }
-
 }
 
+// REVISED 5/27
 // View members of a specific committee given an AY
-// TEST: http://localhost:5000/organization/committeeMembers/user/MS-101123?ay=2023-2024&committee=Executive
-// FIELDS
-//     "student_number": "2019-04339",
-//     "member_name": "Jan Levinson",
-//     "committee": "Executive",
-//     "role": "Secretary",
-//     "academic_year": "2023-2024"
 const orgCommitteeMembers = async (req, res) => {
 
     let organization_id = req.params.user;
@@ -194,14 +160,13 @@ const orgCommitteeMembers = async (req, res) => {
     let committee = req.query.committee;
     let academic_year = req.query.ay;
 
-    var query =`SELECT DISTINCT c.student_number, c.member_name, b.committee, b.role, b.academic_year, b.semester
-    FROM (organization NATURAL JOIN is_part_of AS b)
-    JOIN member c ON b.student_number = c.student_number
+    var query =`SELECT DISTINCT student_number, member_name, committee, role, academic_year, semester
+    FROM is_part_of NATURAL JOIN member
     WHERE organization_id = '${organization_id}'
-    AND b.academic_year = '${academic_year}'`
+    AND academic_year = '${academic_year}'`
 
     if (committee != "") {
-        query += ` AND b.committee = '${committee}'`
+        query += ` AND committee = '${committee}'`
     }
 
     query += ";"
@@ -210,42 +175,29 @@ const orgCommitteeMembers = async (req, res) => {
     res.send(rows)
 }
 
+// REVISED 5/27
 // View roles
-// TEST: http://localhost:5000/organization/roles/user/MS-101123/?role=President
-// FIELDS
-//     "student_number": "2022-04382",
-//     "member_name": "Pam Beesly",
-//     "role": "President",
-//     "academic_year": "2024-2025"
 const orgRoles = async (req, res) => {
 
     let organization_id = req.params.user;
     let role = req.query.role;
 
-    var query = `SELECT DISTINCT c.student_number, c.member_name, b.role, b.academic_year,
-    b.committee, b.semester
-    FROM (organization NATURAL JOIN is_part_of AS b)
-    JOIN member c ON b.student_number = c.student_number
+    var query = `SELECT DISTINCT student_number, member_name, role, academic_year,
+    committee, semester
+    FROM is_part_of NATURAL JOIN member
     WHERE organization_id = '${organization_id}'`
 
     if (role !== "") {
-        query += ` AND b.role = '${role}'`
+        query += ` AND role = '${role}'`
     }
 
-    query += ` ORDER BY b.academic_year DESC;`
+    query += ` ORDER BY academic_year DESC;`
 
     const [rows] = await pool.query(query);
     res.send(rows)
 }
 
 // View status distribution for the last n semesters
-// TEST: http://localhost:5000/organization/memberStatus/user/MS-101123?n=3
-// FIELDS (per n sem entries)
-//     "percent_active": "100.0000",
-//     "percent_inactive": "0.0000",
-//     "percent_other": "0.0000",
-//     "semester": "1S",
-//     "academic_year": "2024-2025"
 const orgCountStatus = async (req, res) => {
 
     let organization_id = req.params.user;
@@ -263,7 +215,7 @@ const orgCountStatus = async (req, res) => {
         (SELECT * FROM is_part_of NATURAL JOIN organization WHERE organization_id = '${organization_id}'
         GROUP BY student_number, semester, academic_year) AS b 
     GROUP BY b.academic_year, b.semester      
-    ORDER BY b.semester, b.academic_year DESC LIMIT ${n};`
+    ORDER BY b.academic_year DESC, b.semester DESC LIMIT ${n};`
 
     const [rows] = await pool.query(query);
     res.send(rows)
