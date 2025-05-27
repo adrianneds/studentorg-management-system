@@ -15,6 +15,12 @@
 </script>
 
 <div class="home-container h-[calc(100vh-6rem)] flex flex-row py-8">
+  <div class="floating-particles">
+    {#each Array(10) as _, i}
+      <div class="particle"></div>
+    {/each}
+  </div>
+  <div class="shimmer"></div>
   <div class="left-col">
     <div class="logo"> 
       <img src='src\assets\logo.png' alt="" class="home-logo">
@@ -33,11 +39,10 @@
       </Link>
     </div>
   </div>
-  <div class="right-col">
-    <img src="src\assets\screenshots.png" alt="" class="ml-10 mt-8 home-screenshots">
+  <div class="right-col flex items-center">
+    <img src="src\assets\screenshots.png" alt="" class="ml-10 mb-20 home-screenshots">
   </div>
 </div>
-
 
 <!-- <div class="h-[calc(100vh-6rem)] flex items-center justify-center py-8">
   <div class="w-full max-w-4xl px-4">

@@ -29,9 +29,12 @@
 </script>
 
 <Router {url}>
+  <div class="bokeh-circle"></div>
+  <div class="bokeh-circle"></div>
+  <div class="bokeh-circle"></div>
   <Navbar />
   <LoadingOverlay />
-  <main class="min-h-screen bg-gradient-to-br from-blue-900 via-indigo-900 to-violet-900">
+  <main class="min-h-screen">
     <div class="container mx-auto px-4 py-6">
       <Route path="/" component={Home} />
       <Route path="/home" component={Home} />
