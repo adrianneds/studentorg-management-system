@@ -51,9 +51,9 @@
     fee_id: ''
   }
 
-
   function changeDate(date) {
-    currdate = incrementDate(date)
+    currdate = date;
+    // currdate = incrementDate(date)
     getFeeStatus();
   }
 
@@ -458,7 +458,7 @@
                 <div class="flex justify-between items-start mb-4">
                   <div>
                     <h3 class="text-lg font-semibold text-primary mb-1">{fee.fee_name}</h3>
-                    <p class="text-secondary text-sm">Due: {fee.due_date.slice(0,10)}</p>
+                    <p class="text-secondary text-sm">Due: {incrementDate(fee.due_date)}</p>
                   </div>
                   <div class="glass-badge bg-gradient-to-r from-green-500/20 to-emerald-500/20
                     bg-gradient-to-r from-yellow-500/20 to-orange-500/20 ">
@@ -477,7 +477,7 @@
                   </div>
                   <div class="flex justify-between text-sm">
                     <span class="text-secondary">Date Issued:</span>
-                    <span class="text-primary">{fee.issue_date.slice(0,10)} </span>
+                    <span class="text-primary">{incrementDate(fee.issue_date)} </span>
                   </div>
                 </div>
               </div>
