@@ -102,7 +102,7 @@
         }
         )
         .then(response => {if (!response.ok) 
-            {alert("Something went wrong. Make sure to enter only one status update per student per semester."); return}
+            {alert("Something went wrong. Make sure to:\n Enter only one status update per student per semester\nEnter an existing student number"); return}
             else {alert("Successfully added status update!"); response.json()} })
         .then(data => {
         console.log(data);
