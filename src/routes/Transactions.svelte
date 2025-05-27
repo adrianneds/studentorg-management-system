@@ -466,7 +466,7 @@
                     <div class="col-span-2 sm:col-span-1">
                         <label for="payment_status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Payment Status</label>
                         <select bind:value={addTransactionQuery.payment_status} required id="payment_status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select option</option>
+                            <option selected>Select option</option>
                             <option value="Paid">Paid</option>
                             <option value="Unpaid">Unpaid</option>
                         </select>
@@ -474,7 +474,7 @@
                     <div class="col-span-2 sm:col-span-1">
                         <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester</label>
                         <select bind:value={addTransactionQuery.semester} id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select option</option>
+                            <option selected>Select option</option>
                             <option value="1S">1st Semester</option>
                             <option value="2S">2nd Semester</option>
                             <option value="M">Midyear</option>
