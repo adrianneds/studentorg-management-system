@@ -308,15 +308,15 @@
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
     </svg>
     </button>
-    <div id="role-dropdown" class="dropdown-options z-10 hidden">
+    <div id="role-dropdown" class="dropdown-options z-10 hidden" style="position: absolute; margin-left: 0;">
         <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
         {#each roleOptions as role}
             <li>
-                <a href="#role" class="block px-4 py-2" on:click={() => updateRole(role)}>{role}</a>
+                <a href="#" class="block px-4 py-2" on:click={() => updateRole(role)}>{role}</a>
             </li>
         {/each}
             <li>
-                <a href="#role" class="block px-4 py-2" on:click={() => updateRole("")}> Any </a>
+                <a href="#" class="block px-4 py-2" on:click={() => updateRole("")}> Any </a>
             </li>
         </ul>
     </div>

@@ -227,6 +227,16 @@ th {
   width: 9vw;
 }
 
+#role-dropdown {
+  width: 9vw;
+  position: absolute;
+  margin-left: 0;
+  background-color: rgb(118, 108, 165);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(147, 138, 255, 0.28);
+  color: white;
+}
+
 .options {
   width: 70vw;
   height: 7vh;
