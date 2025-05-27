@@ -29,7 +29,7 @@
         gender: '',
         degree_program:'',
 
-        organization_id: id,
+        organization_id: $auth.organization_id,
         committee: '',
         batch: '',
         semester: '',
@@ -49,7 +49,8 @@
     }
 
     let deleteMemberQuery = {
-        student_number: ''
+        student_number: '',
+        organization_id: $auth.organization_id
     }
 
     function resetFilterQuery() {
@@ -319,10 +320,10 @@
                 <button on:click={()=>{showAddMemberModal=true}} class="glass-button text-sm py-2 flex items-center" type="button" data-modal-target="crud-modal" data-modal-toggle="crud-modal">
                 Add Member
                 </button> <br>
-                <button on:click={()=>{showUpdateMemberModal=true}} class="glass-button text-sm py-2 flex items-center">
+                <!-- <button on:click={()=>{showUpdateMemberModal=true}} class="glass-button text-sm py-2 flex items-center">
                 Update Member
                 </button>
-                <br>
+                <br> -->
                 <button on:click={()=>{showDeleteMemberModal=true}} class="glass-button text-sm py-2 flex items-center">
                 Delete Member
                 </button>

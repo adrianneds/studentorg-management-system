@@ -884,26 +884,22 @@ const updateMember = async (req, res) => {
 
 }
 
-//delete member
+//delete member from the organization's records
 const deleteMember = async (req, res) => {
 
     let student_number = req.body.student_number;
+    let organization_id = req.body.organization_id;
 
     const pays_query = 
-    `DELETE FROM pays WHERE student_number = '${student_number}';`;
+    `DELETE FROM pays WHERE student_number = '${student_number}' AND organization_id = '${organization_id}';`;
 
     const ispartof_query = 
-    `DELETE FROM is_part_of WHERE student_number = '${student_number}';`;
-
-    const query = 
-    `DELETE FROM member 
-    WHERE student_number = '${student_number}';`
+    `DELETE FROM is_part_of WHERE student_number = '${student_number} AND organization_id = '${organization_id}';`;
 
     try {
         console.log(query)
         await pool.query(pays_query);
         await pool.query(ispartof_query);
-        await pool.query(query);
         res.status(200).json({message: "Successfully deleted member"})
     } catch (err) {
         console.log(err)
