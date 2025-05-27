@@ -67,7 +67,7 @@
             if (query.committee== '' && query.batch==''&&query.semester==''&&query.academic_year==''
                 &&query.date_of_status_update==''&&query.role==''&&query.membership_status=='') {
                 success = false;
-                alertText += "Please fill out at least one field."
+                alertText += "Please fill out at least one field.\n"
             }
         }
 
