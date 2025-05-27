@@ -36,12 +36,13 @@ body {
   /* font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; */
   color: var(--text-primary);
   background: linear-gradient(to bottom right, #1a365d, #312e81, #5e1893);
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
   overflow: hidden;
   @apply antialiased;
   position: relative;
   background-attachment: fixed;
+  font-family: Inter !important;
 }
 
 /* Bokeh effect */
@@ -208,13 +209,11 @@ main, .glass-card, .glass-button, .glass-input {
 }
 
 .page-container {
-  @apply h-screen py-8 px-4 sm:px-6 lg:px-8 flex flex-col;
-  overflow: hidden;
+  @apply min-h-screen py-8 px-4 sm:px-6 lg:px-8;
 }
 
 .page-content {
-  @apply max-w-7xl mx-auto flex-1 flex flex-col;
-  overflow: hidden;
+  @apply max-w-7xl mx-auto;
 }
 
 .page-title {
@@ -272,6 +271,12 @@ main, .glass-card, .glass-button, .glass-input {
   @apply glass-card p-8 max-w-2xl mx-auto;
 }
 
+.glass-table-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
 .glass-table {
   @apply w-full text-sm text-left rtl:text-right;
   background: rgba(255, 255, 255, 0.1);
@@ -281,8 +286,8 @@ main, .glass-card, .glass-button, .glass-input {
   overflow: hidden;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
   margin: 1.5rem 0;
-  display: flex;
-  flex-direction: column;
+  table-layout: fixed;
+  width: 100%;
 }
 
 .glass-table thead {
@@ -295,39 +300,44 @@ main, .glass-card, .glass-button, .glass-input {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.glass-table thead::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.glass-table thead tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
-  background: rgba(255, 255, 255, 0.1);
-}
-
 .glass-table tbody {
   display: block;
-  width: 100%;
-  position: relative;
-  max-height: calc(6 * 3.5rem); /* 6 rows * row height */
+  height: calc(5 * 3.5rem); /* Fixed height for 5 rows */
   overflow-y: auto;
 }
 
+.glass-table thead,
 .glass-table tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
-  transition: all 0.3s ease;
+}
+
+.glass-table th,
+.glass-table td {
+  @apply px-6 py-4;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.glass-table th {
+  @apply text-xs font-semibold uppercase tracking-wider;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+}
+
+.glass-table tbody tr {
   background: rgba(255, 255, 255, 0.05);
-  position: relative;
+  transition: all 0.3s ease;
+}
+
+.glass-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(31, 38, 135, 0.15);
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Custom scrollbar for the tbody */
@@ -350,35 +360,6 @@ main, .glass-card, .glass-button, .glass-input {
   background: rgba(255, 255, 255, 0.3);
 }
 
-.glass-table th {
-  @apply px-6 py-4 text-xs font-semibold uppercase tracking-wider;
-  color: var(--text-primary);
-  letter-spacing: 0.05em;
-}
-
-.glass-table td {
-  @apply px-6 py-4;
-  color: var(--text-secondary);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-}
-
-.glass-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(31, 38, 135, 0.15);
-  border-left: 3px solid rgba(255, 255, 255, 0.3);
-}
-
-.glass-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
-/* Remove conflicting table styles */
-td, tr, th {
-  background-color: transparent !important;
-}
-
 .glass-badge {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
@@ -397,6 +378,7 @@ td, tr, th {
 } 
 
 .glass-dropdown {
+  position: relative;
   background: rgba(255, 255, 255, 0.20); 
   backdrop-filter: blur(30px);
   border-radius: 0.75rem;
@@ -410,23 +392,28 @@ td, tr, th {
 }
 
 .dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
   background-color: rgb(118, 108, 165);
   border-radius: 0.75rem;
   border: 1px solid rgba(147, 138, 255, 0.28);
   color: white;
-  width: 6vw;
-  margin-left: -10vw;
+  width: 200px;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-options li {
-    transition: 0.2s;
+  padding: 0.75rem 1rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .dropdown-options li:hover {
   background-color: rgba(181, 177, 226, 0.592);
-  color:white;
-    border-radius: 0.75rem;
-  transition: 0.2s;
+  color: white;
 }
 
 #dropdown3 {
@@ -446,6 +433,10 @@ td, tr, th {
   border-radius: 0.75rem;
   border: 1px solid rgba(147, 138, 255, 0.28);
   color: white;
+  z-index: 1000;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
 }
 
 .options {
@@ -456,6 +447,7 @@ td, tr, th {
   align-items: center;
   padding: 1vw;
   justify-content: space-around;
+  position: relative;
 }
 
 .options-button {
@@ -486,6 +478,7 @@ td, tr, th {
   display: flex;
   flex-direction: row;
   column-gap: 2vw;
+  position: relative;
 }
 
 .text-input {
@@ -503,10 +496,6 @@ td, tr, th {
   margin-top: 0.2vh;
   margin-right: 0.5vw;
   border-radius: 0.75rem;
-}
-
-body {
-  font-family: Inter !important;
 }
 
 .back-to-dashboard {
@@ -551,29 +540,32 @@ body {
 }
 
 /* Modal styles */
-.fixed.inset-0 {
+.cud-modal-container {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 999999;
+  background-color: rgba(87, 84, 128, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
-.fixed.inset-0 .glass-card {
-  position: relative;
-  z-index: 1000000;
-}
-
-/* Ensure base content stays below modal */
-main, .glass-card, .glass-button, .glass-input {
-  position: relative;
-  z-index: 1;
+.cud.glass-card {
+  background: rgba(255, 255, 255, 0.80);
+  max-width: 32rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .cud-header {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
 }
 
 .fee-card-container {
@@ -695,10 +687,8 @@ main {
 .glass-table-container {
   width: 100%;
   overflow: hidden;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+  border-radius: 1rem;
+  display: table;
 }
 
 .glass-table {
@@ -786,3 +776,46 @@ main {
   overflow-y: auto;
   margin: auto;
 }
+
+.relative {
+  position: relative;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Add container styles */
+.glass-table-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Add column width classes */
+.col-student-number { width: 15%; }
+.col-name { width: 20%; }
+.col-date { width: 12%; }
+.col-sem-ay { width: 12%; }
+.col-committee { width: 15%; }
+.col-batch { width: 10%; }
+.col-role { width: 10%; }
+.col-status { width: 6%; }
