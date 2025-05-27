@@ -26,7 +26,7 @@
 
     // NEW: import member data from db server
     async function getMembers() {
-      fetch(`http://localhost:5000/organization/orgMembers/user/${$auth.organization_id}`,
+      fetch(`http://localhost:5001/organization/orgMembers/user/${$auth.organization_id}`,
         {
         method: 'POST',
         headers: {

@@ -44,7 +44,7 @@
 
     // NEW: import member data from db server
     async function getMembers() {
-      await fetch(`http://localhost:5000/organization/orgMembers/user/${$auth.organization_id}`,
+      await fetch(`http://localhost:5001/organization/orgMembers/user/${$auth.organization_id}`,
         {
         method: 'POST',
         headers: {
@@ -65,7 +65,7 @@
 
     // NEW: get fees
     async function getFees() {
-        await fetch(`http://localhost:5000/organization/viewFees/user/${$auth.organization_id}`,
+        await fetch(`http://localhost:5001/organization/viewFees/user/${$auth.organization_id}`,
         {
         method: 'GET',
         headers: {
@@ -148,7 +148,7 @@
 
     // NEW: add transaction
   async function addTransaction() {
-    await fetch(`http://localhost:5000/organization/addTransaction`,
+    await fetch(`http://localhost:5001/organization/addTransaction`,
       {
       method: 'POST',
       headers: {
@@ -170,7 +170,7 @@
   // NEW: update transaction
   async function updateTransaction() {
 
-    await fetch(`http://localhost:5000/organization/updateTransaction`,
+    await fetch(`http://localhost:5001/organization/updateTransaction`,
       {
       method: 'POST',
       headers: {
@@ -192,7 +192,7 @@
   // NEW: delete transaction
   async function deleteTransaction() {
 
-    await fetch(`http://localhost:5000/organization/deleteTransaction`,
+    await fetch(`http://localhost:5001/organization/deleteTransaction`,
       {
       method: 'POST',
       headers: {
@@ -286,7 +286,7 @@
 
     // NEW: import member with late payments from db server
     async function getTransactions() {
-      await fetch(`http://localhost:5000/organization/viewTransactions/user/${$auth.organization_id}`,
+      await fetch(`http://localhost:5001/organization/viewTransactions/user/${$auth.organization_id}`,
         {
         method: 'GET',
         headers: {

@@ -16,7 +16,7 @@
   
     // NEW: update member
     async function updateMember() {
-        await fetch(`http://localhost:5000/member/updateMember`,
+        await fetch(`http://localhost:5001/member/updateMember`,
         {
         method: 'POST',
         headers: {
@@ -37,7 +37,7 @@
 
       // NEW: get member data from db server
   async function getMemberInfo() {
-    fetch(`http://localhost:5000/member/info/user/${$auth.student_number}`)
+    fetch(`http://localhost:5001/member/info/user/${$auth.student_number}`)
     .then(response => response.json())
     .then(data => {
       console.log(data[0])
@@ -62,7 +62,7 @@
 
   // NEW: get organization data from db server
   async function getOrganizations() {
-    fetch(`http://localhost:5000/member/getOrganizations/user/${student_number}`)
+    fetch(`http://localhost:5001/member/getOrganizations/user/${student_number}`)
     .then(response => response.json())
     .then(data => {
       organizations = data;

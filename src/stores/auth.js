@@ -44,7 +44,7 @@ function createAuthStore() {
     },
 
     validateCredentials: async(username, password, type) => {
-      const res = await fetch(`http://localhost:5000/${type}/login`, {
+      const res = await fetch(`http://localhost:5001/${type}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username: username, password: password})

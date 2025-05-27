@@ -60,7 +60,7 @@
 
     // NEW: add member
     async function addMember() {
-        await fetch(`http://localhost:5000/organization/addMember`,
+        await fetch(`http://localhost:5001/organization/addMember`,
         {
         method: 'POST',
         headers: {
@@ -82,7 +82,7 @@
 
     // NEW: update member
     async function updateMember() {
-        await fetch(`http://localhost:5000/organization/updateMember`,
+        await fetch(`http://localhost:5001/organization/updateMember`,
         {
         method: 'POST',
         headers: {
@@ -104,7 +104,7 @@
     // NEW: delete member
     async function deleteMember() {
 
-        await fetch(`http://localhost:5000/organization/deleteMember`,
+        await fetch(`http://localhost:5001/organization/deleteMember`,
         {
         method: 'POST',
         headers: {
@@ -265,7 +265,7 @@
 
     // NEW: import member data from db server
     async function getMembers() {
-      await fetch(`http://localhost:5000/organization/orgMembers/user/${$auth.organization_id}`,
+      await fetch(`http://localhost:5001/organization/orgMembers/user/${$auth.organization_id}`,
         {
         method: 'POST',
         headers: {

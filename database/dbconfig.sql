@@ -41,8 +41,7 @@ CREATE TABLE IF NOT EXISTS is_part_of (
     semester CHAR(2) CHECK (semester IN ('1S','2S','M')),
     academic_year CHAR(9) CHECK (academic_year LIKE '%-%'),
     -- ensure that date is within academic year
-    date_of_status_update DATE CHECK( YEAR(date_of_status_update)
-        BETWEEN SUBSTRING(academic_year,1,4) AND SUBSTRING(academic_year, 6,4)),
+    date_of_status_update DATE,
     role VARCHAR(50),
     membership_status VARCHAR(9) CHECK (
         membership_status IN ('Active','Inactive','Expelled','Suspended','Alumni')), -- only allow such values

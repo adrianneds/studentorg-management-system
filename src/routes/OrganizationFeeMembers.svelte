@@ -61,7 +61,7 @@
 
     // NEW: import member with unpaid fees data from db server
     async function getMembersUnpaid() {
-      await fetch(`http://localhost:5000/organization/unpaidMembers/user/${$auth.organization_id}?sem=${sem}&ay=${ay}`,
+      await fetch(`http://localhost:5001/organization/unpaidMembers/user/${$auth.organization_id}?sem=${sem}&ay=${ay}`,
         {
         method: 'GET',
         headers: {
@@ -81,7 +81,7 @@
 
     // NEW: import member with late payments from db server
     async function getMembersLate() {
-      await fetch(`http://localhost:5000/organization/latePayments/user/${$auth.organization_id}?sem=${sem}&ay=${ay}`,
+      await fetch(`http://localhost:5001/organization/latePayments/user/${$auth.organization_id}?sem=${sem}&ay=${ay}`,
         {
         method: 'GET',
         headers: {
@@ -101,7 +101,7 @@
 
     // NEW: import member with highest debt from db server
     async function getMemberHighestDebt() {
-      await fetch(`http://localhost:5000/organization/highestDebt/user/${$auth.organization_id}?sem=${semDebt}&ay=${ayDebt}`,
+      await fetch(`http://localhost:5001/organization/highestDebt/user/${$auth.organization_id}?sem=${semDebt}&ay=${ayDebt}`,
         {
         method: 'GET',
         headers: {

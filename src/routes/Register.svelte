@@ -49,7 +49,7 @@
 
   // NEW: add organization / register
   async function registerOrg() {
-      await fetch(`http://localhost:5000/organization/register`,
+      await fetch(`http://localhost:5001/organization/register`,
       {
       method: 'POST',
       headers: {
@@ -72,7 +72,7 @@
   // NEW: add member / register
   async function registerMember() {
     console.log(member_query)
-      await fetch(`http://localhost:5000/member/register`,
+      await fetch(`http://localhost:5001/member/register`,
       {
       method: 'POST',
       headers: {

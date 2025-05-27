@@ -25,7 +25,7 @@
   // NEW: import fee data from db server
   async function getFees() {
     console.log(organization_selection)
-    fetch(`http://localhost:5000/member/transactions?student_number=${$auth.student_number}&status=${fee_status}&organization_id=${organization_selection}`)
+    fetch(`http://localhost:5001/member/transactions?student_number=${$auth.student_number}&status=${fee_status}&organization_id=${organization_selection}`)
     .then(response => response.json())
     .then(data => {
       fees = data;
@@ -38,7 +38,7 @@
 
   // NEW: get organization data from db server
   async function getOrganizations() {
-    fetch(`http://localhost:5000/member/getOrganizations/user/${$auth.student_number}`)
+    fetch(`http://localhost:5001/member/getOrganizations/user/${$auth.student_number}`)
     .then(response => response.json())
     .then(data => {
       organizations = data;

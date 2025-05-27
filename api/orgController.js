@@ -123,6 +123,22 @@ const orgUnpaidMembers = async (req, res) => {
     res.send(rows)
 };
 
+// CHECKED 5/27
+// View members with unpaid fees as of a given semester/AY
+const orgUnpaidMembersAsOf = async (req, res) => {
+
+    let organization_id = req.params.user;
+    
+    let semester = req.query.sem;                  // need to pass to query
+    let academic_year = req.query.ay;            
+
+    const query =
+    ``
+
+    const [rows] = await pool.query(query);
+    res.send(rows)
+};
+
 
 // CHECKED 5/27
 // REVISED 5/25 
@@ -309,6 +325,7 @@ const orgHighestDebt = async (req, res) => {
     res.send(rows)
 }
 
+// CHECKED 5/27
 // Late payments
 const orgLatePayments = async (req, res) => {
 
@@ -330,7 +347,7 @@ const orgLatePayments = async (req, res) => {
     res.send(rows)
 }
 
-// REVISED 5/25
+// REVISED 5/25 CHECKED 5/27
 // Add a fee
 const addFee = async (req, res) => {
 
@@ -360,7 +377,8 @@ const addFee = async (req, res) => {
     }
 }
 
-// Delete a fee
+// CHECKED 5/27
+// Delete a fee 
 const deleteFee = async (req, res) => {
 
     let fee_id = req.body.fee_id;
@@ -378,7 +396,7 @@ const deleteFee = async (req, res) => {
     }
 }
 
-// REVISED 5/25/2025
+// REVISED 5/25/2025 CHECKED 5/27
 // Add transaction
 const addPays = async (req, res) => {
 
@@ -405,6 +423,7 @@ const addPays = async (req, res) => {
 
 }
 
+// CHECKED 5/27
 // Update a transaction
 const updateTransaction = async (req, res) => {
 
@@ -464,6 +483,7 @@ const updateTransaction = async (req, res) => {
 
 }
 
+// CHECKED 5/27
 // Delete transaction
 const deletePays = async (req, res) => {
 
@@ -483,6 +503,7 @@ const deletePays = async (req, res) => {
 
 }
 
+// CHECKED 5/27
 // Add status update
 const addStatusUpdate = async (req, res) => {
 
@@ -514,6 +535,7 @@ const addStatusUpdate = async (req, res) => {
 
 }
 
+// CHECKED 5/27
 // Update a status update
 const updateStatusUpdate = async (req, res) => {
 
@@ -573,7 +595,7 @@ const updateStatusUpdate = async (req, res) => {
 
 }
 
-// REVISED 5/25/2025
+// REVISED 5/25/2025    CHECKED 5/27
 // Delete a status update
 const deleteStatusUpdate = async (req, res) => {
 
@@ -598,7 +620,7 @@ const deleteStatusUpdate = async (req, res) => {
     }
 }
 
-// REVISED 5/25/2025
+// REVISED 5/25/2025    CHECKED 5/27
 // Update a fee
 const updateFee = async (req, res) => {
 
@@ -660,6 +682,7 @@ const updateFee = async (req, res) => {
 
 }
 
+// CHECKED 5/27
 // View all fees
 const viewFees = async (req, res) => {
 
@@ -677,6 +700,7 @@ const viewFees = async (req, res) => {
     }
 }
 
+// CHECKED 5/27
 // View all status updates
 const viewStatusUpdates = async (req, res) => {
 
@@ -696,6 +720,7 @@ const viewStatusUpdates = async (req, res) => {
     }
 }
 
+// CHECKED 5/27
 // View all transactions
 const viewTransactions = async (req, res) => {
 
@@ -714,6 +739,7 @@ const viewTransactions = async (req, res) => {
     }
 }
 
+// CHECKED 5/27
 const getOrganizationId = async (req, res) => {
     let username = req.params.user;
     const query = 
@@ -727,24 +753,13 @@ const getOrganizationId = async (req, res) => {
     }
 }
 
-// DELETE FROM `member`;
-// INSERT INTO member VALUES
-//     ('2022-04382','pambeesly','pb123','Pam Beesly','F','BS Statistics'),
-// 	('2022-12034','jimhalpert','jh456','Jim Halpert','M','BS Computer Science'),
-// 	('2023-20302','erinhannon','ekh123','Erin Kelly Hannon','F','BS Economics'),
-// 	('2021-20392','dwightschrute','ds456','Dwight Schrute','M','BS Math'),
-// 	('2019-04339','janlevinson','jl123','Jan Levinson','F','BS Math'),
-// 	('2020-93922','andybernard','ab456','Andy Bernard','M','BS Economics'),
-// 	('2020-83492','kellykapoor','kk123','Kelly Kapoor','F','BS Economics')
-// ;
-
-
+// CHECKED 5/27
 // add member
 const addMember = async (req, res) => {
 
     let student_number = req.body.student_number;
     let member_username = req.body.member_username;
-    let member_password = req.body.member_password;   // NOTE: note sure if organization ba magseset nito????
+    let member_password = req.body.member_password;  
     let member_name = req.body.member_name;
     let gender = req.body.gender;
     let degree_program = req.body.degree_program;
@@ -783,6 +798,7 @@ const addMember = async (req, res) => {
     }
 }
 
+// CHECKED 5/27
 // update member
 const updateMember = async (req, res) => {
 
@@ -835,6 +851,7 @@ const updateMember = async (req, res) => {
 
 }
 
+// CHECKED 5/27
 //delete member from the organization's records
 const deleteMember = async (req, res) => {
     let student_number = req.body.student_number;
@@ -857,6 +874,7 @@ const deleteMember = async (req, res) => {
     }
 }
 
+// CHECKED 5/27
 // add organization or register
 const addOrganization = async (req, res) => {
 

@@ -18,7 +18,7 @@
 
     // NEW: fetch alumni data from db server
     async function getAlumni() {
-      await fetch(`http://localhost:5000/organization/alumni/user/${$auth.organization_id}?date=${alumniDate}`,
+      await fetch(`http://localhost:5001/organization/alumni/user/${$auth.organization_id}?date=${alumniDate}`,
         {
         method: 'GET',
         headers: {

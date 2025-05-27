@@ -92,7 +92,7 @@
 
     // NEW: add status update
     async function addStatusUpdate() {
-        await fetch(`http://localhost:5000/organization/addStatusUpdate`,
+        await fetch(`http://localhost:5001/organization/addStatusUpdate`,
         {
         method: 'POST',
         headers: {
@@ -114,7 +114,7 @@
 
     // NEW: update status update
     async function updateStatusUpdate() {
-        await fetch(`http://localhost:5000/organization/updateStatusUpdate`,
+        await fetch(`http://localhost:5001/organization/updateStatusUpdate`,
         {
         method: 'POST',
         headers: {
@@ -136,7 +136,7 @@
     // NEW: delete status update
     async function deleteStatusUpdate() {
 
-        await fetch(`http://localhost:5000/organization/deleteStatusUpdate`,
+        await fetch(`http://localhost:5001/organization/deleteStatusUpdate`,
         {
         method: 'POST',
         headers: {
@@ -227,7 +227,7 @@
 
     // NEW: import member with late payments from db server
     async function getStatusUpdates() {
-      await fetch(`http://localhost:5000/organization/viewStatusUpdates/user/${$auth.organization_id}`,
+      await fetch(`http://localhost:5001/organization/viewStatusUpdates/user/${$auth.organization_id}`,
         {
         method: 'GET',
         headers: {

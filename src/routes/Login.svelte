@@ -25,7 +25,7 @@
   });
 
     async function getOrganizationId(username) {
-      await fetch(`http://localhost:5000/organization/getOrganizationId/user/${username}`,
+      await fetch(`http://localhost:5001/organization/getOrganizationId/user/${username}`,
         {
         method: 'GET',
         headers: {
@@ -44,7 +44,7 @@
   }; 
 
     async function getStudentNumber(username) {
-      await fetch(`http://localhost:5000/member/getStudentNumber/user/${username}`,
+      await fetch(`http://localhost:5001/member/getStudentNumber/user/${username}`,
         {
         method: 'GET',
         headers: {
