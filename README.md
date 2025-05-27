@@ -4,7 +4,7 @@ This project is a student organization management system that runs through a Sve
 It allows both organizations and its members to manage memberships, fees, and organization details. Members can also have multiple organizations.
 
 ## Database Configuration
-The database definition language statements can be found in: database\dbconfig.sql
+The database definition language statements can be found in: `database\dbconfig.sql`
 
 ## Mock Data
 **Member Account**  
