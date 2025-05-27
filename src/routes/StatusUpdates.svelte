@@ -63,6 +63,14 @@
             success = false;
         } 
 
+        if (type =='update') {
+            if (query.committee== '' && query.batch==''&&query.semester==''&&query.academic_year==''
+                &&query.date_of_status_update==''&&query.role==''&&query.membership_status=='') {
+                success = false;
+                alertText += "Please fill out at least one field."
+            }
+        }
+
         if (type =='update' || type == 'delete') {
             let studno = statusUpdates.find(({ student_number }) => student_number === query.student_number);
             if (studno == undefined) {
@@ -362,25 +370,25 @@
                     <div class="col-span-2">
                         <label for="student_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Number</label>
                         <input bind:value={addStatusUpdateQuery.student_number} type="text" name="student_number" id="student_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., 2020-0404" required="">
+                        placeholder="i.e., 2020-0404" required>
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="organization_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Organization ID</label>
-                        <input bind:value={addStatusUpdateQuery.organization_id} type="text" name="organization_id" id="organization_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee" required="">
+                        <input bind:value={addStatusUpdateQuery.organization_id} disabled required type="text" name="organization_id" id="organization_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="committee" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Committee</label>
                         <input bind:value={addStatusUpdateQuery.committee} type="text" name="committee" id="committee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., Membership" required="">
+                        placeholder="i.e., Membership" required>
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="batch" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Batch</label>
                         <input bind:value={addStatusUpdateQuery.batch} type="text" name="batch" id="batch" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., 2022B" required="">
+                        placeholder="i.e., 2022B" required>
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester</label>
-                        <select bind:value={addStatusUpdateQuery.semester} id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <select bind:value={addStatusUpdateQuery.semester} required id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option selected="">Select option</option>
                             <option value="1S">1st Semester</option>
                             <option value="2S">2nd Semester</option>
@@ -390,19 +398,19 @@
                     <div class="col-span-2 sm:col-span-1">
                         <label for="academic_year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year</label>
                         <input bind:value={addStatusUpdateQuery.academic_year} type="text" name="academic_year" id="academic_year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., 2022-2023" required="">
+                        placeholder="i.e., 2022-2023" required>
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="date_of_status_update" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of Status Update</label>
-                        <input bind:value={addStatusUpdateQuery.date_of_status_update} type="date" name="date_of_status_update" id="date_of_status_update" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
+                        <input bind:value={addStatusUpdateQuery.date_of_status_update} required type="date" name="date_of_status_update" id="date_of_status_update" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
-                        <input bind:value={addStatusUpdateQuery.role} type="text" name="role" id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., President" required="">
+                        <input bind:value={addStatusUpdateQuery.role} required type="text" name="role" id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., President">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="membership_status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                        <input bind:value={addStatusUpdateQuery.membership_status} type="text" name="membership_status" id="membership_status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Active" required="">
+                        <input bind:value={addStatusUpdateQuery.membership_status} required type="text" name="membership_status" id="membership_status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Active">
                     </div>
                 </div>
                 <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -440,19 +448,19 @@
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
                         <label for="student_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Number</label>
-                        <input bind:value={updateStatusUpdateQuery.student_number} type="text" name="student_number" id="student_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2020-0404" required="">
+                        <input bind:value={updateStatusUpdateQuery.student_number} required type="text" name="student_number" id="student_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2020-0404">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="organization_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Organization ID</label>
-                        <input bind:value={updateStatusUpdateQuery.organization_id} type="text" name="organization_id" id="organization_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee" required="">
+                        <input bind:value={updateStatusUpdateQuery.organization_id} disabled type="text" name="organization_id" id="organization_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="committee" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Committee</label>
-                        <input bind:value={updateStatusUpdateQuery.committee} type="text" name="committee" id="committee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership" required="">
+                        <input bind:value={updateStatusUpdateQuery.committee} type="text" name="committee" id="committee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="batch" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Batch</label>
-                        <input bind:value={updateStatusUpdateQuery.batch} type="text" name="batch" id="batch" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022B" required="">
+                        <input bind:value={updateStatusUpdateQuery.batch} type="text" name="batch" id="batch" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022B">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester</label>
@@ -465,19 +473,19 @@
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="academic_year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year</label>
-                        <input bind:value={updateStatusUpdateQuery.academic_year} type="text" name="academic_year" id="academic_year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                        <input bind:value={updateStatusUpdateQuery.academic_year} type="text" name="academic_year" id="academic_year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="date_of_status_update" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of Status Update</label>
-                        <input bind:value={updateStatusUpdateQuery.date_of_status_update} type="date" name="date_of_status_update" id="date_of_status_update" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                        <input bind:value={updateStatusUpdateQuery.date_of_status_update} type="date" name="date_of_status_update" id="date_of_status_update" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
-                        <input bind:value={updateStatusUpdateQuery.role} type="text" name="role" id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., President" required="">
+                        <input bind:value={updateStatusUpdateQuery.role} type="text" name="role" id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., President">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="membership_status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                        <input bind:value={updateStatusUpdateQuery.membership_status} type="text" name="membership_status" id="membership_status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Active" required="">
+                        <input bind:value={updateStatusUpdateQuery.membership_status} type="text" name="membership_status" id="membership_status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Active">
                     </div>
                 </div>
                 <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -516,7 +524,7 @@
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2 sm:col-span-1">
                         <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester</label>
-                        <select bind:value={deleteStatusUpdateQuery.semester} id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <select bind:value={deleteStatusUpdateQuery.semester} required id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option selected="">Select option</option>
                             <option value="1S">1st Semester</option>
                             <option value="2S">2nd Semester</option>
@@ -525,15 +533,15 @@
                     </div>
                     <div class="col-span-2">
                         <label for="academic_year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Academic Year </label>
-                        <input bind:value={deleteStatusUpdateQuery.academic_year} type="text" name="academic_year" id="academic_year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                        <input bind:value={deleteStatusUpdateQuery.academic_year} required type="text" name="academic_year" id="academic_year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                     <div class="col-span-2">
                         <label for="student_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Number</label>
-                        <input bind:value={deleteStatusUpdateQuery.student_number} type="text" name="student_number" id="student_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2020-0404" required="">
+                        <input bind:value={deleteStatusUpdateQuery.student_number} required type="text" name="student_number" id="student_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2020-0404">
                     </div>
                     <div class="col-span-2">
                         <label for="organization_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Organization ID</label>
-                        <input bind:value={deleteStatusUpdateQuery.organization_id} type="text" name="organization_id" id="organization_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000" required="">
+                        <input bind:value={deleteStatusUpdateQuery.organization_id} disabled required type="text" name="organization_id" id="organization_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000">
                     </div>
                 <button type="submit" class="w-20 text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Delete
