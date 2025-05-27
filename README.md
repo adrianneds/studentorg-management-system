@@ -4,12 +4,12 @@ This project is a student organization management system that runs through a Sve
 It allows both organizations and its members to manage memberships, fees, and organization details. Members can also have multiple organizations.
 
 ## Mock Data
-**Member Account**
-Username: janlevinson
+**Member Account**  
+Username: janlevinson  
 Password: jl123
 
-**Organization Account**
-Username: mathsoc
+**Organization Account**  
+Username: mathsoc  
 Password: msoc123
 
 ## Getting Started
@@ -88,9 +88,9 @@ The application supports two types of users:
 - **routes.js**: Route configuration for the application.
 
 ## Developers
-CMSC 127 - ST28L
-Eugenio, Dana Katril S.
-Solis, Adrianne D.
-Victoria, Jan Clarisse B.
+CMSC 127 - ST28L  
+Eugenio, Dana Katril S.  
+Solis, Adrianne D.  
+Victoria, Jan Clarisse B.  
 
 
