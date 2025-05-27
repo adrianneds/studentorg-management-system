@@ -35,7 +35,7 @@
           <div class="flex items-center">
             {#if $auth}
               {#if $auth.type === 'organization'}
-                <Link to="/organizations" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Organizations</Link>
+                <Link to="/organization-dashboard" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Organizations</Link>
               {:else}
                 <Link to="/member-fees" class="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">Member Fees</Link>
               {/if}

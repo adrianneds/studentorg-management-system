@@ -6,7 +6,7 @@
   onMount(() => {
     if ($auth) {
       if ($auth.type === 'organization') {
-        navigate('/organizations');
+        navigate('/organization-dashboard');
       } else if ($auth.type === 'member') {
         navigate('/member-dashboard');
       }

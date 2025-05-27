@@ -10,7 +10,7 @@
 
 <nav class="glass-card p-4">
   <div class="max-w-7xl mx-auto flex justify-between items-center">
-    <Link to="/" class="text-primary font-bold text-xl">StudentOrg</Link>
+    <Link to="/home" class="text-primary font-bold text-xl">StudentOrg</Link>
     
     <div class="flex items-center gap-4">
       {#if $auth}
