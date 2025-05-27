@@ -185,64 +185,96 @@
 </div>
 
 {#if showUpdateModal}
+  <div 
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+    on:click|self={() => showUpdateModal = false}
+  >
+    <div class="glass-card max-w-md w-full max-h-[70vh] flex flex-col">
+      <div class="flex justify-between items-start p-6 border-b border-white/10">
+        <h2 class="text-xl font-semibold text-primary">Update Member</h2>
+        <button 
+          class="text-secondary hover:text-primary transition-colors"
+          on:click={() => {
+            showUpdateModal = false;
+          }}
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
-<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="cud-modal-container overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="glass-card cud relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Update Member
-                </h3>
-                <button on:click={()=>{showUpdateModal=false}} type="button" class="glass-button text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="crud-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
+      <div class="p-6 overflow-y-auto">
+        <form id="updateMemberForm" on:submit|preventDefault={()=>updateMemberSubmit()}>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Member Username</label>
+              <input 
+                bind:value={updateQuery.member_username}
+                type="text"
+                class="glass-input w-full"
+                required
+              />
             </div>
-            <!-- Modal body -->
-            <form id = "updateFeeForm" class="p-4 md:p-5" on:submit|preventDefault={()=>updateMemberSubmit()}>
-                <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
-                        <label for="member_username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Member Username</label>
-                        <input bind:value={updateQuery.member_username} type="text" name="member_username" id="member_username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="" required="">
-                    </div>
-                    <div class="col-span-2">
-                        <label for="member_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Member Password</label>
-                        <input bind:value={updateQuery.member_password} type="text" name="member_password" id="member_password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="" required="">
-                    </div>
-                    <div class="col-span-2">
-                        <label for="member_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Member Name</label>
-                        <input bind:value={updateQuery.member_name} type="text" name="member_name" id="member_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., John Doe" required="">
-                    </div>
-                    <div class="col-span-2">
-                        <label for="gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
-                        <select bind:value={updateQuery.gender} id="gender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select option</option>
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
-                        </select>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="degree_program" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Degree Program</label>
-                        <input bind:value={updateQuery.degree_program} type="text" name="degree_program" id="degree_program" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., BS Statistics" required="">
-                    </div>
-                </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                    Update
-                </button>
-            </form>
-        </div>
-    </div>
-</div>
 
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Member Password</label>
+              <input 
+                bind:value={updateQuery.member_password}
+                type="text"
+                class="glass-input w-full"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Member Name</label>
+              <input 
+                bind:value={updateQuery.member_name}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., John Doe"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Gender</label>
+              <select 
+                bind:value={updateQuery.gender}
+                class="glass-input w-full"
+              >
+                <option value="">Select option</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Degree Program</label>
+              <input 
+                bind:value={updateQuery.degree_program}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., BS Statistics"
+                required
+              />
+            </div>
+
+            <button 
+              type="submit"
+              class="glass-button w-full py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+            >
+              <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/>
+              </svg>
+              Update Member
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 {/if}
 
 
