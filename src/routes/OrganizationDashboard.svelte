@@ -105,35 +105,9 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="lg:col-span-1">
         <div class="glass-card p-6">
-          <h2 class="text-xl font-semibold text-primary mb-4">Organization Information</h2>
+          <h2 class="text-xl font-semibold text-primary mb-4">View Members</h2>
           <div class="space-y-4">
-            <div>
-              <label class="block text-secondary text-sm font-medium mb-2">Description</label>
-              <p class="text-primary">{organization?.description}</p>
-            </div>
-            <div>
-              <label class="block text-secondary text-sm font-medium mb-2">Established</label>
-              <p class="text-primary">{new Date(organization?.established).toLocaleDateString()}</p>
-            </div>
-            <div>
-              <label class="block text-secondary text-sm font-medium mb-2">Committees</label>
-              <div class="flex flex-wrap gap-2">
-                {#each organization?.committees || [] as committee}
-                  <div class="glass-badge bg-gradient-to-r from-purple-500/20 to-pink-500/20">
-                    {committee}
-                  </div>
-                {/each}
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-        
-      <div class="glass-card p-6">
-        <div class="space-y-3">
-          <h2 class="text-xl font-semibold text-primary mb-4">Members</h2>
-            <Link 
+              <Link 
               to="/members" 
               class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30"
             >
@@ -151,17 +125,15 @@
               </svg>
               Members (List View)
             </Link>
-            
-            <Link 
-              to="/roles-and-participation" 
-              class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30"
-            >
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-              Roles and Participation
-            </Link>
+          </div>
+        </div>
 
+      </div>
+        
+      <div class="glass-card p-6">
+        <div class="space-y-3">
+          <h2 class="text-xl font-semibold text-primary mb-4"> Member Details </h2>
+            
             <Link 
               to="/alumni" 
               class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30"
@@ -170,6 +142,16 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
               </svg>
               Alumni
+            </Link>
+
+            <Link 
+              to="/roles-and-participation" 
+              class="glass-button w-full text-sm py-2 flex items-center justify-center bg-gradient-to-r from-purple-500/20 to-pink-500/20 hover:from-purple-500/30 hover:to-pink-500/30"
+            >
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              Roles and Participation
             </Link>
 
             <Link 
