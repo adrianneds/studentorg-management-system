@@ -6,6 +6,12 @@ It allows both organizations and its members to manage memberships, fees, and or
 ## Database Configuration
 The database definition language statements can be found in: `database\dbconfig.sql`
 
+## Tech Stack
+- Frontend: Svelte  
+- Server: Express, Node js  
+- Used mysql npm package for database communication  
+- Database: MySQL
+
 ## Mock Data
 **Member Account**  
 Username: janlevinson  
