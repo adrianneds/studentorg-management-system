@@ -14,7 +14,7 @@ Password: msoc123
 
 ## Getting Started
 
-To run this project, follow these steps:
+To run this project, you must have mysql installed. Follow these steps:
 
 1. **Open the studentorg-management-system folder in the command prompt**  
 2. **Install dependencies:**
@@ -25,7 +25,7 @@ To run this project, follow these steps:
    ```sql
    source studentorg-management-system\database\dbconfig.sql
    ```
-4. **In connect.js, change the password to your own password**
+4. **In connect.js, change the password to your own mysql password**
    ```javascript
    var pass = '<your-password>'
    ```
@@ -60,12 +60,18 @@ To run this project, follow these steps:
 ### Public Routes
 - `/home` - Home page
 - `/login` - Login page
+- `/register`: Register
 
 ### Organization Routes
-- `/organization-dashboard` - Organization dashboard
+- `/organization-dashboard` - Organization dashboard\
+- `/fees` - Fees
+- `/members` - Members (Card View)
+- `/members-list` - Members (List View)
+- `/transactions` - Transactions
 
 ### Member Routes
 - `/member-dashboard` - Member dashboard
+- `/member-fees` - Fees
 
 ## Authentication
 
