@@ -38,11 +38,12 @@ body {
   background: linear-gradient(to bottom right, #1a365d, #312e81, #5e1893);
   min-height: 100vh;
   width: 100%;
-  overflow: hidden;
+  overflow-y: auto;
   @apply antialiased;
   position: relative;
   background-attachment: fixed;
   font-family: Inter !important;
+  padding-bottom:15vh !important;
 }
 
 /* Bokeh effect */
@@ -667,7 +668,8 @@ td, tr, th {
 }
 
 .transaction-container {
-  max-height: 60vmax;
+  max-height: 150vmax;
+  overflow-y: auto !important;
 }
 
 .home-logo {
