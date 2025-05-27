@@ -17,27 +17,27 @@ Password: msoc123
 To run this project, follow these steps:
 
 1. **Open the student-org-management-system folder in the command prompt**  
-3. **Install dependencies:**
+2. **Install dependencies:**
    ```bash
    npm install
    ```
-4. **Run dbconfig.sql in MariaDB to set up the database**
+3. **Run dbconfig.sql in MariaDB to set up the database**
    ```sql
    source studentorg-management-system\database\dbconfig.sql
    ```
-   
-5. **Run the web server**
+4. **In connect.js, change the password to your own password**
+   ```javascript
+   var pass = '<your-password>'
+   ```
+5. **In the api folder, run**
    ```bash
-   cd api
    node index.js
    ```
-
 6. **Run the development server:**
    ```bash
    cd src
    npm run dev
    ```
-
 7. **Open your browser and navigate to:**
    ```
    http://localhost:5173
