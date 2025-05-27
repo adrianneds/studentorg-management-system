@@ -158,7 +158,7 @@
 
 </script> 
 
-<div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
+<div class="main-container h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
     <div class="flex items-center gap-4 mb-2">
         <Link to="/organization-dashboard" class="glass-button text-sm py-2 flex items-center">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,7 +271,7 @@
             </div>
         </div>
 
-        <div class="relative overflow-x-auto">
+        <div class="relative update-container">
         <table class="glass-table">
             <thead>
                 <tr>

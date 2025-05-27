@@ -36,14 +36,14 @@ body {
   /* font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; */
   color: var(--text-primary);
   background: linear-gradient(to bottom right, #1a365d, #312e81, #5e1893);
-  min-height: 100vh;
+  min-height: 120vh;
   width: 100%;
   overflow-y: auto;
   @apply antialiased;
   position: relative;
   background-attachment: fixed;
   font-family: Inter !important;
-  padding-bottom:15vh !important;
+  /* padding-bottom:15vh !important; */
 }
 
 /* Bokeh effect */
@@ -912,3 +912,7 @@ select option {
   color: var(--secondary);
   transition: 0.3s;
 }
+
+/* .main-container-screen {
+  min-height: 150vh;
+} */

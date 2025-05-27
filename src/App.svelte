@@ -35,7 +35,7 @@
   <div class="bokeh-circle"></div>
   <Navbar />
   <LoadingOverlay />
-  <main class="min-h-screen">
+  <main class="main-container-screen min-h-[calc(150vh-6rem)] ">
     <div class="container mx-auto px-4 py-6">
       <Route path="/" component={Home} />
       <Route path="/home" component={Home} />
