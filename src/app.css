@@ -819,3 +819,6 @@ main {
 .col-batch { width: 10%; }
 .col-role { width: 10%; }
 .col-status { width: 6%; }
+select option {
+  color: black;
+}

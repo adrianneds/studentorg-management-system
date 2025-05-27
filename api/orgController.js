@@ -40,6 +40,7 @@ const orgInfo = async (req, res) => {
     res.send(rows)
 };
 
+// CHECKED 5/28
 // View members of an organization (with filtering)
 const orgMembers = async (req, res) => {
 
