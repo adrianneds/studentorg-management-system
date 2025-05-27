@@ -14,43 +14,36 @@ Password: msoc123
 
 ## Getting Started
 
-To get started with this project, follow these steps:
+To run this project, follow these steps:
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/studentorg-management-system.git
-   cd studentorg-management-system
-   ```
-
-2. **Install dependencies:**
+1. **Open the student-org-management-system folder in the command prompt**  
+3. **Install dependencies:**
    ```bash
    npm install
    ```
-3. **Run dbconfig.sql in MariaDB to set up the database**
+4. **Run dbconfig.sql in MariaDB to set up the database**
    ```sql
    source studentorg-management-system\database\dbconfig.sql
    ```
    
-4. **Rnu the web server**
+5. **Rnu the web server**
    ```bash
    cd api
    node index.js
    ```
 
-5. **Run the development server:**
+6. **Run the development server:**
    ```bash
    cd src
    npm run dev
    ```
 
-6. **Open your browser and navigate to:**
+7. **Open your browser and navigate to:**
    ```
    http://localhost:5173
    ```
-
+   
 ## Features
-
-### Features
 - Organization Features
   - View members, fees, transactions, and status updates
   - Add members
