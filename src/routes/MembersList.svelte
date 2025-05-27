@@ -547,211 +547,351 @@
 
 <!-- Add member modal -->
 {#if showAddMemberModal}
-<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="cud-modal-container overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="add-member glass-card cud relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Add Member
-                </h3>
-                <button on:click={()=>{showAddMemberModal=false}} type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
+  <div 
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+    on:click|self={() => showAddMemberModal = false}
+  >
+    <div class="glass-card max-w-md w-full max-h-[70vh] flex flex-col">
+      <div class="flex justify-between items-start p-6 border-b border-white/10">
+        <h2 class="text-xl font-semibold text-primary">Add Member</h2>
+        <button 
+          class="text-secondary hover:text-primary transition-colors"
+          on:click={() => {
+            showAddMemberModal = false;
+          }}
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto">
+        <form id="updateFeeForm" on:submit|preventDefault={()=>addMemberSubmit()}>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Student Number</label>
+              <input 
+                bind:value={addMemberQuery.student_number}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., 2020-0404"
+                required
+              />
             </div>
-            <!-- Modal body -->
-            <form id = "updateFeeForm" class="p-4 md:p-5" on:submit|preventDefault={()=>addMemberSubmit()}>
-                <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
-                        <label for="student_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Number</label>
-                        <input bind:value={addMemberQuery.student_number} type="text" name="student_number" id="student_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., 2020-0404" required>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="member_username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Member Username</label>
-                        <input bind:value={addMemberQuery.member_username} type="text" name="member_username" id="member_username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="" required>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="member_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Member Password</label>
-                        <input bind:value={addMemberQuery.member_password} type="text" name="member_password" id="member_password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="" required>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="member_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Member Name</label>
-                        <input bind:value={addMemberQuery.member_name} type="text" name="member_name" id="member_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., John Doe" required>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
-                        <select bind:value={addMemberQuery.gender} id="gender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select option</option>
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
-                        </select>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="degree_program" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Degree Program</label>
-                        <input bind:value={addMemberQuery.degree_program} type="text" name="degree_program" id="degree_program" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., BS Statistics" required>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="organization_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Organization ID</label>
-                        <input bind:value={addMemberQuery.organization_id} disabled type="text" name="organization_id" id="organization_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., OR-1000" required>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="committee" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Committee</label>
-                        <input bind:value={addMemberQuery.committee} type="text" name="committee" id="committee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., Membership" required>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="batch" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Batch</label>
-                        <input bind:value={addMemberQuery.batch} type="text" name="batch" id="batch" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., 2022B" required>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester</label>
-                        <select bind:value={addMemberQuery.semester} required id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select option</option>
-                            <option value="1S">1st Semester</option>
-                            <option value="2S">2nd Semester</option>
-                            <option value="M">Midyear</option>
-                        </select>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="academic_year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year</label>
-                        <input bind:value={addMemberQuery.academic_year} type="text" name="academic_year" id="academic_year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., 2022-2023" required>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="date_of_status_update" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date of Status Update</label>
-                        <input bind:value={addMemberQuery.date_of_status_update} required type="date" name="date_of_status_update" id="date_of_status_update" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="role" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Role</label>
-                        <input bind:value={addMemberQuery.role} type="text" name="role" id="role" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., President"
-                        required>
-                    </div>
-                    <div class="col-span-2 sm:col-span-1">
-                        <label for="membership_status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                        <input bind:value={addMemberQuery.membership_status} type="text" name="membership_status" id="membership_status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Active"
-                        required>
-                    </div>
-                </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                    Add
-                </button>
-            </form>
-        </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Member Username</label>
+              <input 
+                bind:value={addMemberQuery.member_username}
+                type="text"
+                class="glass-input w-full"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Member Password</label>
+              <input 
+                bind:value={addMemberQuery.member_password}
+                type="text"
+                class="glass-input w-full"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Member Name</label>
+              <input 
+                bind:value={addMemberQuery.member_name}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., John Doe"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Gender</label>
+              <select 
+                bind:value={addMemberQuery.gender}
+                class="glass-input w-full"
+                required
+              >
+                <option value="">Select option</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Degree Program</label>
+              <input 
+                bind:value={addMemberQuery.degree_program}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., BS Statistics"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Organization ID</label>
+              <input 
+                bind:value={addMemberQuery.organization_id}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., OR-1000"
+                disabled
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Committee</label>
+              <input 
+                bind:value={addMemberQuery.committee}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., Membership"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Batch</label>
+              <input 
+                bind:value={addMemberQuery.batch}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., 2022B"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Semester</label>
+              <select 
+                bind:value={addMemberQuery.semester}
+                class="glass-input w-full"
+                required
+              >
+                <option value="">Select option</option>
+                <option value="1S">1st Semester</option>
+                <option value="2S">2nd Semester</option>
+                <option value="M">Midyear</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Academic Year</label>
+              <input 
+                bind:value={addMemberQuery.academic_year}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., 2022-2023"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Date of Status Update</label>
+              <input 
+                bind:value={addMemberQuery.date_of_status_update}
+                type="date"
+                class="glass-input w-full"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Role</label>
+              <input 
+                bind:value={addMemberQuery.role}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., President"
+                required
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Status</label>
+              <input 
+                bind:value={addMemberQuery.membership_status}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., Active"
+                required
+              />
+            </div>
+
+            <button 
+              type="submit"
+              class="glass-button w-full py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+            >
+              <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/>
+              </svg>
+              Add Member
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-</div>
+  </div>
 {/if}
 
-<!-- Add member modal -->
+<!-- Update member modal -->
 {#if showUpdateMemberModal}
-<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="cud-modal-container overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="glass-card cud relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Update Member
-                </h3>
-                <button on:click={()=>{showUpdateMemberModal=false}} type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
+  <div 
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+    on:click|self={() => showUpdateMemberModal = false}
+  >
+    <div class="glass-card max-w-md w-full max-h-[70vh] flex flex-col">
+      <div class="flex justify-between items-start p-6 border-b border-white/10">
+        <h2 class="text-xl font-semibold text-primary">Update Member</h2>
+        <button 
+          class="text-secondary hover:text-primary transition-colors"
+          on:click={() => {
+            showUpdateMemberModal = false;
+          }}
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto">
+        <form id="updateFeeForm" on:submit|preventDefault={()=>updateMemberSubmit()}>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Student Number</label>
+              <input 
+                bind:value={updateMemberQuery.student_number}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., 2020-0404"
+                required
+              />
             </div>
-            <!-- Modal body -->
-            <form id = "updateFeeForm" class="p-4 md:p-5" on:submit|preventDefault={()=>updateMemberSubmit()}>
-                <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
-                        <label for="student_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Number</label>
-                        <input bind:value={updateMemberQuery.student_number} type="text" name="student_number" id="student_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., 2020-0404" required>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="member_username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Member Username</label>
-                        <input bind:value={updateMemberQuery.member_username} type="text" name="member_username" id="member_username" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="">
-                    </div>
-                    <div class="col-span-2">
-                        <label for="member_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Member Password</label>
-                        <input bind:value={updateMemberQuery.member_password} type="text" name="member_password" id="member_password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="">
-                    </div>
-                    <div class="col-span-2">
-                        <label for="member_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Member Name</label>
-                        <input bind:value={updateMemberQuery.member_name} type="text" name="member_name" id="member_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., John Doe">
-                    </div>
-                    <div class="col-span-2">
-                        <label for="gender" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
-                        <select bind:value={updateMemberQuery.gender} id="gender" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option selected="">Select option</option>
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
-                        </select>
-                    </div>
-                    <div class="col-span-2">
-                        <label for="degree_program" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Degree Program</label>
-                        <input bind:value={updateMemberQuery.degree_program} type="text" name="degree_program" id="degree_program" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        placeholder="i.e., BS Statistics">
-                    </div>
-                </div>
-                <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                    Update
-                </button>
-            </form>
-        </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Member Username</label>
+              <input 
+                bind:value={updateMemberQuery.member_username}
+                type="text"
+                class="glass-input w-full"
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Member Password</label>
+              <input 
+                bind:value={updateMemberQuery.member_password}
+                type="text"
+                class="glass-input w-full"
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Member Name</label>
+              <input 
+                bind:value={updateMemberQuery.member_name}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., John Doe"
+              />
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Gender</label>
+              <select 
+                bind:value={updateMemberQuery.gender}
+                class="glass-input w-full"
+              >
+                <option value="">Select option</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Degree Program</label>
+              <input 
+                bind:value={updateMemberQuery.degree_program}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., BS Statistics"
+              />
+            </div>
+
+            <button 
+              type="submit"
+              class="glass-button w-full py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+            >
+              <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/>
+              </svg>
+              Update Member
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-</div>
+  </div>
 {/if}
 
-<!-- Delete status update modal -->
+<!-- Delete member modal -->
 {#if showDeleteMemberModal}
+  <div 
+    class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+    on:click|self={() => showDeleteMemberModal = false}
+  >
+    <div class="glass-card max-w-md w-full max-h-[70vh] flex flex-col">
+      <div class="flex justify-between items-start p-6 border-b border-white/10">
+        <h2 class="text-xl font-semibold text-primary">Delete Member</h2>
+        <button 
+          class="text-secondary hover:text-primary transition-colors"
+          on:click={() => {
+            showDeleteMemberModal = false;
+          }}
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
 
-<div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="cud-modal-container overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="glass-card cud relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Delete Member
-                </h3>
-                <button on:click={()=>{showDeleteMemberModal=false}} type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="crud-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
+      <div class="p-6 overflow-y-auto">
+        <form id="deleteFeeForm" on:submit|preventDefault={()=>deleteMemberSubmit()}>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-2">Student Number</label>
+              <input 
+                bind:value={deleteMemberQuery.student_number}
+                type="text"
+                class="glass-input w-full"
+                placeholder="i.e., 2020-0404"
+                required
+              />
             </div>
-            <!-- Modal body -->
-            <form id = "deleteFeeForm" class="p-4 md:p-5" on:submit|preventDefault={()=>deleteMemberSubmit()}>
-                <div class="grid gap-4 mb-4 grid-cols-2">
-                    <div class="col-span-2">
-                        <label for="student_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"> Student Number </label>
-                        <input bind:value={deleteMemberQuery.student_number} type="text" name="student_number" id="student_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2020-0404"
-                        required>
-                    </div>
-                <button type="submit" class="w-20 text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Delete
-                </button>
-            </form>
-        </div>
-    </div>
-</div> 
 
+            <button 
+              type="submit"
+              class="glass-button w-full py-2 flex items-center justify-center bg-gradient-to-r from-red-500/20 to-pink-500/20 hover:from-red-500/30 hover:to-pink-500/30"
+            >
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              Delete Member
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 {/if}
 
 
@@ -761,5 +901,13 @@
   }
   table {
     color: black;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+  }
+  input[type="date"]::-webkit-inner-spin-button,
+  input[type="date"]::-webkit-clear-button {
+    display: none;
   }
 </style> 

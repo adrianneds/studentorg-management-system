@@ -436,176 +436,275 @@
 
     <!-- Add transaction modal -->
     {#if showAddTransactionModal}
+      <div 
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+        on:click|self={() => showAddTransactionModal = false}
+      >
+        <div class="glass-card max-w-md w-full max-h-[70vh] flex flex-col">
+          <div class="flex justify-between items-start p-6 border-b border-white/10">
+            <h2 class="text-xl font-semibold text-primary">Add Transaction</h2>
+            <button 
+              class="text-secondary hover:text-primary transition-colors"
+              on:click={() => {
+                showAddTransactionModal = false;
+              }}
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
-    <div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="cud-modal-container overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <!-- Modal content -->
-            <div class="glass-card cud relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Add Transaction
-                    </h3>
-                    <button on:click={()=>{showAddTransactionModal=false}} type="button" class="glass-button text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="crud-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
+          <div class="p-6 overflow-y-auto">
+            <form id="addTransactionForm" on:submit|preventDefault={()=>addTransactionSubmit()}>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Student Number</label>
+                  <input 
+                    bind:value={addTransactionQuery.student_number}
+                    type="text"
+                    class="glass-input w-full"
+                    placeholder="i.e., 2020-04040"
+                    required
+                  />
                 </div>
-                <!-- Modal body -->
-                <form id = "updateFeeForm" class="p-4 md:p-5" on:submit|preventDefault={()=>addTransactionSubmit()}>
-                    <div class="grid gap-4 mb-4 grid-cols-2">
-                        <div class="col-span-2">
-                            <label for="student_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Number</label>
-                            <input bind:value={addTransactionQuery.student_number} required type="text" name="student_number" id="student_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2020-04040">
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="fee_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee ID</label>
-                            <input bind:value={addTransactionQuery.fee_id} required type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000">
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="payment_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Payment Date</label>
-                            <input bind:value={addTransactionQuery.payment_date} type="date" name="payment_date" id="payment_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 100">
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="payment_status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Payment Status</label>
-                            <select bind:value={addTransactionQuery.payment_status} required id="payment_status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option selected="">Select option</option>
-                                <option value="Paid">Paid</option>
-                                <option value="Unpaid">Unpaid</option>
-                            </select>
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester</label>
-                            <select bind:value={addTransactionQuery.semester} id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option selected="">Select option</option>
-                                <option value="1S">1st Semester</option>
-                                <option value="2S">2nd Semester</option>
-                                <option value="M">Midyear</option>
-                            </select>
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="academic_year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year</label>
-                            <input bind:value={addTransactionQuery.academic_year} type="text" name="academic_year" id="academic_year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
-                        </div>
-                    </div>
-                    <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                        Add
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div> 
 
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Fee ID</label>
+                  <input 
+                    bind:value={addTransactionQuery.fee_id}
+                    type="text"
+                    class="glass-input w-full"
+                    placeholder="i.e., FE-10000"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Payment Date</label>
+                  <input 
+                    bind:value={addTransactionQuery.payment_date}
+                    type="date"
+                    class="glass-input w-full"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Payment Status</label>
+                  <select 
+                    bind:value={addTransactionQuery.payment_status}
+                    class="glass-input w-full"
+                    required
+                  >
+                    <option value="">Select option</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Unpaid">Unpaid</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Semester</label>
+                  <select 
+                    bind:value={addTransactionQuery.semester}
+                    class="glass-input w-full"
+                  >
+                    <option value="">Select option</option>
+                    <option value="1S">1st Semester</option>
+                    <option value="2S">2nd Semester</option>
+                    <option value="M">Midyear</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Academic Year</label>
+                  <input 
+                    bind:value={addTransactionQuery.academic_year}
+                    type="text"
+                    class="glass-input w-full"
+                    placeholder="i.e., 2022-2023"
+                  />
+                </div>
+
+                <button 
+                  type="submit"
+                  class="glass-button w-full py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+                >
+                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/>
+                  </svg>
+                  Add Transaction
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     {/if}
 
     <!-- Update transaction modal -->
     {#if showUpdateTransactionModal}
+      <div 
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+        on:click|self={() => showUpdateTransactionModal = false}
+      >
+        <div class="glass-card max-w-md w-full max-h-[70vh] flex flex-col">
+          <div class="flex justify-between items-start p-6 border-b border-white/10">
+            <h2 class="text-xl font-semibold text-primary">Update Transaction</h2>
+            <button 
+              class="text-secondary hover:text-primary transition-colors"
+              on:click={() => {
+                showUpdateTransactionModal = false;
+              }}
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
-    <div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="cud-modal-container overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <!-- Modal content -->
-            <div class="glass-card cud relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Update Transaction
-                    </h3>
-                    <button on:click={()=>{showUpdateTransactionModal=false}} type="button" class="glass-button text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="crud-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
+          <div class="p-6 overflow-y-auto">
+            <form id="updateTransactionForm" on:submit|preventDefault={()=>updateTransactionSubmit()}>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Transaction ID</label>
+                  <input 
+                    bind:value={updateTransactionQuery.transaction_id}
+                    type="text"
+                    class="glass-input w-full"
+                    placeholder="i.e., 1000"
+                    required
+                  />
                 </div>
-                <!-- Modal body -->
-                <form id = "updateFeeForm" class="p-4 md:p-5" on:submit|preventDefault={()=>updateTransactionSubmit()}>
-                    <div class="grid gap-4 mb-4 grid-cols-2">
-                        <div class="col-span-2">
-                            <label for="transaction_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Transaction ID</label>
-                            <input bind:value={updateTransactionQuery.transaction_id} required type="text" name="transaction_id" id="transaction_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 1000" >
-                        </div>
-                        <div class="col-span-2">
-                            <label for="student_number" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student Number</label>
-                            <input bind:value={updateTransactionQuery.student_number} type="text" name="student_number" id="student_number" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2020-0404">
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="fee_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee ID</label>
-                            <input bind:value={updateTransactionQuery.fee_id} type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000">
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="payment_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Payment Date</label>
-                            <input bind:value={updateTransactionQuery.payment_date} type="date" name="payment_date" id="payment_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 100">
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="payment_status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Payment Status</label>
-                            <select bind:value={updateTransactionQuery.payment_status} id="payment_status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option selected="">Select option</option>
-                                <option value="Paid">Paid</option>
-                                <option value="Unpaid">Unpaid</option>
-                            </select>
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester</label>
-                            <select bind:value={updateTransactionQuery.semester} id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                <option selected="">Select option</option>
-                                <option value="1S">1st Semester</option>
-                                <option value="2S">2nd Semester</option>
-                                <option value="M">Midyear</option>
-                            </select>
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="academic_year" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year</label>
-                            <input bind:value={updateTransactionQuery.academic_year} type="text" name="academic_year" id="academic_year" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
-                        </div>
-                    </div>
-                    <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                        Update
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div> 
 
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Student Number</label>
+                  <input 
+                    bind:value={updateTransactionQuery.student_number}
+                    type="text"
+                    class="glass-input w-full"
+                    placeholder="i.e., 2020-0404"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Fee ID</label>
+                  <input 
+                    bind:value={updateTransactionQuery.fee_id}
+                    type="text"
+                    class="glass-input w-full"
+                    placeholder="i.e., FE-10000"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Payment Date</label>
+                  <input 
+                    bind:value={updateTransactionQuery.payment_date}
+                    type="date"
+                    class="glass-input w-full"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Payment Status</label>
+                  <select 
+                    bind:value={updateTransactionQuery.payment_status}
+                    class="glass-input w-full"
+                  >
+                    <option value="">Select option</option>
+                    <option value="Paid">Paid</option>
+                    <option value="Unpaid">Unpaid</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Semester</label>
+                  <select 
+                    bind:value={updateTransactionQuery.semester}
+                    class="glass-input w-full"
+                  >
+                    <option value="">Select option</option>
+                    <option value="1S">1st Semester</option>
+                    <option value="2S">2nd Semester</option>
+                    <option value="M">Midyear</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Academic Year</label>
+                  <input 
+                    bind:value={updateTransactionQuery.academic_year}
+                    type="text"
+                    class="glass-input w-full"
+                    placeholder="i.e., 2022-2023"
+                  />
+                </div>
+
+                <button 
+                  type="submit"
+                  class="glass-button w-full py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+                >
+                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"/>
+                  </svg>
+                  Update Transaction
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     {/if}
 
     <!-- Delete transaction modal -->
     {#if showDeleteTransactionModal}
+      <div 
+        class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4"
+        on:click|self={() => showDeleteTransactionModal = false}
+      >
+        <div class="glass-card max-w-md w-full max-h-[70vh] flex flex-col">
+          <div class="flex justify-between items-start p-6 border-b border-white/10">
+            <h2 class="text-xl font-semibold text-primary">Delete Transaction</h2>
+            <button 
+              class="text-secondary hover:text-primary transition-colors"
+              on:click={() => {
+                showDeleteTransactionModal = false;
+              }}
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
 
-    <div id="crud-modal-1" tabindex="-1" aria-hidden="true" class="cud-modal-container overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-        <div class="relative p-4 w-full max-w-md max-h-full">
-            <!-- Modal content -->
-            <div class="glass-card cud relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-                <!-- Modal header -->
-                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Delete Transaction
-                    </h3>
-                    <button on:click={()=>{showDeleteTransactionModal=false}} type="button" class="glass-button text-sm w-8 h-8 ms-auto inline-flex justify-center items-center" data-modal-toggle="crud-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
+          <div class="p-6 overflow-y-auto">
+            <form id="deleteTransactionForm" on:submit|preventDefault={()=>deleteTransactionSubmit()}>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-secondary text-sm font-medium mb-2">Transaction ID</label>
+                  <input 
+                    bind:value={deleteTransactionQuery.transaction_id}
+                    type="text"
+                    class="glass-input w-full"
+                    placeholder="i.e., 1000"
+                    required
+                  />
                 </div>
-                <!-- Modal body -->
-                <form id = "deleteFeeForm" class="p-4 md:p-5" on:submit|preventDefault={()=>deleteTransactionSubmit()}>
-                    <div class="grid gap-4 mb-4 grid-cols-2">
-                        <div class="col-span-2">
-                            <label for="transaction_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Transaction ID</label>
-                            <input bind:value={deleteTransactionQuery.transaction_id} required type="text" name="transaction_id" id="transaction_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 1000" >
-                        </div>
-                    <button type="submit" class="w-20 text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        Delete
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div> 
 
+                <button 
+                  type="submit"
+                  class="glass-button w-full py-2 flex items-center justify-center bg-gradient-to-r from-red-500/20 to-pink-500/20 hover:from-red-500/30 hover:to-pink-500/30"
+                >
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Delete Transaction
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     {/if}
 
 
@@ -623,5 +722,20 @@
         padding-left: 0;
         padding-right:0;
         text-align: center;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        cursor: pointer;
+        opacity: 0.7;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator:hover {
+        opacity: 1;
+    }
+
+    input[type="date"]::-webkit-inner-spin-button,
+    input[type="date"]::-webkit-clear-button {
+        filter: invert(1);
     }
 </style>
