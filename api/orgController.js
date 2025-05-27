@@ -197,6 +197,7 @@ const orgRoles = async (req, res) => {
     res.send(rows)
 }
 
+// CHECKED 5/27
 // View status distribution for the last n semesters
 const orgCountStatus = async (req, res) => {
 
@@ -222,15 +223,6 @@ const orgCountStatus = async (req, res) => {
 }
 
 // View alumni
-// TEST: http://localhost:5000/organization/alumni/user/MS-101123?date=2024-07-20
-// FIELDS
-//     "student_number": "2019-04339",
-//     "member_name": "Jan Levinson",
-//     "gender": "F",
-//     "degree_program": "BS Statistics",
-//     "date_of_status_update": "2024-06-30T16:00:00.000Z",
-//     "membership_status": "Alumni"
-
 const orgAlumni = async (req, res) => {
 
     let organization_id = req.params.user;

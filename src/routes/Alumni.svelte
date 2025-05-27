@@ -65,7 +65,7 @@
     <div class="mb-8">
         <div class="date-container glass-card p-6">
       <input class = "dateInput text-input" type="date" min="1970-01-01" bind:value={alumniDateInput} />
-      <button class = "date-input-submit" id = "submitButton" type="button" on:click={()=>{changeDate(alumniDateInput)}}> Submit </button>
+      <button class = "date-input-submit" id = "submitButton" type="button" on:click={()=>{alumniDate=alumniDateInput;getAlumni()}}> Submit </button>
         </div>
     </div>
 
