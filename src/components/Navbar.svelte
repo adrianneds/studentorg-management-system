@@ -8,7 +8,7 @@
   }
 </script>
 
-<nav class="sticky top-0 z-50 backdrop-blur-lg bg-gradient-to-r from-purple-900/20 via-pink-900/20 to-purple-900/20 border-b border-white/10">
+<nav class="sticky top-0 z-50">
   <div class="max-w-7xl mx-auto">
     <div class="flex items-center justify-between px-8 py-3">
       <Link to="/home" class="text-primary font-bold text-2xl bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent hover:from-purple-300 hover:to-pink-300 transition-all duration-300">
