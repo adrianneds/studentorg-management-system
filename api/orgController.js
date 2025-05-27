@@ -69,7 +69,7 @@ const orgMembers = async (req, res) => {
     var whereClause = "";
 
     if (student_number !== "") {
-        whereClause += ` WHERE c.student_number = '${student_number}'`
+        whereClause += ` AND c.student_number = '${student_number}'`
     }
     if (committee !== "") {
         whereClause += ` AND committee = '${committee}'`
@@ -89,14 +89,14 @@ const orgMembers = async (req, res) => {
     if (batch !== "") {
         whereClause += ` AND batch = '${batch}'`
     }
-    if (whereClause!=="") {
-        if (whereClause[1]=='A') {
-            whereClause = ' WHERE' + whereClause.slice(4, whereClause.length) + ';'
-        }
-    } else {
-        query += ';'
-    }
-
+    // if (whereClause!=="") {
+    //     if (whereClause[1]=='A') {
+    //         whereClause = ' WHERE' + whereClause.slice(4, whereClause.length) + ';'
+    //     }
+    // } else {
+    //     query += ';'
+    // }
+    whereClause += ';'
     query += whereClause;
     console.log(query)
 
