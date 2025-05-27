@@ -5,7 +5,7 @@ import {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
      addStatusUpdate, deleteStatusUpdate, updateFee, viewFees,
      viewStatusUpdates, viewTransactions,orgMemberCounts, getOrganizationId,
      updateTransaction,updateStatusUpdate, addMember, updateMember, deleteMember,
-     addOrganization} from '../orgController.js';
+     addOrganization,orgUnpaidMembersAsOf} from '../orgController.js';
 // import all the functions from controller.js
 
 const orgRouter = express.Router();  // use Router to define and manage the API routes 
