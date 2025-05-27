@@ -29,7 +29,7 @@
     let addTransactionQuery = {
         student_number: '',
         fee_id: '',
-        payment_date: 0,
+        payment_date: '',
         payment_status: '',
         semester: '',
         academic_year: ''
@@ -39,7 +39,7 @@
         transaction_id: '',
         student_number: '',
         fee_id: '',
-        payment_date: 0,
+        payment_date: '',
         payment_status: '',
         semester: '',
         academic_year: ''        
@@ -99,7 +99,7 @@
         var success = true; // indicates valid output
         var alertText = "" // alert contents (pinagiisa ko na lahat ng error para mabilis)
 
-        if (type != "delete") {
+        if (type == "add") {
             if (query.academic_year.slice(4,5) != '-' || !isNaN(query.academic_year) || query.academic_year.length != 9)  {
                 alertText += "Please enter a valid academic year.\n"
                 success = false;
@@ -142,6 +142,7 @@
         }
 
         if (success == true) {
+            console.log(success)
             // all valid inputs, ready for querying in db
             deleteValid = true;
             updateValid = true;
@@ -384,9 +385,6 @@
                     Due date
                 </th>
                 <th scope="col">
-                    Payment status
-                </th>
-                <th scope="col">
                     Payment date
                 </th>
             </tr>
@@ -420,9 +418,6 @@
                 </td>
                 <td>
                     {incrementDate(transaction.due_date)}
-                </td>
-                <td>
-                    {transaction.payment_status}
                 </td>
                 <td>
                     {transaction.payment_date == null ? 'N/A' : incrementDate(transaction.payment_date)}
