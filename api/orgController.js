@@ -222,6 +222,7 @@ const orgCountStatus = async (req, res) => {
     res.send(rows)
 }
 
+// CHECKED 5/27
 // View alumni
 const orgAlumni = async (req, res) => {
 
@@ -239,11 +240,8 @@ const orgAlumni = async (req, res) => {
     res.send(rows)
 }
 
+// CHECKED 5/27
 // View total paid/unpaid fees
-// TEST: http://localhost:5000/organization/feeStatus/user/MS-101123?date=2024-01-01
-// FIELDS
-//      "unpaid": 200,
-//      "paid": 90
 const orgFeeStatus = async (req, res) => {
 
     let organization_id = req.params.user;
@@ -253,15 +251,15 @@ const orgFeeStatus = async (req, res) => {
     `SELECT 
     (SELECT SUM(fee_amount) as total_unpaid  
     FROM pays NATURAL JOIN fee NATURAL JOIN organization
-    WHERE organization_id = '${organization_id}'
-    AND payment_status = "Unpaid"
-    AND issue_date <= '${fee_date}') AS unpaid,
+    WHERE organization_id = '${organization_id}' AND
+    ( (payment_status = "Unpaid" AND issue_date <= '${fee_date}')
+    OR (payment_status='Paid' AND payment_date >= '${fee_date}' AND issue_date <= '${fee_date}'))) AS unpaid,
 
     (SELECT SUM(fee_amount) as total_paid         
     FROM pays NATURAL JOIN fee NATURAL JOIN organization
     WHERE organization_id = '${organization_id}'
     AND payment_status = "Paid"
-    AND payment_date <= '${fee_date}') AS paid`
+    AND payment_date <= '${fee_date}') AS paid;`
 
     const [rows] = await pool.query(query);
     res.send(rows)
