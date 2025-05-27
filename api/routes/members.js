@@ -1,6 +1,7 @@
 import express from 'express';
 import {logIn, memberInfo, memberTransactions, getStudentNumber,
-    getOrganizations, getMemberUnpaidFees, updateMember} from '../memberController.js';
+    getOrganizations, getMemberUnpaidFees, updateMember,
+    addMember} from '../memberController.js';
 
 // import all the functions from controller.js
 
@@ -12,6 +13,6 @@ memberRouter.get('/getStudentNumber/user/:user', getStudentNumber);
 memberRouter.get('/getOrganizations/user/:user', getOrganizations);
 memberRouter.get('/getUnpaidFees/user/:user', getMemberUnpaidFees);
 memberRouter.post('/updateMember', updateMember);
-
+memberRouter.post('/register', addMember);
 
 export {memberRouter}

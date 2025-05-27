@@ -9,21 +9,23 @@
   let success = false;
 
   // Member form fields
-  let memberName = '';
-  let memberUsername = '';
-  let memberPassword = '';
-  let memberConfirmPassword = '';
-  let memberEmail = '';
-  let memberPhone = '';
+  let member_query = {
+    member_name: '',
+    student_number: '',
+    gender: '',
+    member_password: '',
+    degree_program: '',
+    member_username: ''
+  }
 
   // Organization form fields
-  let orgName = '';
-  let orgUsername = '';
-  let orgPassword = '';
-  let orgConfirmPassword = '';
-  let orgEmail = '';
-  let orgPhone = '';
-  let orgDescription = '';
+  let org_query = {
+    organization_name: '',
+    organization_id: '',
+    orgainzation_password: '',
+    orgnaization_username: ''
+  }
+
 
   onMount(() => {
     if ($auth) {
@@ -35,49 +37,61 @@
     }
   });
 
-  function handleRegister() {
+  function handleRegister(type) {
     loading = true;
     error = '';
-    
-    // Validate passwords match
-    if (userType === 'member') {
-      if (memberPassword !== memberConfirmPassword) {
-        error = 'Passwords do not match';
-        loading = false;
-        return;
-      }
-    } else {
-      if (orgPassword !== orgConfirmPassword) {
-        error = 'Passwords do not match';
-        loading = false;
-        return;
-      }
+    if (type == 'organization') {
+      registerOrg()
+    } else if (type == 'member') {
+      registerMember()
     }
-
-    // Simulate registration
-    setTimeout(() => {
-      if (userType === 'member') {
-        if (memberUsername === 'johndoe') {
-          error = 'Username already exists';
-        } else {
-          success = true;
-          setTimeout(() => {
-            navigate('/login');
-          }, 2000);
-        }
-      } else {
-        if (orgUsername === 'compsoc') {
-          error = 'Username already exists';
-        } else {
-          success = true;
-          setTimeout(() => {
-            navigate('/login');
-          }, 2000);
-        }
-      }
-      loading = false;
-    }, 1000);
   }
+
+  // NEW: add organization / register
+  async function registerOrg() {
+      await fetch(`http://localhost:5000/organization/register`,
+      {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(org_query)
+      }
+      )
+      .then(response => {if (!response.ok) 
+          {alert("Organization ID or username already exists."); return}
+          else {alert("Successfully registered! Please log in..."); success=true; navigate('/login'); response.json()} })
+      .then(data => {
+      console.log(data);
+      }).catch(error => {
+      console.log(error);
+      return [];
+      });
+  };
+
+  // NEW: add member / register
+  async function registerMember() {
+    console.log(member_query)
+      await fetch(`http://localhost:5000/member/register`,
+      {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(member_query)
+      }
+      )
+      .then(response => {if (!response.ok) 
+          {alert("Student number or username already exists."); return}
+          else {alert("Successfully registered! Please log in..."); success=true; navigate('/login'); response.json()} })
+      .then(data => {
+      console.log(data);
+      }).catch(error => {
+      console.log(error);
+      return [];
+      });
+  };
+
 </script>
 
 <div class="h-[calc(100vh-6rem)] flex items-center justify-center py-8">
@@ -126,60 +140,60 @@
           </div>
         </div>
 
+        <form on:submit|preventDefault={()=>handleRegister(userType)}>
         {#if userType === 'member'}
           <div class="space-y-6">
             <div>
               <label class="block text-secondary text-sm font-medium mb-3">Full Name</label>
               <input 
                 type="text" 
-                bind:value={memberName}
+                bind:value={member_query.member_name}
                 class="glass-input"
-                placeholder="Enter your full name"
+                placeholder="Enter your full name" required
               />
             </div>
             <div>
               <label class="block text-secondary text-sm font-medium mb-3">Username</label>
               <input 
                 type="text" 
-                bind:value={memberUsername}
+                bind:value={member_query.member_username}
                 class="glass-input"
-                placeholder="Choose a username"
+                placeholder="Choose a username" required
               />
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Email</label>
+              <label class="block text-secondary text-sm font-medium mb-3">Student Number</label>
               <input 
-                type="email" 
-                bind:value={memberEmail}
+                type="text" 
+                bind:value={member_query.student_number}
                 class="glass-input"
-                placeholder="Enter your email"
+                placeholder="Enter your student number" required
               />
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Phone</label>
+              <label class="block text-secondary text-sm font-medium mb-3">Gender</label>
+              <select bind:value={member_query.gender} id = "gender" class='text-black rounded-md'>
+                <option selected="">Select option</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-secondary text-sm font-medium mb-3">Degree Program</label>
               <input 
-                type="tel" 
-                bind:value={memberPhone}
+                type="text" 
+                bind:value={member_query.degree_program}
                 class="glass-input"
-                placeholder="Enter your phone number"
+                placeholder="Enter your degree program" required
               />
             </div>
             <div>
               <label class="block text-secondary text-sm font-medium mb-3">Password</label>
               <input 
-                type="password" 
-                bind:value={memberPassword}
+                type="text" 
+                bind:value={member_query.member_password}
                 class="glass-input"
-                placeholder="Create a password"
-              />
-            </div>
-            <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Confirm Password</label>
-              <input 
-                type="password" 
-                bind:value={memberConfirmPassword}
-                class="glass-input"
-                placeholder="Confirm your password"
+                placeholder="Create a password" required
               />
             </div>
           </div>
@@ -189,73 +203,48 @@
               <label class="block text-secondary text-sm font-medium mb-3">Organization Name</label>
               <input 
                 type="text" 
-                bind:value={orgName}
+                bind:value={org_query.organization_name}
                 class="glass-input"
-                placeholder="Enter organization name"
+                placeholder="Enter organization name" required
               />
             </div>
             <div>
               <label class="block text-secondary text-sm font-medium mb-3">Username</label>
               <input 
                 type="text" 
-                bind:value={orgUsername}
+                bind:value={org_query.organization_username}
                 class="glass-input"
-                placeholder="Choose a username"
+                placeholder="Choose a username" required
               />
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Email</label>
+              <label class="block text-secondary text-sm font-medium mb-3">Organization ID</label>
               <input 
-                type="email" 
-                bind:value={orgEmail}
+                type="text" 
+                bind:value={org_query.organization_id}
                 class="glass-input"
-                placeholder="Enter organization email"
-              />
-            </div>
-            <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Phone</label>
-              <input 
-                type="tel" 
-                bind:value={orgPhone}
-                class="glass-input"
-                placeholder="Enter organization phone"
+                placeholder="Enter organization ID" required
               />
             </div>
             <div>
               <label class="block text-secondary text-sm font-medium mb-3">Password</label>
               <input 
-                type="password" 
-                bind:value={orgPassword}
+                type="text" 
+                bind:value={org_query.organization_password}
                 class="glass-input"
-                placeholder="Create a password"
+                placeholder="Create a password" required
               />
-            </div>
-            <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Confirm Password</label>
-              <input 
-                type="password" 
-                bind:value={orgConfirmPassword}
-                class="glass-input"
-                placeholder="Confirm your password"
-              />
-            </div>
-            <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Description</label>
-              <textarea 
-                bind:value={orgDescription}
-                class="glass-input h-32 resize-none"
-                placeholder="Describe your organization"
-              ></textarea>
             </div>
           </div>
         {/if}
-
+          <br>
         <button 
+          type = "submit"
           class="glass-button w-full py-3 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
-          on:click={handleRegister}
           disabled={loading}
-        >
-          {#if loading}
+        >Create Account</button>
+        </form>
+          <!-- {#if loading}
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -263,8 +252,7 @@
             Creating account...
           {:else}
             Create Account
-          {/if}
-        </button>
+          {/if} -->
 
         <div class="text-center pt-4">
           <p class="text-secondary text-sm">

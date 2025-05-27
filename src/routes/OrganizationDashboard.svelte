@@ -89,11 +89,11 @@
       </div>
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Total Members</div>
-        <div class="text-2xl font-semibold text-primary">{totalMembers || 999}</div>
+        <div class="text-2xl font-semibold text-primary">{totalMembers || 'N/A'}</div>
       </div>
       <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Active Members</div>
-        <div class="text-2xl font-semibold text-primary">{totalActiveMembers || 999}</div>
+        <div class="text-2xl font-semibold text-primary">{totalActiveMembers || 'N/A'}</div>
       </div>
       <!-- <div class="glass-card p-6">
         <div class="text-sm text-secondary mb-1">Officers</div>

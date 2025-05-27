@@ -42,9 +42,9 @@
         <Link to="/login" class="nav-link" let:active>
           Login
         </Link>
-        <!-- <Link to="/register" class="nav-link" let:active>
+        <Link to="/register" class="nav-link" let:active>
           Register
-        </Link> -->
+        </Link>
       {/if}
     </div>
   </div>

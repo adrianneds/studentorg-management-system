@@ -886,7 +886,6 @@ const updateMember = async (req, res) => {
 
 //delete member from the organization's records
 const deleteMember = async (req, res) => {
-
     let student_number = req.body.student_number;
     let organization_id = req.body.organization_id;
 
@@ -907,9 +906,31 @@ const deleteMember = async (req, res) => {
     }
 }
 
+// add organization or register
+const addOrganization = async (req, res) => {
+
+    let organization_id = req.body.organization_id;
+    let organization_username = req.body.organization_username;
+    let organization_name = req.body.organization_name;
+    let organization_password = req.body.organization_password;
+
+    const query = 
+    `INSERT INTO organization VALUES ('${organization_id}', '${organization_username}',
+    '${organization_password}', '${organization_name}');`;
+
+    try {
+        console.log(query)
+        await pool.query(query);
+        res.status(200).json({message: "Successfully added organization"})
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({message: "Error adding organization"})
+    }
+}
+
 export {orgInfo, orgUnpaidMembers, orgCommitteeMembers,
         orgRoles, orgCountStatus, orgAlumni, orgFeeStatus, orgHighestDebt, orgLatePayments,
         orgMembers, logIn, addFee, deleteFee, addPays, deletePays, addStatusUpdate, deleteStatusUpdate,
         updateFee, viewFees, viewStatusUpdates, viewTransactions, orgMemberCounts, getOrganizationId,updateTransaction,
-        updateStatusUpdate, addMember, updateMember, deleteMember}
+        updateStatusUpdate, addMember, updateMember, deleteMember, addOrganization}
 

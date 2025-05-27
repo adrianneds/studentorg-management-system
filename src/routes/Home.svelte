@@ -24,9 +24,14 @@
         </p>
       </div>
     </div>
-    <Link to="/login" class="mt-8 glass-button py-3 px-8 text-lg self-start">
-          Sign In
-    </Link>
+    <div class="flex flex-row self-start gap-5">
+      <Link to="/login" class="mt-8 glass-button py-3 px-8 text-lg self-start">
+            Sign In
+      </Link>
+      <Link to="/register" class="mt-8 glass-button py-3 px-8 text-lg self-start">
+            Register
+      </Link>
+    </div>
   </div>
   <div class="right-col">
     <img src="src\assets\screenshots.png" alt="" class="ml-10 mt-8 home-screenshots">

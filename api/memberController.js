@@ -174,4 +174,29 @@ const updateMember = async (req, res) => {
 
 }
 
-export {memberInfo, memberTransactions, logIn, getStudentNumber, getOrganizations, getMemberUnpaidFees, updateMember}
+// add member / register
+const addMember = async (req, res) => {
+
+  let student_number = req.body.student_number;
+  let member_username = req.body.member_username;
+  let member_password = req.body.member_password;   // NOTE: note sure if organization ba magseset nito????
+  let member_name = req.body.member_name;
+  let gender = req.body.gender;
+  let degree_program = req.body.degree_program;
+
+  const query =
+  `INSERT INTO member VALUES ('${student_number}', '${member_username}', '${member_password}',
+  '${member_name}', '${gender}', '${degree_program}');`
+
+  try {
+      console.log(query)
+      await pool.query(query);
+      res.status(200).json({message: "Successfully registeredd"})
+  } catch (err) {
+      console.log(err)
+      res.status(500).json({message: "Error in register"})
+  }
+
+}
+
+export {memberInfo, memberTransactions, logIn, getStudentNumber, getOrganizations, getMemberUnpaidFees, updateMember, addMember}
