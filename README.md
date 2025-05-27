@@ -26,7 +26,7 @@ To run this project, follow these steps:
    source studentorg-management-system\database\dbconfig.sql
    ```
    
-5. **Rnu the web server**
+5. **Run the web server**
    ```bash
    cd api
    node index.js
