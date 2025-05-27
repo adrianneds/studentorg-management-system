@@ -60,14 +60,18 @@ To run this project, you must have mysql installed. Follow these steps:
 ### Public Routes
 - `/home` - Home page
 - `/login` - Login page
-- '/register': Register
+- `/register`: Register
 
 ### Organization Routes
 - `/organization-dashboard` - Organization dashboard\
-- '/fees': Fees
+- `/fees` - Fees
+- `/members` - Members (Card View)
+- `/members-list` - Members (List View)
+- `/transactions` - Transactions
 
 ### Member Routes
 - `/member-dashboard` - Member dashboard
+- `/member-fees` - Fees
 
 ## Authentication
 
