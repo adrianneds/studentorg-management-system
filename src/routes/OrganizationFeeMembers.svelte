@@ -10,6 +10,7 @@
     let status = "unpaid";
     let ayInput = "";
     let members = [];
+    let membersAsOf = [];
     let semDebt = "2S";
     let ayDebt = "2023-2024";
     let ayInputDebt = "";
@@ -42,6 +43,8 @@
             getMembersUnpaid();
         } else if (status == "late") {
             getMembersLate();
+        } else if (status == 'unpaidAsOf') {
+            getMembersUnpaidAsOf();
         }
     }
 
@@ -58,6 +61,26 @@
     // NEW: getting username
     // var username = JSON.parse(localStorage.getItem('user')).organization_username
     // console.log(username)
+
+    // NEW: import member with unpaid fees data from db server
+    async function getMembersUnpaidAsOf() {
+      await fetch(`http://localhost:5001/organization/unpaidMembersAsOf/user/${$auth.organization_id}?sem=${sem}&ay=${ay}`,
+        {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      )
+      .then(response => response.json())
+      .then(data => {
+        members = data;
+        console.log(members);
+      }).catch(error => {
+        console.log(error);
+        return [];
+      });
+    };
 
     // NEW: import member with unpaid fees data from db server
     async function getMembersUnpaid() {
@@ -152,8 +175,8 @@
 <div class="max-w-7xl mx-auto h-full flex flex-col">
 
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-primary mb-2"> {status=='unpaid'? 'Unpaid Fees' : 'Late Payments'} </h1>
-        <p class="text-secondary"> View members with {status=='unpaid'? 'unpaid fees issued at a semester/academic year' : 'late payments made during a semester/academic year'} </p>
+        <h1 class="text-3xl font-bold text-primary mb-2"> {status=='unpaid'||status=='unpaidAsOf'? 'Unpaid Fees' : 'Late Payments'} </h1>
+        <p class="text-secondary"> View members with {status=='unpaid'||status=='unpaidAsOf'? 'unpaid fees' : 'late payments made during a semester/academic year'} </p>
     </div>
 
     <div class="mb-8">
@@ -170,7 +193,10 @@
         class="dropdown-options z-10 hidden">
             <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
             <li>
-                <a href="#" class="block px-4 py-2" on:click={() => updateSemAY("unpaid", sem ,ay)}>Unpaid</a>
+                <a href="#" class="block px-4 py-2" on:click={() => updateSemAY("unpaid", sem ,ay)}>Unpaid for Sem/AY Fees</a>
+            </li>
+            <li>
+                <a href="#" class="block px-4 py-2" on:click={() => updateSemAY("unpaidAsOf",sem, ay)}>Unpaid as of Sem/AY</a>
             </li>
             <li>
                 <a href="#" class="block px-4 py-2" on:click={() => updateSemAY("late",sem, ay)}>Late</a>
@@ -282,6 +308,7 @@
         </tbody>
     </table>
 </div>
+
 </div>
 {/if}
 
@@ -390,6 +417,7 @@
     </div>
 </div>
 {/if}
+
 
 </div>
 

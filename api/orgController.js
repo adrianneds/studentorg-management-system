@@ -131,7 +131,8 @@ const orgUnpaidMembersAsOf = async (req, res) => {
     let organization_id = req.params.user;
     
     let semester = req.query.sem;                  // need to pass to query
-    let academic_year = req.query.ay;            
+    let academic_year = req.query.ay;    
+    let sem;        
 
     if (semester== '1S') {
         sem = 1
