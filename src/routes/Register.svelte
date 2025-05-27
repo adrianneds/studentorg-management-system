@@ -172,8 +172,12 @@
             </div>
             <div>
               <label class="block text-secondary text-sm font-medium mb-3">Gender</label>
-              <select bind:value={member_query.gender} id = "gender" class='text-black rounded-md'>
-                <option selected="">Select option</option>
+              <select 
+                bind:value={member_query.gender} 
+                class="glass-input w-full"
+                required
+              >
+                <option value="">Select gender</option>
                 <option value="M">Male</option>
                 <option value="F">Female</option>
               </select>
