@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise';
 
 // CHANGE WITH OWN PASSWORD
-var pass = 'Jcbv@11-14-02'
+var pass = 'ads2004'
 
 // db connection
 const pool = mysql.createPool({
