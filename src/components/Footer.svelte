@@ -16,7 +16,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 10;
+    z-index: 1;
     padding: 5px;
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(5px);

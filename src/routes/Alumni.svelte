@@ -72,14 +72,27 @@
     </div>
 
     <div class="mb-8">
-        <div class="date-container glass-card p-6 flex items-center gap-4">
-            <input class="glass-input flex-1" type="date" min="1970-01-01" bind:value={alumniDateInput} />
-            <button class="glass-button text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30" id="submitButton" type="button" on:click={()=>{alumniDate=alumniDateInput;getAlumni()}}>
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Submit
-            </button>
+        <div class="glass-card p-6">
+            <div class="flex items-center gap-4">
+                <div class="flex-1">
+                    <input 
+                        class="glass-input" 
+                        type="date" 
+                        min="1970-01-01" 
+                        bind:value={alumniDateInput}
+                    />
+                </div>
+                <button 
+                    class="glass-button text-sm py-2 flex items-center justify-center" 
+                    type="button" 
+                    on:click={()=>{alumniDate=alumniDateInput;getAlumni()}}
+                >
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Submit
+                </button>
+            </div>
         </div>
     </div>
 
@@ -137,13 +150,40 @@
     color: var(--text-primary);
   }
 
+  input[type="date"] {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.75rem 1rem;
+    width: 100%;
+    transition: all 0.3s ease;
+  }
+
+  input[type="date"]:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
   input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
     cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
   }
 
   input[type="date"]::-webkit-inner-spin-button,
   input[type="date"]::-webkit-clear-button {
     filter: invert(1);
+  }
+
+  .glass-label {
+    @apply text-blue-100 font-medium mb-2 block;
   }
 </style>
