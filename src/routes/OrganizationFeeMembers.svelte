@@ -179,6 +179,7 @@
             </button>
         </div>
     </div>
+    <br>
 
     {#if showUnpaidMembers}
     <div class="max-w-7xl mx-auto h-full flex flex-col">
@@ -257,7 +258,7 @@
             <div class="flex flex-row">
                 <div class="w-full max-w-sm min-w-[200px]">
                     <div class="relative">
-                        <input id = "AYInput" class="glass-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                        <input id = "AYInput" class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         placeholder="{status === 'unpaid' ? 'A.Y. Issued' : status === 'unpaidAsOf' ? 'A.Y. as of' : 'A.Y. Paid'} e.g., 2023-2024" bind:value={ayInput} />
                     </div>
                 </div>
@@ -394,7 +395,7 @@
             <div class="flex flex-row">
                 <div class="w-full max-w-sm min-w-[200px]">
                     <div class="relative">
-                        <input id = "AYInput" class="glass-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                        <input id = "AYInput" class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
                         placeholder="e.g., 2023-2024" bind:value={ayInputDebt} />
                     </div>
                 </div>
