@@ -94,45 +94,45 @@
 
 </script>
 
-<div class="h-[calc(100vh-6rem)] flex items-center justify-center py-8">
+<div class="h-[calc(100vh-6rem)] flex items-center justify-center py-4">
   <div class="w-full max-w-4xl px-4">
-    <Link to="/home" class="glass-button py-2 px-4 mb-4 inline-flex items-center">
+    <Link to="/home" class="glass-button py-2 px-4 mb-3 inline-flex items-center">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
       </svg>
       Back to Home
     </Link>
 
-    <div class="glass-card p-8">
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-primary mb-2">Create Account</h1>
-        <p class="text-secondary">Join our community today</p>
+    <div class="glass-card p-6">
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-primary mb-2">Create Account</h1>
+        <p class="text-secondary text-sm">Join our community today</p>
       </div>
 
       {#if error}
-        <div class="glass-badge bg-gradient-to-r from-red-500/20 to-pink-500/20 mb-6 p-4 text-center">
+        <div class="glass-badge bg-gradient-to-r from-red-500/20 to-pink-500/20 mb-5 p-3 text-center">
           {error}
         </div>
       {/if}
 
       {#if success}
-        <div class="glass-badge bg-gradient-to-r from-green-500/20 to-emerald-500/20 mb-6 p-4 text-center">
+        <div class="glass-badge bg-gradient-to-r from-green-500/20 to-emerald-500/20 mb-5 p-3 text-center">
           Registration successful! Redirecting to login...
         </div>
       {/if}
 
-      <div class="space-y-6 max-h-[calc(100vh-24rem)] overflow-y-auto pr-2">
+      <div class="space-y-5 max-h-[calc(85vh-22rem)] overflow-y-auto pr-2">
         <div>
-          <label class="block text-secondary text-sm font-medium mb-3">Account Type</label>
+          <label class="block text-secondary text-sm font-medium mb-2">Account Type</label>
           <div class="flex gap-4">
             <button 
-              class="flex-1 glass-button py-3 {userType === 'member' ? 'bg-gradient-to-r from-blue-500/20 to-indigo-500/20' : ''}"
+              class="flex-1 glass-button py-2.5 {userType === 'member' ? 'bg-gradient-to-r from-blue-500/20 to-indigo-500/20' : ''}"
               on:click={() => userType = 'member'}
             >
               Member
             </button>
             <button 
-              class="flex-1 glass-button py-3 {userType === 'organization' ? 'bg-gradient-to-r from-blue-500/20 to-indigo-500/20' : ''}"
+              class="flex-1 glass-button py-2.5 {userType === 'organization' ? 'bg-gradient-to-r from-blue-500/20 to-indigo-500/20' : ''}"
               on:click={() => userType = 'organization'}
             >
               Organization
@@ -142,9 +142,9 @@
 
         <form on:submit|preventDefault={()=>handleRegister(userType)}>
         {#if userType === 'member'}
-          <div class="space-y-6">
+          <div class="space-y-4">
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Full Name</label>
+              <label class="block text-secondary text-sm font-medium mb-2">Full Name</label>
               <input 
                 type="text" 
                 bind:value={member_query.member_name}
@@ -153,7 +153,7 @@
               />
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Username</label>
+              <label class="block text-secondary text-sm font-medium mb-2">Username</label>
               <input 
                 type="text" 
                 bind:value={member_query.member_username}
@@ -162,7 +162,7 @@
               />
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Student Number</label>
+              <label class="block text-secondary text-sm font-medium mb-2">Student Number</label>
               <input 
                 type="text" 
                 bind:value={member_query.student_number}
@@ -171,7 +171,7 @@
               />
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Gender</label>
+              <label class="block text-secondary text-sm font-medium mb-2">Gender</label>
               <select 
                 bind:value={member_query.gender} 
                 class="glass-input w-full"
@@ -183,7 +183,7 @@
               </select>
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Degree Program</label>
+              <label class="block text-secondary text-sm font-medium mb-2">Degree Program</label>
               <input 
                 type="text" 
                 bind:value={member_query.degree_program}
@@ -192,7 +192,7 @@
               />
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Password</label>
+              <label class="block text-secondary text-sm font-medium mb-2">Password</label>
               <input 
                 type="text" 
                 bind:value={member_query.member_password}
@@ -202,9 +202,9 @@
             </div>
           </div>
         {:else}
-          <div class="space-y-6">
+          <div class="space-y-4">
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Organization Name</label>
+              <label class="block text-secondary text-sm font-medium mb-2">Organization Name</label>
               <input 
                 type="text" 
                 bind:value={org_query.organization_name}
@@ -213,7 +213,7 @@
               />
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Username</label>
+              <label class="block text-secondary text-sm font-medium mb-2">Username</label>
               <input 
                 type="text" 
                 bind:value={org_query.organization_username}
@@ -222,7 +222,7 @@
               />
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Organization ID</label>
+              <label class="block text-secondary text-sm font-medium mb-2">Organization ID</label>
               <input 
                 type="text" 
                 bind:value={org_query.organization_id}
@@ -231,7 +231,7 @@
               />
             </div>
             <div>
-              <label class="block text-secondary text-sm font-medium mb-3">Password</label>
+              <label class="block text-secondary text-sm font-medium mb-2">Password</label>
               <input 
                 type="text" 
                 bind:value={org_query.organization_password}
@@ -241,24 +241,14 @@
             </div>
           </div>
         {/if}
-          <br>
         <button 
           type = "submit"
-          class="glass-button w-full py-3 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+          class="glass-button w-full py-2.5 mt-6 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
           disabled={loading}
         >Create Account</button>
         </form>
-          <!-- {#if loading}
-            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Creating account...
-          {:else}
-            Create Account
-          {/if} -->
 
-        <div class="text-center pt-4">
+        <div class="text-center pt-4 pb-2">
           <p class="text-secondary text-sm">
             Already have an account? 
             <Link to="/login" class="text-primary hover:underline">Sign in here</Link>

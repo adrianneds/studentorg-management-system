@@ -121,33 +121,33 @@
   }
 </script>
 
-<div class="h-[calc(100vh-6rem)] flex items-center justify-center py-8">
+<div class="h-[calc(100vh-6rem)] flex items-center justify-center py-4">
   <div class="w-full max-w-md px-4">
-    <Link to="/home" class="glass-button py-2 px-4 mb-8 inline-flex items-center">
+    <Link to="/home" class="glass-button py-2 px-4 mb-3 inline-flex items-center">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clip-rule="evenodd" />
       </svg>
       Back to Home
     </Link>
 
-    <div class="glass-card p-8">
-      <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-primary mb-2">Welcome Back</h1>
-        <p class="text-secondary">Sign in to your account</p>
+    <div class="glass-card p-6">
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-primary mb-2">Welcome Back</h1>
+        <p class="text-secondary text-sm">Sign in to your account</p>
       </div>
 
-      <div class="space-y-6">
+      <div class="space-y-5">
         <div>
-          <label class="block text-secondary text-sm font-medium mb-3">Account Type</label>
+          <label class="block text-secondary text-sm font-medium mb-2">Account Type</label>
           <div class="flex gap-4">
             <button 
-              class="flex-1 glass-button py-3 {userType === 'member' ? 'bg-gradient-to-r from-blue-500/20 to-indigo-500/20' : ''}"
+              class="flex-1 glass-button py-2.5 {userType === 'member' ? 'bg-gradient-to-r from-blue-500/20 to-indigo-500/20' : ''}"
               on:click={() => userType = 'member'}
             >
               Member
             </button>
             <button 
-              class="flex-1 glass-button py-3 {userType === 'organization' ? 'bg-gradient-to-r from-blue-500/20 to-indigo-500/20' : ''}"
+              class="flex-1 glass-button py-2.5 {userType === 'organization' ? 'bg-gradient-to-r from-blue-500/20 to-indigo-500/20' : ''}"
               on:click={() => userType = 'organization'}
             >
               Organization
@@ -156,7 +156,7 @@
         </div>
 
         <div>
-          <label class="block text-secondary text-sm font-medium mb-3">
+          <label class="block text-secondary text-sm font-medium mb-2">
             {userType === 'member' ? 'Member Username' : 'Organization Username'}
           </label>
           <input 
@@ -169,7 +169,7 @@
         </div>
 
         <div>
-          <label class="block text-secondary text-sm font-medium mb-3">Password</label>
+          <label class="block text-secondary text-sm font-medium mb-2">Password</label>
           <input 
             required
             type="password" 
@@ -180,7 +180,7 @@
         </div>
 
         <button 
-          class="glass-button w-full py-3 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="glass-button w-full py-2.5 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
           on:click={handleLogin}
           disabled={loading}
         >
@@ -194,6 +194,13 @@
             Sign In
           {/if}
         </button>
+
+        <div class="text-center pt-4 pb-2">
+          <p class="text-secondary text-sm">
+            Don't have an account? 
+            <Link to="/register" class="text-primary hover:underline">Register here</Link>
+          </p>
+        </div>
       </div>
     </div>
   </div>

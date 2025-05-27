@@ -4,6 +4,7 @@
   import { onMount } from "svelte";
   import Navbar from "./components/Navbar.svelte";
   import LoadingOverlay from "./components/LoadingOverlay.svelte";
+  import Footer from "./components/Footer.svelte";
   import Home from "./routes/Home.svelte";
   import Login from "./routes/Login.svelte";
   import Register from "./routes/Register.svelte";
@@ -55,6 +56,7 @@
       <Route path="*" component={NotFound} />
     </div>
   </main>
+  <Footer />
 </Router>
 
 <style>
