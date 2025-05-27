@@ -29,7 +29,7 @@
   let updateFeeQuery = {
     fee_id: '',
     fee_name: '',
-    fee_amount: 0,
+    fee_amount: '',
     due_date: '',
     issue_date: '',
     semester_issued: '',
@@ -39,7 +39,7 @@
   let addFeeQuery = {
     fee_id: '',
     fee_name: '',
-    fee_amount: 0,
+    fee_amount: '',
     issue_date: '',
     semester_issued: '',
     academic_year_issued: '',
@@ -121,8 +121,9 @@
       body: JSON.stringify(addFeeQuery)
     }
     )
-    .then(response => {if (response.ok) 
-        {alert("Successfully added fee!"); response.json()} })
+    .then(response => {if (!response.ok) 
+        {alert("Something went wrong. Make sure to enter a unique fee id."); return}
+        else {alert("Successfully added fee!"); response.json()} })
     .then(data => {
       console.log(data);
     }).catch(error => {
@@ -341,15 +342,19 @@
     }
 
     if (type == 'update') {
-      if (query.academic_year_issued.slice(4,5) != '-' || !isNaN(query.academic_year_issued) || query.academic_year_issued.length != 9)  {
+
+      if (query.academic_year_issued != '') {
+        if (query.academic_year_issued.slice(4,5) != '-' || !isNaN(query.academic_year_issued) || query.academic_year_issued.length != 9)  {
         alertText += "Please enter a valid academic year.\n"
         success = false;
-      } 
+        } 
+      }
 
-      if (parseInt(query.fee_amount) < 0) {
+      if (parseInt(query.fee_amount) <= 0) {
         success = false;
         alertText += "Please enter a valid fee amount.\n"
       }
+
     }
     
     if (success == true) {
@@ -625,23 +630,23 @@
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
                         <label for="fee_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee ID</label>
-                        <input bind:value={addFeeQuery.fee_id} type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000" required="">
+                        <input bind:value={addFeeQuery.fee_id} required type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="fee_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Name</label>
-                        <input bind:value={addFeeQuery.fee_name} type="text" name="fee_name" id="fee_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee" required="">
+                        <input bind:value={addFeeQuery.fee_name} required type="text" name="fee_name" id="fee_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., Membership Fee">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="fee_amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Amount</label>
-                        <input bind:value={addFeeQuery.fee_amount} type="number" name="fee_amount" id="fee_amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 100" required="">
+                        <input bind:value={addFeeQuery.fee_amount} required type="number" name="fee_amount" id="fee_amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 100">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="issue_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Issue Date</label>
-                        <input bind:value={addFeeQuery.issue_date} type="date" name="issue_date" id="issue_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                        <input bind:value={addFeeQuery.issue_date} required type="date" name="issue_date" id="issue_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="semester" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Semester Issued</label>
-                        <select bind:value={addFeeQuery.semester_issued} id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <select bind:value={addFeeQuery.semester_issued} required id="semester" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option selected="">Select option</option>
                             <option value="1S">1st Semester</option>
                             <option value="2S">2nd Semester</option>
@@ -650,11 +655,11 @@
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="academic_year_issued" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Academic Year Issued</label>
-                        <input bind:value={addFeeQuery.academic_year_issued} type="text" name="academic_year_issued" id="academic_year_issued" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                        <input bind:value={addFeeQuery.academic_year_issued} required type="text" name="academic_year_issued" id="academic_year_issued" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="issue_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Due Date</label>
-                        <input bind:value={addFeeQuery.due_date} type="date" name="issue_date" id="issue_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023" required="">
+                        <input bind:value={addFeeQuery.due_date} required type="date" name="issue_date" id="issue_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., 2022-2023">
                     </div>
                 </div>
                 <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
@@ -692,7 +697,7 @@
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
                         <label for="fee_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee ID</label>
-                        <input bind:value={updateFeeQuery.fee_id} type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000" required="">
+                        <input bind:value={updateFeeQuery.fee_id} required type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000">
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label for="fee_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee Name</label>
@@ -760,7 +765,7 @@
                 <div class="grid gap-4 mb-4 grid-cols-2">
                     <div class="col-span-2">
                         <label for="fee_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fee ID</label>
-                        <input bind:value={deleteFeeQuery.fee_id} type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000" required="">
+                        <input bind:value={deleteFeeQuery.fee_id} required type="text" name="fee_id" id="fee_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="i.e., FE-10000">
                     </div>
                 <button type="submit" class="w-20 text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                     Delete

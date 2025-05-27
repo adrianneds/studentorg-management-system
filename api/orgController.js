@@ -413,10 +413,12 @@ const addFee = async (req, res) => {
 const deleteFee = async (req, res) => {
 
     let fee_id = req.body.fee_id;
+    const pays_query = `DELETE FROM pays WHERE fee_id = '${fee_id}';`
     const query = `DELETE FROM fee WHERE fee_id = '${fee_id}';`
 
     try {
         console.log(query)
+        await pool.query(pays_query)
         await pool.query(query);
         res.status(200).json({message: "Successfully deleted fee"})
     } catch (err) {
@@ -674,7 +676,7 @@ const updateFee = async (req, res) => {
     if (fee_name !==""&&fee_name!==undefined) {
         updateColumns.push(` fee_name = '${fee_name}'`)
     } 
-    if (fee_amount !=="" && fee_amount!==undefined) {
+    if (fee_amount !=='' && fee_amount!==undefined && fee_amount!=null) {
         updateColumns.push(` fee_amount = '${fee_amount}'`)
     }
     if (due_date !==""&&due_date!==undefined) {

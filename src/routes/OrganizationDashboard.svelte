@@ -78,7 +78,7 @@
   <div class="max-w-7xl mx-auto h-full flex flex-col">
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-primary mb-2">{orgInfo?.organization_name || 'Organization'} Dashboard</h1>
-      <p class="text-secondary">Manage your organization and members</p>
+      <p class="text-secondary">Manage your organization, members, and fees </p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
