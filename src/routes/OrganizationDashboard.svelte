@@ -78,7 +78,7 @@
   <div class="max-w-7xl mx-auto space-y-8">
     <!-- Welcome Message -->
     <div class="text-center mb-4">
-      <h1 class="text-4xl font-bold text-primary mb-2">{orgInfo?.organization_name || 'Organization'} Dashboard</h1>
+      <h1 class="text-4xl font-bold text-primary mt-6 mb-2">{orgInfo?.organization_name || 'Organization'} Dashboard</h1>
       <p class="text-secondary text-lg">Manage your organization, members, and fees</p>
     </div>
 
