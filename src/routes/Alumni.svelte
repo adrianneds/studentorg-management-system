@@ -57,15 +57,29 @@
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
 <div class="max-w-7xl mx-auto h-full flex flex-col">
 
+    <div class="flex items-center gap-4 mb-2">
+        <Link to="/organization-dashboard" class="glass-button text-sm py-2 flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Dashboard
+        </Link>
+    </div>
+    <br>
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-primary mb-2"> Alumni Members </h1>
         <p class="text-secondary"> View alumni members as of a given date </p>
     </div>
 
     <div class="mb-8">
-        <div class="date-container glass-card p-6">
-      <input class = "dateInput text-input" type="date" min="1970-01-01" bind:value={alumniDateInput} />
-      <button class = "date-input-submit" id = "submitButton" type="button" on:click={()=>{alumniDate=alumniDateInput;getAlumni()}}> Submit </button>
+        <div class="date-container glass-card p-6 flex items-center gap-4">
+            <input class="glass-input flex-1" type="date" min="1970-01-01" bind:value={alumniDateInput} />
+            <button class="glass-button text-sm py-2 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30" id="submitButton" type="button" on:click={()=>{alumniDate=alumniDateInput;getAlumni()}}>
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Submit
+            </button>
         </div>
     </div>
 
@@ -123,4 +137,13 @@
     color: var(--text-primary);
   }
 
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+  }
+
+  input[type="date"]::-webkit-inner-spin-button,
+  input[type="date"]::-webkit-clear-button {
+    filter: invert(1);
+  }
 </style>

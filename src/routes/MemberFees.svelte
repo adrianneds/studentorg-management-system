@@ -108,17 +108,18 @@
 
 </script>
 
-<div class="h-full py-8 px-4 sm:px-6 lg:px-8">
+<div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto h-full flex flex-col">
+    <div class="flex items-center gap-4 mb-2">
+      <Link to="/member-dashboard" class="glass-button text-sm py-2 flex items-center">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to Dashboard
+      </Link>
+    </div>
+    <br>
     <div class="mb-8">
-      <div class="flex items-center gap-4 mb-2">
-        <Link to="/member-dashboard" class="glass-button text-sm py-2 flex items-center">
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Back to Dashboard
-        </Link>
-      </div>
       <h1 class="mt-5 text-3xl font-bold text-primary mb-2"> Organization Fees</h1>
       <p class="text-secondary">View and manage your transactions </p>
     </div>

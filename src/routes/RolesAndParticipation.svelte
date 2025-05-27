@@ -168,23 +168,30 @@
   
 </script>
 
-<div class="options-container">
-<div class="options">
-    <button class = "glass-button options-button" on:click={() => {showCommmitee=true;showRoles=false;showStatus=false}}>
-        Committees
-    </button>
-    <button class = "glass-button options-button" on:click={() => {showCommmitee=false;showRoles=true;showStatus=false}}>
-        Roles
-    </button>
-    <button class = "glass-button options-button" on:click={() => {showCommmitee=false;showRoles=false;showStatus=true}}>
-        Status
-    </button>
-</div>
-</div>
-
-
-
 <div class="h-[calc(100vh-6rem)] py-8 px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center gap-4 mb-2">
+        <Link to="/organization-dashboard" class="glass-button text-sm py-2 flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to Dashboard
+        </Link>
+    </div>
+    <br>
+
+    <div class="options-container mb-8">
+        <div class="options">
+            <button class = "glass-button options-button" on:click={() => {showCommmitee=true;showRoles=false;showStatus=false}}>
+                Committees
+            </button>
+            <button class = "glass-button options-button" on:click={() => {showCommmitee=false;showRoles=true;showStatus=false}}>
+                Roles
+            </button>
+            <button class = "glass-button options-button" on:click={() => {showCommmitee=false;showRoles=false;showStatus=true}}>
+                Status
+            </button>
+        </div>
+    </div>
 
 {#if showCommmitee}
 <div class="max-w-7xl mx-auto h-full flex flex-col">
@@ -194,14 +201,14 @@
     </div>
 
     <div class="committee-options">
-    <div class="mb-8">
+    <div class="mb-6">
     <!-- Dropdown menu -->
     <button id="committeeDropdown" data-dropdown-toggle="dropdown-committee"
-    class="glass-dropdown" type="button">
-        Committee
-    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-    </svg>
+    class="glass-dropdown h-11 flex items-center justify-between px-4 rounded-md" type="button">
+        <span>Committee</span>
+        <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+        </svg>
     </button>
     <div id="dropdown-committee" class="dropdown-options z-10 hidden">
         <ul class="py-2 text-sm" aria-labelledby="dropdownDefaultButton">
@@ -217,25 +224,25 @@
     </div>
     </div>
     
-    <div class = "mb-8">
-        <div class="flex flex-row">
+    <div class="mb-6">
+        <div class="flex items-center space-x-4">
             <div class="w-full max-w-sm min-w-[200px]">
-                <div class="relative">
-                    <input id = "AYInput"
-                    class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                    placeholder="Academic Year e.g., 2023-2024" bind:value={ayInput} />
-                    <button id = "AYsubmitButton"
-                    class="text-input-submit absolute right-1 top-1 rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                    type="button" on:click={updateAY(ayInput)}
-                    >
-                    Submit
-                    </button>
-                </div>
+                <input id = "AYInput"
+                class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md px-4 h-11 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
+                placeholder="Academic Year e.g., 2023-2024" bind:value={ayInput} />
             </div>
-            <button class = "ml-5 search text-input-submit rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                on:click={() => resetQuery()}>
+            <div class="flex space-x-3">
+                <button id = "AYsubmitButton"
+                class="glass-button text-sm h-11 px-4 min-w-[80px] text-center flex items-center justify-center"
+                type="button" on:click={updateAY(ayInput)}
+                >
+                Submit
+                </button>
+                <button class = "glass-button text-sm h-11 px-4 min-w-[80px] text-center flex items-center justify-center"
+                    on:click={() => resetQuery()}>
                     Reset 
-            </button>
+                </button>
+            </div>
         </div>
     </div>
     </div>
@@ -322,7 +329,7 @@
             </li>
         </ul>
     </div>
-    <button class = "ml-5 search text-input-submit rounded bg-slate-800 py-1 px-2.5 border border-transparent text-center text-sm text-white transition-all shadow-sm hover:shadow focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+    <button class = "ml-5 glass-button text-sm py-1 px-2.5"
         on:click={() => resetQuery()}>
             Reset 
     </button>
@@ -392,9 +399,10 @@
     <div class="mb-8">
         <label for="quantity-input" class="block mb-2 text-sm font-medium text-white-900 dark:text-white"> Show {nsemCountInput} semesters </label>
         <a name="#number-input"> </a>
-        <input type="number" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" href="#number-input"
-        class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="3" required bind:value={nsemCountInput} on:input={updatensemCount(nsemCountInput)}/>
+        <div class="flex items-center gap-4">
+            <input type="number" id="quantity-input" data-input-counter aria-describedby="helper-text-explanation" href="#number-input"
+            class="glass-input w-24 text-center" placeholder="3" required bind:value={nsemCountInput} on:input={updatensemCount(nsemCountInput)}/>
+        </div>
     </div>
 
     <div class="glass-table-container">
@@ -451,10 +459,16 @@
   h1 {
     color: var(--text-primary);
   }
-   #quantity-input {
-    width: 50px;
-    height: 30px;
-    border-radius:2px;
-   }
 
+  /* Style number input spinners */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    filter: invert(1);
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 </style> 
