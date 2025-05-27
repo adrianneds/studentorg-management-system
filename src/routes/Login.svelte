@@ -2,16 +2,25 @@
   import { Link, navigate } from "svelte-routing";
   import { onMount } from 'svelte';
   import { auth } from '../stores/auth';
+  import Toast from '../components/Toast.svelte';
   
   let username = '';
   let password = '';
   let userType = 'member'; // 'member' or 'organization'
-  let error = '';
   let loading = false;
   let id = '';
   let studno = '';
 
   let credentialsValid = false;
+  let toastMessage = '';
+  let toastType = 'error';
+  let showToast = false;
+
+  function showError(message) {
+    toastMessage = message;
+    toastType = 'error';
+    showToast = true;
+  }
 
   onMount(() => {
     // Check if user is already logged in
@@ -24,52 +33,60 @@
     }
   });
 
-    async function getOrganizationId(username) {
-      await fetch(`http://localhost:5001/organization/getOrganizationId/user/${username}`,
-        {
+  async function getOrganizationId(username) {
+    try {
+      const response = await fetch(`http://localhost:5001/organization/getOrganizationId/user/${username}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }
-      }
-      )
-      .then(response => response.json())
-      .then(data => {
-        id = data[0].organization_id;
-        console.log(id)
-      }).catch(error => {
-        console.log(error);
-        return '';
       });
-  }; 
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch organization ID');
+      }
+      
+      const data = await response.json();
+      id = data[0].organization_id;
+      return id;
+    } catch (error) {
+      console.error('Error fetching organization ID:', error);
+      throw new Error('Failed to fetch organization details');
+    }
+  }
 
-    async function getStudentNumber(username) {
-      await fetch(`http://localhost:5001/member/getStudentNumber/user/${username}`,
-        {
+  async function getStudentNumber(username) {
+    try {
+      const response = await fetch(`http://localhost:5001/member/getStudentNumber/user/${username}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }
-      }
-      )
-      .then(response => response.json())
-      .then(data => {
-        studno = data[0].student_number;
-        //console.log(id)
-      }).catch(error => {
-        console.log(error);
-        return '';
       });
-  }; 
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch student number');
+      }
+      
+      const data = await response.json();
+      studno = data[0].student_number;
+      return studno;
+    } catch (error) {
+      console.error('Error fetching student number:', error);
+      throw new Error('Failed to fetch member details');
+    }
+  }
 
   async function handleLogin() {
-    error = '';
+    loading = true;
     
     try {
+      if (!username || !password) {
+        throw new Error('Please fill in all fields');
+      }
+
       if (userType === 'member') {
-        // Check member credentials
-        // if (username === 'johndoe' && password === 'password') {
-        credentialsValid = await auth.validateCredentials(username, password, 'member')
+        credentialsValid = await auth.validateCredentials(username, password, 'member');
         if (credentialsValid) {
           await getStudentNumber(username);
           await auth.login({
@@ -79,13 +96,10 @@
           });
           navigate('/member-dashboard');
         } else {
-          alert('Invalid member credentials');
-          console.log(error)
-          return
+          throw new Error('Invalid member credentials');
         }
       } else {
-        // Check organization credentials
-        credentialsValid = await auth.validateCredentials(username, password, 'organization')
+        credentialsValid = await auth.validateCredentials(username, password, 'organization');
         if (credentialsValid) {
           await getOrganizationId(username);
           await auth.login({
@@ -95,12 +109,14 @@
           });
           navigate('/organization-dashboard');
         } else {
-          alert('Invalid organization credentials');
-          return
+          throw new Error('Invalid organization credentials');
         }
       }
     } catch (err) {
-      console.log("ERROR: " + err)
+      showError(err.message || 'An error occurred during login');
+      console.error('Login error:', err);
+    } finally {
+      loading = false;
     }
   }
 </script>
@@ -164,12 +180,11 @@
         </div>
 
         <button 
-          class="glass-button w-full py-3 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30"
+          class="glass-button w-full py-3 flex items-center justify-center bg-gradient-to-r from-blue-500/20 to-indigo-500/20 hover:from-blue-500/30 hover:to-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
           on:click={handleLogin}
           disabled={loading}
         >
-          Sign In
-          <!-- {#if loading}
+          {#if loading}
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -177,19 +192,18 @@
             Signing in...
           {:else}
             Sign In
-          {/if} -->
+          {/if}
         </button>
-
-        <!-- <div class="text-center pt-4">
-          <p class="text-secondary text-sm">
-            Don't have an account? 
-            <Link to="/register" class="text-primary hover:underline">Register here</Link>
-          </p>
-        </div> -->
       </div>
     </div>
   </div>
 </div>
+
+<Toast 
+  bind:show={showToast}
+  message={toastMessage}
+  type={toastType}
+/>
 
 <style>
   h1 {
