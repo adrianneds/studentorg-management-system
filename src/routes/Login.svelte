@@ -144,6 +144,7 @@
             {userType === 'member' ? 'Member Username' : 'Organization Username'}
           </label>
           <input 
+            required
             type="text" 
             bind:value={username}
             class="glass-input"
@@ -154,6 +155,7 @@
         <div>
           <label class="block text-secondary text-sm font-medium mb-3">Password</label>
           <input 
+            required
             type="password" 
             bind:value={password}
             class="glass-input"

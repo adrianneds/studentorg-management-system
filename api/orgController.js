@@ -427,13 +427,6 @@ const deleteFee = async (req, res) => {
     }
 }
 
-// INSERT INTO pays (student_number, fee_id, issue_date, semester_issued,
-// academic_year_issued, due_date, payment_date, payment_status, semester, academic_year)
-// VALUES 
-// ('2022-15733', 'FE-00044', '2024-05-02', '1S', '2024-2025', '2024-10-01',
-// '2024-12-10', 'Paid', '1S', '2024-2025');
-
-
 // REVISED 5/25/2025
 // Add transaction
 const addPays = async (req, res) => {

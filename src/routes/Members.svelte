@@ -20,11 +20,11 @@
       return;
     }
 
-      // NEW: getting username
+    // NEW: getting username
     var username = JSON.parse(localStorage.getItem('user')).organization_username
     console.log(username)
 
-      // NEW: import member data from db server
+    // NEW: import member data from db server
     async function getMembers() {
       fetch(`http://localhost:5000/organization/orgMembers/user/${$auth.organization_id}`,
         {
@@ -51,63 +51,7 @@
     // Simulate loading organization and members
     setTimeout(() => {
       // If orgId is provided in params, use it to load specific organization
-      const orgId = params.orgId || 1;
-      
-      // organization = {
-      //   id: orgId,
-      //   name: 'Computer Society',
-      //   description: 'A community of computer science enthusiasts',
-      //   totalMembers: 150,
-      //   activeMembers: 145
-      // };
-
-      // members = [
-      //   {
-      //     id: 1,
-      //     name: 'John Doe',
-      //     studentNumber: '2024-0001',
-      //     role: 'President',
-      //     joinDate: '2023-09-01',
-      //     status: 'active',
-      //     email: 'john.doe@example.com',
-      //     contactNumber: '09123456789',
-      //     fees: {
-      //       paid: 3,
-      //       pending: 0,
-      //       overdue: 0
-      //     }
-      //   },
-      //   {
-      //     id: 2,
-      //     name: 'Jane Smith',
-      //     studentNumber: '2024-0002',
-      //     role: 'Vice President',
-      //     joinDate: '2023-09-01',
-      //     status: 'active',
-      //     email: 'jane.smith@example.com',
-      //     contactNumber: '09123456790',
-      //     fees: {
-      //       paid: 2,
-      //       pending: 1,
-      //       overdue: 0
-      //     }
-      //   },
-      //   {
-      //     id: 3,
-      //     name: 'Mike Johnson',
-      //     studentNumber: '2024-0003',
-      //     role: 'Member',
-      //     joinDate: '2024-01-15',
-      //     status: 'active',
-      //     email: 'mike.johnson@example.com',
-      //     contactNumber: '09123456791',
-      //     fees: {
-      //       paid: 1,
-      //       pending: 2,
-      //       overdue: 1
-      //     }
-      //   }
-      // ];
+      // const orgId = params.orgId || 1;
       loading = false;
     }, 1000);
   });
