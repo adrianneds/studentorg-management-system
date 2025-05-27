@@ -531,3 +531,7 @@ div.left-col {
   flex-direction: row;
   width: 100vmax;
 }
+
+select option {
+  color: black;
+}
