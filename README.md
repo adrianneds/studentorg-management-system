@@ -16,7 +16,7 @@ Password: msoc123
 
 To run this project, follow these steps:
 
-1. **Open the student-org-management-system folder in the command prompt**  
+1. **Open the studentorg-management-system folder in the command prompt**  
 2. **Install dependencies:**
    ```bash
    npm install
@@ -31,7 +31,7 @@ To run this project, follow these steps:
    ```
 5. **In the api folder, run**
    ```bash
-   node index.js
+   node server.js
    ```
 6. **Run the development server:**
    ```bash
