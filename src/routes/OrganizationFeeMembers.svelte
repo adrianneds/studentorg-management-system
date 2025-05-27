@@ -175,8 +175,24 @@
 <div class="max-w-7xl mx-auto h-full flex flex-col">
 
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-primary mb-2"> {status=='unpaid'||status=='unpaidAsOf'? 'Unpaid Fees' : 'Late Payments'} </h1>
-        <p class="text-secondary"> View members with {status=='unpaid'||status=='unpaidAsOf'? 'unpaid fees' : 'late payments made during a semester/academic year'} </p>
+        <h1 class="text-3xl font-bold text-primary mb-2">
+            {#if status === 'unpaid'}
+                Unpaid Fees for Semester or Academic Year
+            {:else if status === 'unpaidAsOf'}
+                Unpaid Fees as of Semester or Academic Year
+            {:else if status === 'late'}
+                Late Payments
+            {/if}
+        </h1>
+        <p class="text-secondary">
+            {#if status === 'unpaid'}
+                View members who have not paid their fees for the selected semester/academic year
+            {:else if status === 'unpaidAsOf'}
+                View members who have unpaid fees accumulated up to the selected semester/academic year
+            {:else if status === 'late'}
+                View members who made late payments during the selected semester/academic year
+            {/if}
+        </p>
     </div>
 
     <div class="mb-8">
@@ -234,7 +250,7 @@
             <div class="w-full max-w-sm min-w-[200px]">
                 <div class="relative">
                     <input id = "AYInput" class="text-input w-full bg-transparent placeholder:text-white text-sm border border-slate-200 rounded-md pl-3 pr-16 py-2 transition duration-300 ease focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow"
-                    placeholder="{status == 'unpaid' ? 'A.Y. Issued' : 'A.Y. Paid'} e.g., 2023-2024" bind:value={ayInput} />
+                    placeholder="{status === 'unpaid' ? 'A.Y. Issued' : status === 'unpaidAsOf' ? 'A.Y. as of' : 'A.Y. Paid'} e.g., 2023-2024" bind:value={ayInput} />
                 </div>
             </div>
             <button id = "AYsubmitButton"
