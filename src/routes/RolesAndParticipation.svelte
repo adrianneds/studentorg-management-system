@@ -240,52 +240,54 @@
     </div>
     </div>
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div class="glass-table-container">
+    <table class="glass-table">
+        <thead>
             <tr>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Student Number
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Name
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Committee
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Role
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Semester
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Academic Year
                 </th>
             </tr>
         </thead>
+        <tbody>
         {#each membersCommittee as member}
-            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <tr>
+                <th scope="row">
                     {member.student_number}
                 </th>
-                <td class="px-6 py-4">
+                <td>
                     {member.member_name}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {member.committee}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {member.role}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {member.semester}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {member.academic_year}
                 </td>
             </tr>
         {/each}
+        </tbody>
     </table>
 </div>
 </div>
@@ -326,52 +328,54 @@
     </button>
     </div>
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div class="glass-table-container">
+    <table class="glass-table">
+        <thead>
             <tr>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Student Number
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Name
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Committee
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Role
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Semester
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Academic Year
                 </th>
             </tr>
         </thead>
+        <tbody>
         {#each membersRole as member}
-            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <tr>
+                <th scope="row">
                     {member.student_number}
                 </th>
-                <td class="px-6 py-4">
+                <td>
                     {member.member_name}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {member.committee}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {member.role}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {member.semester}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {member.academic_year}
                 </td>
             </tr>
         {/each}
+        </tbody>
     </table>
 </div>
 </div>
@@ -393,46 +397,48 @@
         placeholder="3" required bind:value={nsemCountInput} on:input={updatensemCount(nsemCountInput)}/>
     </div>
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div class="glass-table-container">
+    <table class="glass-table">
+        <thead>
             <tr>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Percent Active
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Percent Inactive
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Other
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Semester
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Academic Year
                 </th>
             </tr>
         </thead>
+        <tbody>
         {#each statusProps as statusProp}
-            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
-               <td class="px-6 py-4">
+            <tr>
+                <td>
                     {statusProp.percent_active}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {statusProp.percent_inactive}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {statusProp.percent_other}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {statusProp.semester}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {statusProp.academic_year}
                 </td>
             </tr>
         {/each}
+        </tbody>
     </table>
     </div>
     </div>

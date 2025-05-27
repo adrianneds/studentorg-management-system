@@ -345,82 +345,84 @@
 <!-- transaction_id, student_number, fee_id, fee_amount, fee_name issue_date, semester_issued,
     academic_year_issued, due_date, payment_date, payment_status, semester, academic_year -->
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+    <div class="glass-table-container">
+    <table class="glass-table">
+        <thead>
             <tr>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Transaction id
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Student Number
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Member Name
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Fee ID
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Fee Name
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Payment Status
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Issue date
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Sem/AY issued
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Due date
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Payment status
                 </th>
-                <th scope="col" class="px-6 py-3">
+                <th scope="col">
                     Payment date
                 </th>
             </tr>
         </thead>
+        <tbody>
         {#each transactions as transaction}
-            <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200">
-                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+            <tr>
+                <th scope="row">
                     {transaction.transaction_id}
                 </th>
-                <td class="px-6 py-4">
+                <td>
                     {transaction.student_number}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {transaction.member_name}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {transaction.fee_id}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {transaction.fee_name}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {transaction.payment_status}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {transaction.issue_date.slice(0,10)}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {transaction.semester_issued}/{transaction.academic_year_issued}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {transaction.due_date.slice(0,10)}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {transaction.payment_status}
                 </td>
-                <td class="px-6 py-4">
+                <td>
                     {transaction.payment_date == null ? 'N/A' : transaction.payment_date.slice(0,10)}
                 </td>
             </tr>
         {/each}
+        </tbody>
     </table>
 </div>
 </div>

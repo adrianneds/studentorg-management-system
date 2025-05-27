@@ -145,15 +145,54 @@ body {
 }
 
 .glass-table {
-  @apply w-full;
+  @apply w-full text-sm text-left rtl:text-right;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  margin: 1.5rem 0;
+}
+
+.glass-table thead {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .glass-table th {
-  @apply text-left p-4 text-secondary font-semibold;
+  @apply px-6 py-4 text-xs font-semibold uppercase tracking-wider;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
 }
 
 .glass-table td {
-  @apply p-4 text-secondary border-t border-blue-400/10;
+  @apply px-6 py-4;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.glass-table tbody tr {
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.glass-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(31, 38, 135, 0.15);
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Remove conflicting table styles */
+td, tr, th {
+  background-color: transparent !important;
 }
 
 .glass-badge {
@@ -204,18 +243,6 @@ body {
   color:white;
     border-radius: 0.75rem;
   transition: 0.2s;
-}
-
-td {
-  background-color: rgba(209, 208, 255, 0.2);
-}
-
-tr {
-  background-color: rgba(209, 208, 255, 0.2);
-}
-
-th {
-  background-color: rgba(209, 208, 255, 0.2);
 }
 
 #dropdown3 {
