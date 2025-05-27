@@ -25,20 +25,22 @@ To run this project, follow these steps:
    ```sql
    source studentorg-management-system\database\dbconfig.sql
    ```
-   
-5. **Run the web server**
-   ```bash
-   cd api
-   node index.js
+5. **Run dbconfig.sql in MariaDB to set up the database**
+   ```sql
+   source studentorg-management-system\database\dbconfig.sql
+   ```
+6. **In connect.js, change the password to your own password**
+   ```javascript
+   var pass = '<your-password>'
    ```
 
-6. **Run the development server:**
+7. **Run the development server:**
    ```bash
    cd src
    npm run dev
    ```
 
-7. **Open your browser and navigate to:**
+8. **Open your browser and navigate to:**
    ```
    http://localhost:5173
    ```
