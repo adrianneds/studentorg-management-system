@@ -287,7 +287,7 @@
                 bind:value={updateQuery.member_username}
                 type="text"
                 class="glass-input w-full"
-                required
+                
               />
             </div>
 
@@ -297,7 +297,7 @@
                 bind:value={updateQuery.member_password}
                 type="text"
                 class="glass-input w-full"
-                required
+                
               />
             </div>
 
@@ -308,7 +308,7 @@
                 type="text"
                 class="glass-input w-full"
                 placeholder="i.e., John Doe"
-                required
+                
               />
             </div>
 
@@ -331,7 +331,7 @@
                 type="text"
                 class="glass-input w-full"
                 placeholder="i.e., BS Statistics"
-                required
+                
               />
             </div>
 
