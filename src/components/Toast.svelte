@@ -32,7 +32,8 @@
 
 {#if show}
   <div
-    class="fixed bottom-4 right-4 z-[9999]"
+    class="fixed bottom-20 right-4 z-[99999]"
+    style="z-index: 99999; position: fixed;"
     transition:fly={{ y: 50, duration: 300, easing: quintOut }}
   >
     <div
